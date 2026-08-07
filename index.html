@@ -17,10 +17,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" crossorigin="anonymous"></script>
 <style>
 :root{
   --g:#2C7A46; --g-d:#1E5B33; --g-m:#4F9E68; --g-l:#E8F2EA; --g-xl:#F3F8F4;
@@ -313,6 +313,131 @@ tbody tr:hover td{background:var(--g-xl)}
   padding:9px 11px;font-family:"IBM Plex Mono",monospace;font-size:11px;line-height:1.55;opacity:0;
   transition:opacity .1s;z-index:9;white-space:nowrap;box-shadow:0 6px 20px rgba(22,33,26,.16)}
 #covTip b{color:var(--g-d)}
+
+/* ══════════ TEMA DASHBOARD ══════════ */
+.side{background:#14301C;border-right:0;width:250px;flex:0 0 250px}
+.side .brand{padding:20px 18px 16px;display:flex;align-items:center;gap:11px;border-bottom:1px solid rgba(255,255,255,.08)}
+.side .brand .bmark{width:38px;height:38px;border-radius:11px;background:rgba(255,255,255,.10);display:grid;place-items:center;flex:0 0 38px}
+.side .brand .bmark img{width:26px;height:26px}
+.side .brand .bt{line-height:1.15;min-width:0}
+.side .brand .bt b{display:block;color:#fff;font-size:16.5px;font-weight:700;letter-spacing:-.01em}
+.side .brand .bt span{display:block;color:#8FB79C;font-size:10.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.side .collapse{margin-left:auto;background:none;border:0;color:#8FB79C;cursor:pointer;font-size:15px;padding:4px}
+.nav{padding:12px 10px}
+.nav .navlbl{font-family:"IBM Plex Mono",monospace;font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;
+  color:#6E9179;padding:12px 12px 6px}
+.nav button{color:#C4D8CA;font-size:13.5px;padding:11px 12px;border-radius:10px;gap:12px}
+.nav button:hover{background:rgba(255,255,255,.07);color:#fff}
+.nav button.on{background:#24512F;color:#fff;font-weight:600}
+.nav button.on svg{stroke:#8FD6A4}
+.nav button:disabled{opacity:.35}
+.side .installbtn{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.14);color:#C4D8CA}
+.side .installbtn svg{stroke:#8FD6A4}
+.side .installbtn:hover{background:#24512F;color:#fff}
+.usercard{margin:8px 12px;padding:11px 12px;border-radius:12px;background:rgba(255,255,255,.07);
+  display:flex;align-items:center;gap:11px;cursor:pointer}
+.usercard .av{width:34px;height:34px;border-radius:10px;background:#2C7A46;color:#fff;display:grid;place-items:center;
+  font-weight:700;font-size:13px;flex:0 0 34px}
+.usercard .un{flex:1;min-width:0;line-height:1.25}
+.usercard .un b{display:block;color:#fff;font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.usercard .un span{color:#8FB79C;font-size:10.5px}
+.netcard{margin:8px 12px 14px;padding:13px 14px;border-radius:12px;background:linear-gradient(160deg,#1D4326,#17361F);
+  border:1px solid rgba(255,255,255,.09)}
+.netcard .nt{display:flex;align-items:center;gap:8px;color:#8FB79C;font-size:10.5px;font-family:"IBM Plex Mono",monospace}
+.netcard .nv{color:#fff;font-size:21px;font-weight:700;margin-top:6px}
+.netcard .nv small{font-size:12px;color:#8FD6A4;font-weight:600;margin-left:5px}
+.netcard .ns{color:#7FA48B;font-size:10.5px;margin-top:3px}
+.side.mini{width:74px;flex:0 0 74px}
+.side.mini .bt,.side.mini .nav button span.lb2,.side.mini .navlbl,.side.mini .usercard .un,
+.side.mini .netcard,.side.mini .installbtn span,.side.mini .helpcard p,.side.mini .helpcard h4{display:none}
+.side.mini .nav button{justify-content:center;padding:11px 0}
+.side.mini .brand{justify-content:center;padding:18px 8px}
+.side.mini .collapse{position:absolute;top:12px;right:8px}
+.side.mini .helpcard{padding:10px;text-align:center}
+.side.mini .installbtn{justify-content:center}
+.helpcard{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.10)}
+.helpcard h4{color:#fff} .helpcard p{color:#8FB79C}
+.helpcard a{background:#2C7A46}
+.helpcard svg{stroke:#8FD6A4}
+
+/* ── cabecera global ── */
+.tophead{display:flex;align-items:center;gap:16px;padding:16px 0 20px;flex-wrap:wrap}
+.tophead .hi{flex:1;min-width:200px}
+.tophead .hi h2{margin:0;font-size:23px;font-weight:700;letter-spacing:-.02em}
+.tophead .hi p{margin:2px 0 0;font-size:12.5px;color:var(--mut)}
+.searchbox{position:relative;flex:0 1 340px}
+.searchbox input{width:100%;border:1px solid var(--line);border-radius:11px;padding:11px 13px 11px 38px;
+  font-size:13px;background:#fff;font-family:"Inter",sans-serif}
+.searchbox svg{position:absolute;left:12px;top:11px}
+.srlist{position:absolute;top:46px;left:0;right:0;background:#fff;border:1px solid var(--line);border-radius:12px;
+  box-shadow:0 12px 30px rgba(22,33,26,.14);z-index:60;overflow:hidden;max-height:290px;overflow-y:auto}
+.srlist button{width:100%;text-align:left;background:none;border:0;padding:10px 14px;font-size:13px;cursor:pointer;
+  font-family:"Inter",sans-serif;display:flex;gap:9px;align-items:center}
+.srlist button:hover{background:var(--g-xl)}
+.srlist small{color:var(--mut2);font-size:11px;margin-left:auto}
+.bellbtn{position:relative}
+.bellbtn .bdg{position:absolute;top:-5px;right:-5px;background:var(--red);color:#fff;border-radius:10px;
+  min-width:18px;height:18px;font-size:10.5px;font-weight:700;display:grid;place-items:center;padding:0 4px}
+
+/* ── dashboard ── */
+.dashgrid{display:grid;grid-template-columns:1fr 310px;gap:18px;align-items:start}
+.hero2{border-radius:18px;overflow:hidden;position:relative;background:linear-gradient(120deg,#0E2916,#1D4A2A 55%,#2C7A46);
+  color:#fff;padding:26px 28px;display:grid;grid-template-columns:1fr 210px;gap:22px;align-items:center;min-height:196px}
+.hero2 .orch{position:absolute;inset:0;opacity:.20;pointer-events:none}
+.hero2 .hz{position:relative;z-index:2}
+.hero2 .saludo{font-size:26px;font-weight:700;letter-spacing:-.02em;margin:0}
+.hero2 .sub2{color:#BEDCC6;font-size:13px;margin:3px 0 12px}
+.hero2 .big2{font-size:30px;font-weight:700;line-height:1.15;letter-spacing:-.02em;margin:0}
+.hero2 .big2 em{font-style:normal;color:#8FD6A4}
+.hero2 .cta2{display:inline-flex;align-items:center;gap:9px;background:#2C7A46;border:0;color:#fff;
+  border-radius:10px;padding:11px 18px;font-size:13.5px;font-weight:600;cursor:pointer;margin-top:16px;font-family:"Inter",sans-serif}
+.hero2 .cta2:hover{background:#37945A}
+.riskbox{position:relative;z-index:2;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.16);
+  border-radius:14px;padding:14px;text-align:center;backdrop-filter:blur(3px)}
+.riskbox .rt{font-size:12.5px;font-weight:600}
+.riskbox .rs{font-size:10.5px;color:#BEDCC6;font-family:"IBM Plex Mono",monospace;margin-bottom:6px}
+.riskbox .rc{position:relative;height:104px}
+.riskbox .rn{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+.riskbox .rn b{display:block;font-size:22px;font-weight:700;line-height:1}
+.riskbox .rn span{font-size:10.5px;color:#BEDCC6}
+.riskbox a{color:#8FD6A4;font-size:11.5px;text-decoration:none;display:inline-block;margin-top:6px}
+.kpi4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.kpi4 .kpi{flex-direction:column;align-items:flex-start;gap:9px}
+.kpi4 .kpi .kv{font-size:27px}
+.trendpills{display:flex;gap:5px;background:#F1F4F0;border-radius:9px;padding:3px}
+.trendpills button{border:0;background:none;padding:6px 12px;border-radius:7px;font-size:12px;cursor:pointer;
+  color:var(--mut);font-family:"Inter",sans-serif;font-weight:600}
+.trendpills button.on{background:var(--g);color:#fff}
+.alert{display:flex;gap:11px;padding:11px 0;border-bottom:1px solid #F1F4F0;align-items:flex-start}
+.alert:last-child{border-bottom:0}
+.alert .ai{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;flex:0 0 32px}
+.alert .at{flex:1;min-width:0;line-height:1.3}
+.alert .at b{display:block;font-size:12.5px;font-weight:600}
+.alert .at span{font-size:11px;color:var(--mut)}
+.alert .av{text-align:right;font-family:"IBM Plex Mono",monospace;font-size:12.5px;font-weight:600;white-space:nowrap}
+.alert .av small{display:block;color:var(--mut2);font-size:10px;font-weight:400}
+.rsum{display:flex;align-items:center;gap:11px;padding:9px 0;border-bottom:1px solid #F1F4F0;font-size:12.5px}
+.rsum:last-child{border-bottom:0}
+.rsum .rl{flex:1;color:var(--mut)}
+.rsum .rv{font-weight:700;font-family:"IBM Plex Mono",monospace}
+.updcard{background:linear-gradient(160deg,var(--g-xl),#fff)}
+.updcard .file{display:flex;gap:10px;align-items:center;background:#fff;border:1px solid var(--line);
+  border-radius:10px;padding:10px 12px;margin-bottom:12px}
+.updcard .file b{display:block;font-size:12.5px}
+.updcard .file span{font-size:10.5px;color:var(--mut)}
+#dmap{height:250px;border-radius:12px;border:1px solid var(--line);z-index:1}
+.dmark{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:11.5px;
+  font-weight:700;border:2.5px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.35)}
+@media (max-width:1180px){.dashgrid{grid-template-columns:1fr}.kpi4{grid-template-columns:1fr 1fr}}
+@media (max-width:900px){
+  .side{width:265px;flex:0 0 265px}
+  .hero2{grid-template-columns:1fr;padding:20px}
+  .kpi4{grid-template-columns:1fr 1fr;gap:10px}
+  .tophead{padding:12px 0 14px}
+  .tophead .hi h2{font-size:19px}
+  .searchbox{flex:1 1 100%;order:3}
+}
+
 /* ══ ERRORES / CARGA ══ */
 #errbar{position:fixed;left:14px;right:14px;bottom:14px;z-index:3000;background:#8C3020;color:#fff;
   border-radius:12px;padding:13px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;
@@ -543,8 +668,24 @@ body.modalopen{overflow:hidden}
 
 <div class="shell">
   <aside class="side" id="side">
-    <div class="brand"><img id="logoSide" alt="Exportadora Los Olmos"></div>
+    <div class="brand">
+      <span class="bmark"><img id="logoSide" alt=""></span>
+      <span class="bt"><b>Agroclima</b><span>Exportadora Los Olmos</span></span>
+      <button class="collapse" id="btnMini" title="Contraer menú">«</button>
+    </div>
     <nav class="nav" id="nav"></nav>
+    <div class="usercard" id="userCard">
+      <span class="av" id="uAv">MM</span>
+      <span class="un"><b id="uName">Departamento Técnico</b><span id="uRole">Exportadora Los Olmos</span></span>
+    </div>
+    <div class="netcard">
+      <div class="nt">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8FD6A4" stroke-width="2" stroke-linecap="round">
+          <path d="M5 12.5a10 10 0 0 1 14 0M8.5 16a5 5 0 0 1 7 0"/><circle cx="12" cy="19" r="1.2" fill="#8FD6A4"/></svg>
+        Red de estaciones</div>
+      <div class="nv" id="netN">—<small>conectadas</small></div>
+      <div class="ns" id="netS">—</div>
+    </div>
     <button class="installbtn" id="btnInstall">
       <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#2C7A46" stroke-width="1.8"
         stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M11 18h2"/></svg>
@@ -559,6 +700,26 @@ body.modalopen{overflow:hidden}
   </aside>
 
   <main class="main">
+
+  <div class="tophead hide" id="tophead">
+    <div class="hi"><h2 id="hiTxt">Hola</h2><p id="hiSub">Bienvenido a tu plataforma agroclimática</p></div>
+    <div class="searchbox">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#9AA79C" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="sq" placeholder="Buscar estación, zona…" autocomplete="off">
+      <div class="srlist hide" id="srl"></div>
+    </div>
+    <button class="iconbtn bellbtn" id="btnBell" title="Alertas">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#2C7A46" stroke-width="1.8" stroke-linecap="round">
+        <path d="M18 9a6 6 0 1 0-12 0c0 6-2 7-2 7h16s-2-1-2-7"/><path d="M10.5 20a2 2 0 0 0 3 0"/></svg>
+      <span class="bdg hide" id="bellN">0</span></button>
+    <button class="iconbtn" id="btnCfg2" title="Configuración">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#2C7A46" stroke-width="1.8"
+        stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/>
+        <path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8 2 2 0 1 1-2.8 2.8 1.6 1.6 0 0 0-2.8 1.1 2 2 0 1 1-4 0 1.6 1.6 0 0 0-2.8-1.1 2 2 0 1 1-2.8-2.8A1.6 1.6 0 0 0 3.4 14a2 2 0 1 1 0-4 1.6 1.6 0 0 0 1.1-2.8 2 2 0 1 1 2.8-2.8A1.6 1.6 0 0 0 10 3.4a2 2 0 1 1 4 0 1.6 1.6 0 0 0 2.8 1.1 2 2 0 1 1 2.8 2.8A1.6 1.6 0 0 0 20.6 10a2 2 0 1 1 0 4z"/></svg></button>
+    <button class="iconbtn" onclick="salir()" title="Salir">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#6B7A6E" stroke-width="1.8" stroke-linecap="round">
+        <path d="M15 17l5-5-5-5M20 12H9M11 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h5"/></svg></button>
+  </div>
 
   <!-- ═══ INICIO ═══ -->
   <section id="inicio">
@@ -678,22 +839,95 @@ body.modalopen{overflow:hidden}
 
   <!-- ═══ PANEL ═══ -->
   <section id="panel" class="hide">
-    <div class="phead">
-      <div><div class="eyebrow">Índice de reportes</div><h1 id="panelTitle">Panel</h1>
-        <p class="sub" id="panelLead">—</p></div>
-      <div class="ptools">
-        <div class="chipbox"><span><span class="l">App actualizada al</span><span class="v stampTxt">—</span></span></div>
-        <div class="chipbox"><span><span class="l">Datos al</span><span class="v lastTxt">—</span></span></div>
-        <button class="gh" onclick="salir()">↩ Salir</button>
+    <div class="dashgrid">
+      <div>
+        <div class="hero2 mb16">
+          <svg class="orch" viewBox="0 0 600 200" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M0 200V150c40-10 60 5 100-8s70 6 110-6 70 4 110-8 70 6 110-6 90 4 170-12v90z" fill="#0B2312"/>
+            <g stroke="#8FD6A4" stroke-width="2" opacity=".35">
+              <path d="M60 165v-22M60 143c0-9 7-15 15-15 0 9-7 15-15 15zM60 150c0-9-7-15-15-15 0 9 7 15 15 15z"/>
+              <path d="M180 172v-22M180 150c0-9 7-15 15-15 0 9-7 15-15 15zM180 157c0-9-7-15-15-15 0 9 7 15 15 15z"/>
+              <path d="M300 166v-22M300 144c0-9 7-15 15-15 0 9-7 15-15 15zM300 151c0-9-7-15-15-15 0 9 7 15 15 15z"/>
+              <path d="M430 174v-22M430 152c0-9 7-15 15-15 0 9-7 15-15 15zM430 159c0-9-7-15-15-15 0 9 7 15 15 15z"/>
+              <path d="M540 168v-22M540 146c0-9 7-15 15-15 0 9-7 15-15 15zM540 153c0-9-7-15-15-15 0 9 7 15 15 15z"/>
+            </g>
+          </svg>
+          <div class="hz">
+            <p class="saludo" id="dSaludo">Buenos días</p>
+            <p class="sub2" id="dSub">—</p>
+            <p class="big2" id="dBig">—</p>
+            <button class="cta2" onclick="go('helada')">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round"><path d="M12 2v20M4 6l16 12M20 6L4 18"/></svg>
+              Ver detalle de heladas →</button>
+          </div>
+          <div class="riskbox">
+            <div class="rt">Riesgo de helada</div>
+            <div class="rs" id="dRiskSub">—</div>
+            <div class="rc"><canvas id="chRisk"></canvas><div class="rn"><b id="dRiskN">—</b><span id="dRiskP">—</span></div></div>
+            <a href="#" onclick="go('mapa');return false;">Ver mapa →</a>
+          </div>
+        </div>
+
+        <div class="kpi4 mb16" id="dKpis"></div>
+
+        <div class="card mb16">
+          <div class="chead">
+            <div><h3>Tendencia de los últimos 14 días</h3><p id="dTrendSub">—</p></div>
+            <div class="trendpills" id="dPills">
+              <button class="on" data-m="gdd">GDD</button>
+              <button data-m="hf">HF</button>
+              <button data-m="pf">PF</button>
+            </div>
+          </div>
+          <div class="chartbox"><canvas id="chTrend"></canvas></div>
+        </div>
+
+        <div class="card">
+          <div class="chead">
+            <div><h3>Mapa de estaciones</h3><p id="dMapSub">Mínima registrada en la última helada de cada estación.</p></div>
+            <div class="ptools"><button class="gh" onclick="go('mapa')">⤢ Mapa completo</button></div>
+          </div>
+          <div id="dmap"></div>
+          <div class="qleg" style="margin-top:10px">
+            <span><i style="background:#2C7A46"></i>Sin heladas</span>
+            <span><i style="background:#BFDCEF"></i>Leve</span>
+            <span><i style="background:#4A90C4"></i>Moderada</span>
+            <span><i style="background:#1B4F8A"></i>Severa</span>
+            <span><i style="background:#D8DED8"></i>Sin datos</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card mb16">
+          <div class="chead"><div><h3>Alertas recientes <span id="dAlN" style="color:var(--red)"></span></h3></div></div>
+          <div id="dAlertas"></div>
+          <div style="margin-top:10px"><a href="#" onclick="go('helada');return false;"
+            style="font-size:12px;color:var(--g-d);text-decoration:none;font-weight:600">Ver todas las heladas →</a></div>
+        </div>
+
+        <div class="card mb16">
+          <div class="chead"><div><h3>Mi estación</h3></div></div>
+          <div id="dEst"></div>
+          <button class="gh" id="btnLoc" style="width:100%;justify-content:center;margin-top:10px">◎ Usar mi ubicación</button>
+          <div class="hint" id="locTxt" style="margin-top:9px">—</div>
+        </div>
+
+        <div class="card mb16 updcard expOnly">
+          <div class="chead"><div><h3>Actualización de datos</h3></div></div>
+          <div class="file">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2C7A46" stroke-width="1.7"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>
+            <span><b>Base_climatica.xlsx</b><span id="dUpd">—</span></span>
+          </div>
+          <button class="btn" style="width:100%" onclick="go('datos')">Actualizar datos</button>
+        </div>
+
+        <div class="card">
+          <div class="chead"><div><h3>Resumen del día</h3><p id="dResSub">—</p></div></div>
+          <div id="dResumen"></div>
+        </div>
       </div>
     </div>
-    <div class="locbar">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2C7A46" stroke-width="1.8"
-        stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.5 7-11a7 7 0 1 0-14 0c0 4.5 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
-      <div class="t" id="locTxt">Buscando tu ubicación…</div>
-      <button class="gh" id="btnLoc">◎ Usar mi ubicación</button>
-    </div>
-    <div class="mcards" id="mcards"></div>
   </section>
 
   <!-- ═══ GUÍA ═══ -->
@@ -1349,8 +1583,12 @@ function errorUI(msg,det){
     document.body.appendChild(b);
     document.getElementById('errDet').onclick=()=>document.getElementById('errPre').classList.toggle('hide');
   }
+  if(/^Script error/i.test(msg))
+    msg='Un componente externo (gráficos o mapas) no respondió. Suele resolverse recargando la página.';
   const pre=document.getElementById('errPre');
-  pre.textContent=(pre.textContent?pre.textContent+'\n':'')+msg+(det?'  ['+det+']':'');
+  const linea=msg+(det&&det!==':'?'  ['+det+']':'');
+  if(pre.textContent.indexOf(linea)<0)
+    pre.textContent=(pre.textContent?pre.textContent+'\n':'')+linea;
   console.error(msg,det||'');
 }
 window.addEventListener('error',e=>errorUI(e.message||'Error',(e.filename||'')+':'+(e.lineno||'')));
@@ -1399,11 +1637,11 @@ const NAV={
         ['frio','Horas Frío (7,2 °C) y PF','<path d="M12 2v20M4 6l16 12M20 6L4 18"/><circle cx="12" cy="12" r="2.5"/>',1],
         ['mapa','Mapa de Estaciones','<path d="M12 21s7-6.5 7-11a7 7 0 1 0-14 0c0 4.5 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/>',1],
         ['datos','Base de Datos','<ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v12c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/>',1]],
-  prod:[['panel','Panel Productores','<path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/>'],
+  prod:[['panel','Dashboard','<path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/>'],
         ['gdd','Grados-Día (GDD)','<path d="M3 20h18M6 20V12M11 20V6M16 20V15M21 20V9"/>'],
         ['frio','Horas Frío y PF','<path d="M12 2v20M4 6l16 12M20 6L4 18"/><circle cx="12" cy="12" r="2.5"/>'],
         ['helada','Eventos de Helada','<path d="M12 2v20M4 6l16 12M20 6L4 18"/>']],
-  exp:[['panel','Panel Exportadora','<path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/>'],
+  exp:[['panel','Dashboard','<path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/>'],
        ['gdd','Grados-Día (GDD)','<path d="M3 20h18M6 20V12M11 20V6M16 20V15M21 20V9"/>'],
        ['helada','Eventos de Helada','<path d="M12 2v20M4 6l16 12M20 6L4 18"/>'],
        ['frio','Horas Frío y PF','<path d="M12 2v20M4 6l16 12M20 6L4 18"/><circle cx="12" cy="12" r="2.5"/>'],
@@ -1413,18 +1651,24 @@ const NAV={
 let CURSEC='inicio';
 function buildNav(){
   const list=NAV[S.role||'none'];
-  document.getElementById('nav').innerHTML=list.map(([k,l,ic,dis])=>`
-    <button data-k="${k}" ${dis?'disabled':''} class="${CURSEC===k?'on':''}">
+  document.getElementById('nav').innerHTML='<div class="navlbl">Principal</div>'+
+    list.map(([k,l,ic,dis],idx)=>(idx===1?'<div class="navlbl">Reportes</div>':'')+`
+    <button data-k="${k}" ${dis?'disabled':''} class="${CURSEC===k?'on':''}" title="${l}">
       <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ic}</svg>
-      ${l}</button>`).join('');
+      <span class="lb2">${l}</span></button>`).join('');
   document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>{
     setNav(false);
     const k=b.dataset.k;
     go(k);
   });
 }
+function saludoTxt(){
+  const hh=new Date().getHours();
+  return hh<6?'Buenas noches':hh<12?'Buenos días':hh<20?'Buenas tardes':'Buenas noches';
+}
 function go(id){
   CURSEC=id;
+  document.getElementById('tophead').classList.toggle('hide',id==='inicio'||!S.role);
   SECS.forEach(s=>document.getElementById(s).classList.add('hide'));
   const el=document.getElementById(id);
   el.classList.remove('hide'); el.classList.add('fade');
@@ -1435,6 +1679,7 @@ function go(id){
   if(id==='helada') setTimeout(()=>safe(()=>{renderFrost();initFMap();},'Eventos de Helada'),30);
   if(id==='frio') setTimeout(()=>safe(renderCold,'Horas Frío y PF'),30);
   if(id==='mapa') setTimeout(()=>safe(initMap,'Mapa de Estaciones'),30);
+  if(id==='panel') setTimeout(()=>safe(renderDash,'el Dashboard'),30);
 }
 const veil=document.createElement('div'); veil.id='sideveil'; veil.className='hide';
 document.body.appendChild(veil);
@@ -1472,11 +1717,13 @@ function entrar(role){
   document.querySelectorAll('.expOnly').forEach(e=>e.classList.toggle('hide',role!=='exp'));
   document.getElementById('roleMob').textContent=role==='exp'?'Exportadora':'Productores';
   document.getElementById('gRole').textContent=role==='exp'?'Exportadora':'Productores';
-  document.getElementById('panelTitle').textContent=role==='exp'?'Panel Exportadora':'Panel Productores';
-  document.getElementById('panelLead').textContent=role==='exp'
-    ?'Vista completa de la red. Cada reporte parte con una guía breve de cómo leerlo.'
-    :'Aquí ves el clima de la estación más cercana a tu campo. Cada reporte parte con una guía breve de cómo leerlo.';
-  buildMenuCards(); go('panel'); pedirUbicacion();
+  document.getElementById('uName').textContent=role==='exp'?'Departamento Técnico':'Productor';
+  document.getElementById('uRole').textContent=role==='exp'?'Exportadora Los Olmos':'Acceso sin clave';
+  document.getElementById('uAv').textContent=role==='exp'?'DT':'PR';
+  document.getElementById('hiTxt').textContent=saludoTxt();
+  document.getElementById('hiSub').textContent=role==='exp'
+    ?'Vista completa de la red de estaciones' : 'El clima de la estación más cercana a tu campo';
+  go('panel'); pedirUbicacion();
 }
 const CARDS={
   gdd:{t:'Grados-Día (GDD)',ic:'<path d="M3 20h18M6 20V12M11 20V6M16 20V15M21 20V9"/>',
@@ -1494,6 +1741,7 @@ const CARDS={
     p:{exp:'Sube el Excel de la base climática y deja la plataforma con los últimos registros.'}}
 };
 function buildMenuCards(){
+  if(!document.getElementById('mcards'))return;
   const list=S.role==='exp'?['gdd','frio','helada','mapa','datos']:['gdd','frio','helada'];
   document.getElementById('mcards').innerHTML=list.map(k=>`
     <button class="mcard" onclick="go('${k}')">
@@ -1847,9 +2095,15 @@ const CHARTS={};
 const bgWhite={id:'bg',beforeDraw(c){const x=c.ctx;x.save();x.globalCompositeOperation='destination-over';
   x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.restore();}};
 function mount(id,cfg,title){
-  cfg.plugins=(cfg.plugins||[]).concat([bgWhite,barLabels,pieLabels,lineLabels]);
-  if(CHARTS[id]&&CHARTS[id].chart)CHARTS[id].chart.destroy();
-  CHARTS[id]={cfg,title,chart:new Chart(document.getElementById(id),cfg)};
+  const cv=document.getElementById(id);
+  if(!cv||!window.Chart)return;
+  try{
+    cfg.plugins=(cfg.plugins||[]).concat([bgWhite,barLabels,pieLabels,lineLabels]);
+    if(CHARTS[id]&&CHARTS[id].chart)CHARTS[id].chart.destroy();
+    CHARTS[id]={cfg,title,chart:new Chart(cv,cfg)};
+  }catch(e){
+    errorUI('No se pudo dibujar el gráfico "'+(title||id)+'": '+e.message);
+  }
 }
 let modalChart=null;
 function expandChart(id){
@@ -2351,6 +2605,9 @@ async function cargarClima(loc){
     document.getElementById('wWind').textContent=nf(c.wind_speed_10m,0)+' km/h ('+dirCard(c.wind_direction_10m)+')';
     document.getElementById('wRain').textContent=nf((d.daily&&d.daily.precipitation_sum?d.daily.precipitation_sum[0]:c.precipitation)||0,1)+' mm';
     document.getElementById('wRad').textContent=nf(c.shortwave_radiation,0)+' W/m²';
+    window.__CLIMA={t:c.temperature_2m,h:c.relative_humidity_2m,w:c.wind_speed_10m,
+      p:(d.daily&&d.daily.precipitation_sum?d.daily.precipitation_sum[0]:c.precipitation),r:c.shortwave_radiation};
+    if(CURSEC==='panel'&&document.getElementById('dResumen'))pintarResumen();
     const hh=new Date(c.time).toLocaleTimeString('es-CL',{hour:'2-digit',minute:'2-digit'});
     document.getElementById('wUpd').textContent='Actualizado a las '+hh;
     on.className='wonline'; on.innerHTML='<i></i>En línea';
@@ -2407,10 +2664,221 @@ async function buscarLoc(){
   });
 }
 
+
+/* ═══ DASHBOARD ═══ */
+S.dMet='gdd';
+document.getElementById('btnMini').onclick=()=>{
+  const s=document.getElementById('side'); s.classList.toggle('mini');
+  document.getElementById('btnMini').textContent=s.classList.contains('mini')?'»':'«';
+};
+document.getElementById('btnCfg2').onclick=()=>abrirCfg();
+document.getElementById('btnBell').onclick=()=>go('helada');
+document.getElementById('userCard').onclick=()=>document.getElementById('btnSoporte').click();
+document.getElementById('dPills').onclick=ev=>{
+  const b=ev.target.closest('button'); if(!b)return;
+  document.querySelectorAll('#dPills button').forEach(x=>x.classList.toggle('on',x===b));
+  S.dMet=b.dataset.m; safe(chartTrend,'la tendencia');
+};
+/* buscador */
+const sq=document.getElementById('sq'),srl=document.getElementById('srl');
+sq.oninput=()=>{
+  const q=sq.value.trim().toLowerCase();
+  if(q.length<2){srl.classList.add('hide');return;}
+  const r=ESTACIONES.filter(e=>e.toLowerCase().includes(q)).slice(0,8);
+  if(!r.length){srl.classList.add('hide');return;}
+  srl.innerHTML=r.map(e=>`<button data-e="${e}">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2C7A46" stroke-width="2"><path d="M12 21s7-6.5 7-11a7 7 0 1 0-14 0c0 4.5 7 11 7 11z"/></svg>
+    ${e}<small>${(COORDS[e]||[])[2]??'—'} m</small></button>`).join('');
+  srl.classList.remove('hide');
+  srl.querySelectorAll('button').forEach(b=>b.onclick=()=>{
+    const e=b.dataset.e;
+    S.sel=new Set([e]);
+    if(FROST[e])S.fSel=new Set([e]);
+    if(COLD[e])S.cEst=e;
+    sq.value=''; srl.classList.add('hide');
+    buildChips();buildFChips();buildCChips();go('gdd');
+  });
+};
+document.addEventListener('click',e=>{if(!e.target.closest('.searchbox'))srl.classList.add('hide');});
+
+function ultimasHeladas(dias){
+  const lim=new Date(parseD(DMAX).getTime()-(dias||14)*864e5).toISOString().slice(0,10);
+  const out=[];
+  for(const e in FROST){ if(!visible(e))continue;
+    FROST[e].forEach(r=>{ if(r[0]>=lim) out.push({est:e,fecha:r[0],horas:r[1],tmin:r[3],sev:sevOf(r[3])}); }); }
+  return out.sort((a,b)=>a.fecha<b.fecha?1:-1);
+}
+function renderDash(){
+  const foco=(S.near&&visible(S.near))?S.near:ESTACIONES[0];
+  document.getElementById('hiTxt').textContent=saludoTxt()+(S.role==='exp'?', Depto. Técnico':'');
+  document.getElementById('dSaludo').textContent=saludoTxt();
+  document.getElementById('netN').innerHTML=ESTACIONES.length+'<small>conectadas</small>';
+  document.getElementById('netS').textContent='Datos al '+fmtL(DMAX);
+  const dUpd=document.getElementById('dUpd'); if(dUpd)dUpd.textContent='Actualizado el '+fmtL(META.updated);
+
+  /* riesgo de helada: estaciones con evento en los últimos 14 días */
+  const rec=ultimasHeladas(14);
+  const conRiesgo=new Set(rec.map(x=>x.est)).size;
+  const tot=Math.max(ESTACIONES.length,1);
+  document.getElementById('dSub').textContent=`Datos hasta el ${fmtL(DMAX)} · red de ${tot} estaciones`;
+  document.getElementById('dBig').innerHTML=conRiesgo
+    ? `En los últimos 14 días<br><em>${conRiesgo} estaciones</em> registraron heladas.`
+    : `Sin heladas registradas<br>en los <em>últimos 14 días</em>.`;
+  document.getElementById('dRiskSub').textContent='Últimos 14 días';
+  document.getElementById('dRiskN').textContent=conRiesgo;
+  document.getElementById('dRiskP').textContent=nf(conRiesgo/tot*100,0)+' %';
+  mount('chRisk',{type:'doughnut',
+    data:{labels:['Con heladas','Sin heladas'],datasets:[{data:[conRiesgo,Math.max(tot-conRiesgo,0)],
+      backgroundColor:['#8FD6A4','rgba(255,255,255,.18)'],borderWidth:0}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'74%',
+      plugins:{legend:{display:false},tooltip:{enabled:false}}}},'Riesgo de helada');
+
+  /* KPIs */
+  const bi=BASES[S.base].i;
+  const gdd=foco?sumOf(foco,bi,S.from,S.to):0;
+  const hf=foco?cAcc(foco,CYCUR,'hf'):null, pf=foco?cAcc(foco,CYCUR,'pf'):null;
+  const peor=rec.length?[...rec].sort((a,b)=>a.tmin-b.tmin)[0]:null;
+  const K=(ic,col,bg,v,l,s)=>`<div class="kpi"><div class="ki" style="background:${bg}">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="${col}" stroke-width="1.8" stroke-linecap="round">${ic}</svg></div>
+    <div><div class="kv">${v}</div><div class="kl" style="margin-top:2px">${l}</div>
+      <div class="ks">${s}</div></div></div>`;
+  document.getElementById('dKpis').innerHTML=
+    K('<path d="M5 12.5a10 10 0 0 1 14 0M8.5 16a5 5 0 0 1 7 0"/><circle cx="12" cy="19" r="1"/>','#2C7A46','#E8F2EA',
+      ESTACIONES.length,'Estaciones','En análisis')+
+    K('<path d="M14 14.8V4a2 2 0 1 0-4 0v10.8a4 4 0 1 0 4 0z"/>','#2E6B8F','#E4EFF6',
+      peor?nf(peor.tmin,1)+' °C':'—','Mínima registrada',peor?`${peor.est} · ${fmtL(peor.fecha)}`:'Sin heladas recientes')+
+    K('<path d="M12 21c4-2 7-5.5 7-10a7 7 0 0 0-14 0c0 4.5 3 8 7 10z"/><path d="M12 21V8"/>','#2C7A46','#E8F2EA',
+      nf(gdd,0),'GDD acumulados',`${foco||'—'} · base ${BASES[S.base].lbl}`)+
+    K('<path d="M12 2v20M4 6l16 12M20 6L4 18"/>','#2E6B8F','#E4EFF6',
+      pf?nf(pf.v,1):'—','Porciones de frío',hf?`${nf(hf.v,0)} horas frío`:'Sin registro');
+
+  /* alertas */
+  const al=rec.slice(0,4);
+  document.getElementById('dAlN').textContent=rec.length?rec.length:'';
+  const bn=document.getElementById('bellN');
+  bn.textContent=rec.length; bn.classList.toggle('hide',!rec.length);
+  document.getElementById('dAlertas').innerHTML=al.length?al.map(x=>`
+    <div class="alert"><span class="ai" style="background:${x.sev===0?'#E9F1F7':x.sev===1?'#DCEAF4':'#D5E2EE'}">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="${SEV[x.sev].c}" stroke-width="2" stroke-linecap="round"><path d="M12 2v20M4 6l16 12M20 6L4 18"/></svg></span>
+      <span class="at"><b>Helada ${SEV[x.sev].l.toLowerCase()}</b><span>${x.est}</span></span>
+      <span class="av">${nf(x.tmin,1)} °C<small>${fmtD(parseD(x.fecha))} · ${x.horas} h</small></span></div>`).join('')
+    : '<div class="empty" style="padding:22px 0">Sin heladas en los últimos 14 días.</div>';
+
+  /* mi estación */
+  const co=COORDS[foco]||[];
+  const ho=HORAS.est&&HORAS.est[foco]?horasDe(foco):null;
+  document.getElementById('dEst').innerHTML=foco?`
+    <div style="font-size:16px;font-weight:700;margin-bottom:2px">${foco}</div>
+    <div class="hint" style="margin-bottom:12px">${co[2]??'—'} m · ${co[0]!=null?co[0].toFixed(3)+', '+co[1].toFixed(3):'sin coordenadas'}</div>
+    <div class="rsum"><span class="rl">GDD base ${BASES[S.base].lbl}</span><span class="rv">${nf(gdd,0)} °D</span></div>
+    <div class="rsum"><span class="rl">Horas frío ${CYCUR}</span><span class="rv">${hf?nf(hf.v,0):'—'}</span></div>
+    <div class="rsum"><span class="rl">Porciones de frío</span><span class="rv">${pf?nf(pf.v,1):'—'}</span></div>
+    <div class="rsum"><span class="rl">Datos horarios</span><span class="rv">${ho?nf(ho.pct,1)+' %':'—'}</span></div>`
+    :'<div class="empty">Sin estación asignada.</div>';
+
+  chartTrend(); dashMap(rec);
+  /* resumen del día viene del clima en línea */
+  if(WLOC)pintarResumen();
+}
+function pintarResumen(w){
+  const R=window.__CLIMA||{};
+  document.getElementById('dResSub').textContent=WLOC?WLOC.nombre:'—';
+  const fila=(ic,l,v)=>`<div class="rsum"><span style="font-size:15px">${ic}</span><span class="rl">${l}</span><span class="rv">${v}</span></div>`;
+  document.getElementById('dResumen').innerHTML=
+    fila('🌡️','Temperatura actual',R.t!=null?nf(R.t,1)+' °C':'—')+
+    fila('💧','Humedad',R.h!=null?nf(R.h,0)+' %':'—')+
+    fila('🌬️','Viento',R.w!=null?nf(R.w,0)+' km/h':'—')+
+    fila('🌧️','Lluvia hoy',R.p!=null?nf(R.p,1)+' mm':'—')+
+    fila('☀️','Radiación',R.r!=null?nf(R.r,0)+' W/m²':'—');
+}
+function chartTrend(){
+  const foco=(S.near&&visible(S.near))?S.near:ESTACIONES[0];
+  if(!foco)return;
+  const met=S.dMet;
+  let labels=[],act=[],ant=[],titulo='',unidad='';
+  if(met==='gdd'){
+    const bi=BASES[S.base].i;
+    const rs=(DATA[foco]||[]).filter(r=>r[bi]!=null).slice(-14);
+    let acc=0; labels=rs.map(r=>fmtD(parseD(r[0])));
+    act=rs.map(r=>+(acc+=r[bi]).toFixed(1));
+    const yPrev=SEASON-1;
+    let a2=0;
+    ant=rs.map(r=>{
+      const k=(yPrev+ +r[0].slice(0,4)-SEASON)+r[0].slice(4);
+      const v=(DATA[foco]||[]).find(x=>x[0]===k);
+      if(v&&v[bi]!=null)a2+=v[bi];
+      return +a2.toFixed(1);
+    });
+    titulo='Grados-día acumulados'; unidad=' °D';
+  }else{
+    const o=(COLD[foco]||{})[CYCUR],o2=(COLD[foco]||{})[CYCUR-1];
+    if(!o){labels=[];act=[];ant=[];}
+    else{
+      const arr=o[met]||[],ar2=(o2||{})[met]||[];
+      let fin=91; for(let i=91;i>=0;i--){ if(arr[i]!=null){fin=i;break;} }
+      const ini=Math.max(fin-13,0);
+      let a=0,b=0;
+      for(let i=0;i<ini;i++){a+=arr[i]||0;b+=ar2[i]||0;}
+      for(let i=ini;i<=fin;i++){
+        const d=new Date(2026,4,1+i);
+        labels.push(fmtD(d)); a+=arr[i]||0; b+=ar2[i]||0;
+        act.push(+a.toFixed(1)); ant.push(ar2.length?+b.toFixed(1):null);
+      }
+    }
+    titulo=met==='hf'?'Horas frío base 7,2 °C acumuladas':'Porciones de frío acumuladas';
+    unidad=met==='hf'?' HF':' PF';
+  }
+  document.getElementById('dTrendSub').textContent=`${titulo} · ${foco} · temporada actual vs. anterior`;
+  mount('chTrend',{type:'line',
+    data:{labels,datasets:[
+      {label:'Temporada actual',data:act,borderColor:'#2C7A46',backgroundColor:'rgba(44,122,70,.10)',
+        borderWidth:2.8,pointRadius:0,pointHoverRadius:4,tension:.3,fill:'origin',dlUnit:unidad,dlDec:met==='gdd'?0:1},
+      {label:'Temporada anterior',data:ant,borderColor:'#9AA79C',borderDash:[6,5],borderWidth:2,
+        pointRadius:0,tension:.3,fill:false,dl:false}]},
+    options:{responsive:true,maintainAspectRatio:false,animation:{duration:600},
+      layout:{padding:{right:isMob()?40:70,top:8}},
+      interaction:{mode:'index',intersect:false},
+      plugins:{legend:{position:'top',align:'start',
+          labels:{color:'#6B7A6E',boxWidth:18,boxHeight:2,font:{family:'Inter',size:11},padding:12}},
+        tooltip:{...TT,callbacks:{label:c=>` ${c.dataset.label}: ${nf(c.parsed.y,met==='gdd'?0:1)}${unidad}`}}},
+      scales:{x:{grid:{display:false},border:{color:'#E5EAE4'},
+          ticks:{color:'#9AA79C',maxTicksLimit:isMob()?5:8,font:{family:'IBM Plex Mono',size:10}}},
+        y:{...AX,grace:'10%'}}}},titulo+' · '+foco);
+}
+let dmap=null,dmk=[];
+function dashMap(rec){
+  if(!window.L)return;
+  if(!dmap){
+    dmap=L.map('dmap',{scrollWheelZoom:false,zoomControl:true}).setView([-34.5,-71.1],8);
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+      {maxZoom:18,attribution:'Esri'}).addTo(dmap);
+  }
+  dmk.forEach(m=>dmap.removeLayer(m)); dmk=[];
+  const ult={};
+  rec.forEach(x=>{ if(!ult[x.est]||x.fecha>ult[x.est].fecha)ult[x.est]=x; });
+  const pts=[];
+  ESTACIONES.filter(e=>COORDS[e]).forEach(e=>{
+    const c=COORDS[e],u=ult[e];
+    const col=u?SEV[u.sev].c:(FROST[e]?'#2C7A46':'#D8DED8');
+    const txt=u?nf(u.tmin,1):(FROST[e]?'ok':'—');
+    const m=L.marker([c[0],c[1]],{icon:L.divIcon({className:'',
+      html:`<div class="dmark" style="background:${col};color:${u&&u.sev===0?'#16345B':'#fff'}">${txt}</div>`,
+      iconSize:[30,30],iconAnchor:[15,15]})});
+    m.bindPopup(`<div class="pop"><h4>${e}</h4><div class="sub">${c[2]} m</div>`+
+      (u?`<table><tr><td>Última helada</td><td style="text-align:right">${fmtL(u.fecha)}</td></tr>
+        <tr><td>Mínima</td><td style="text-align:right"><b>${nf(u.tmin,1)} °C</b></td></tr>
+        <tr><td>Horas bajo cero</td><td style="text-align:right">${u.horas}</td></tr></table>`
+        :'<div style="font-size:12px;color:#6B7A6E">Sin heladas en los últimos 14 días</div>')+'</div>');
+    m.addTo(dmap); dmk.push(m); pts.push([c[0],c[1]]);
+  });
+  if(pts.length&&!dmap._fit){dmap._fit=true;dmap.fitBounds(pts,{padding:[28,28],maxZoom:9});}
+  setTimeout(()=>dmap.invalidateSize(),120);
+}
+
 /* ═══ AUTOCHEQUEO · abrir la app con ?check ═══ */
 function autotest(){
   const pruebas=[
-    ['Índice y navegación',()=>{buildMenuCards();buildNav();}],
+    ['Dashboard y navegación',()=>{renderDash();buildNav();}],
     ['Grados-Día',()=>{CURSEC='gdd';renderGdd();}],
     ['Tabla mensual de GDD',()=>tablaMes()],
     ['Horas frío y porciones',()=>{CURSEC='frio';buildCChips();renderCold();}],
@@ -2793,7 +3261,8 @@ document.getElementById('btnColdCsv').onclick=()=>{
 
 let cmini=null;
 function miniMapa(est,co){
-  if(co[0]==null)return;
+  if(co[0]==null||!window.L)return;
+  try{
   const el=document.getElementById('cMini'); if(!el)return;
   if(cmini){cmini.remove();cmini=null;}
   cmini=L.map(el,{zoomControl:false,attributionControl:false,dragging:false,scrollWheelZoom:false,
@@ -2802,6 +3271,7 @@ function miniMapa(est,co){
   L.circleMarker([co[0],co[1]],{radius:8,fillColor:'#fff',color:'#2C7A46',weight:3,fillOpacity:1}).addTo(cmini)
     .bindTooltip(est,{permanent:true,direction:'top',className:'minitip'});
   setTimeout(()=>cmini.invalidateSize(),120);
+  }catch(e){ const el=document.getElementById('cMini'); if(el)el.style.display='none'; }
 }
 function csvCold(met){
   const est=S.cEst; if(!est)return;
@@ -2850,6 +3320,7 @@ function setupHSlider(){
 /* ═══ MAPAS ═══ */
 let fmap=null,fmarkers=[];
 function initFMap(){
+  if(!window.L)return;
   if(!fmap){
     fmap=L.map('fmap',{scrollWheelZoom:false,zoomControl:true}).setView([-34.5,-71.1],8);
     L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
@@ -2892,6 +3363,7 @@ function estIcon(color,size){
     <path d="M14 23h12M14 26h12" stroke="${color}" stroke-width="1.3"/></svg>`;
 }
 function initMap(){
+  if(!window.L)return;
   if(!map){
     map=L.map('map',{scrollWheelZoom:true}).setView([-34.5,-71.1],8);
     TILES={sat:L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
@@ -3347,6 +3819,7 @@ function boot(keep){
   if(CURSEC==='frio')renderCold();
   if(CURSEC==='gdd')renderGdd();
   if(CURSEC==='helada')renderFrost();
+  if(CURSEC==='panel')safe(renderDash,'el Dashboard');
   if(map){map._fit=false;drawMap();}
 }
 /* ═══ ARRANQUE ═══ */
