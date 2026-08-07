@@ -23,6 +23,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" crossorigin="anonymous"></script>
 <style>
 :root{
+  --icoluz:url(data:image/png;base64,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);
   --g:#2C7A46; --g-d:#1E5B33; --g-m:#4F9E68; --g-l:#E8F2EA; --g-xl:#F3F8F4;
   --brand:#65935D;
   --ink:#16211A; --mut:#6B7A6E; --mut2:#9AA79C;
@@ -438,6 +439,35 @@ tbody tr:hover td{background:var(--g-xl)}
   .searchbox{flex:1 1 100%;order:3}
 }
 
+/* ══ BARRA CONTRAÍDA ══ */
+.mini2{display:none}
+.side.mini{width:66px;flex:0 0 66px}
+.side.mini .brand{padding:16px 6px 12px;justify-content:center;gap:0}
+.side.mini .blogo{height:0;width:0;opacity:0}
+.side.mini .brand::before{content:"";width:32px;height:32px;border-radius:9px;background:rgba(255,255,255,.12);
+  background-image:var(--icoluz);background-size:20px 20px;background-position:center;background-repeat:no-repeat}
+.side.mini .collapse{position:static;margin:8px auto 0}
+.side.mini .nav{padding:8px 6px}
+.side.mini .nav button{padding:11px 0;border-radius:10px}
+.side.mini .usercard{margin:6px;padding:8px 0;justify-content:center}
+.side.mini .installbtn{width:calc(100% - 12px);margin:0 6px 8px;padding:10px 0;justify-content:center}
+.side.mini .helpcard{margin:6px;padding:9px 0;text-align:center}
+.side.mini .helpcard a{padding:7px 0;font-size:15px}
+.side.mini .helpcard a .mini2{display:inline}
+.side.mini .netcard,.side.mini .navlbl{display:none}
+/* ══ CARGA MANUAL ══ */
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.tabs button{border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px 16px;font-size:13px;
+  cursor:pointer;font-family:"Inter",sans-serif;color:var(--mut);display:inline-flex;gap:8px;align-items:center}
+.tabs button.on{background:var(--g);border-color:var(--g);color:#fff;font-weight:600}
+.formgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px}
+.formgrid label{display:flex;flex-direction:column;gap:6px}
+.formgrid .fl{font-family:"IBM Plex Mono",monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut)}
+.formgrid input,.formgrid select{border:1px solid var(--line);border-radius:9px;padding:10px 11px;font-size:13.5px;
+  font-family:"Inter",sans-serif;background:#fff;width:100%;max-width:none}
+.formgrid .full{grid-column:1/-1}
+.hintbox{background:var(--g-xl);border-left:3px solid var(--g);border-radius:9px;padding:12px 14px;
+  font-size:12.5px;color:var(--g-d);line-height:1.55;margin-bottom:16px}
 /* ══ AJUSTES DE FORMATO ══ */
 .side .brand{flex-wrap:wrap;gap:8px;padding:18px 16px 14px}
 .side .brand .blogo{height:30px;width:auto;display:block}
@@ -728,13 +758,13 @@ body.modalopen{overflow:hidden}
     <button class="installbtn" id="btnInstall">
       <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#2C7A46" stroke-width="1.8"
         stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M11 18h2"/></svg>
-      Instalar app en el celular</button>
+      <span class="lb2">Instalar app en el celular</span></button>
     <div class="helpcard">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2C7A46" stroke-width="1.7"
         stroke-linecap="round"><path d="M4 14v-3a8 8 0 0 1 16 0v3"/><rect x="2" y="13" width="4" height="7" rx="1.6"/><rect x="18" y="13" width="4" height="7" rx="1.6"/><path d="M20 20v1a3 3 0 0 1-3 3h-3"/></svg>
       <h4>¿Necesitas ayuda?</h4>
       <p>Departamento Técnico · Exportadora Los Olmos</p>
-      <a href="#" id="btnSoporte">Contactar soporte →</a>
+      <a href="#" id="btnSoporte"><span class="lb2">Contactar soporte →</span><span class="mini2">☎</span></a>
     </div>
   </aside>
 
@@ -1365,6 +1395,106 @@ body.modalopen{overflow:hidden}
     </div>
   </section>
 
+  <!-- ═══ CARGA MANUAL ═══ -->
+  <section id="carga" class="hide">
+    <div class="phead">
+      <div class="ptitle2">
+        <div class="picon"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#2C7A46" stroke-width="1.9"
+          stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg></div>
+        <div><h1>Completar base de datos</h1><p class="sub">Ingreso manual de registros diarios, heladas y estaciones nuevas</p></div>
+      </div>
+      <div class="ptools">
+        <div class="chipbox"><span><span class="l">Registros manuales</span><span class="v" id="mgN">0</span></span></div>
+      </div>
+    </div>
+
+    <div class="card mb16" id="mgLock">
+      <div style="max-width:380px">
+        <span class="eyebrow">Sección restringida</span>
+        <p style="font-size:13px;color:var(--mut);line-height:1.6;margin:8px 0 12px">
+          Aquí se modifican los datos que ve toda la exportadora. Ingresa la clave para continuar.</p>
+        <input type="password" id="mgPass" placeholder="Clave de carga" autocomplete="off"
+          style="width:100%;border:1px solid var(--line);border-radius:9px;padding:11px 12px;font-size:15px;font-family:'IBM Plex Mono',monospace;background:var(--bg)">
+        <div id="mgErr" style="display:none;color:var(--red);font-size:12px;margin-top:8px">Clave incorrecta.</div>
+        <button class="btn" id="mgEnter" style="width:100%;margin-top:12px">Entrar</button>
+      </div>
+    </div>
+
+    <div id="mgPane" class="hide">
+      <div class="tabs">
+        <button class="on" data-t="dia">Registro diario</button>
+        <button data-t="hel">Evento de helada</button>
+        <button data-t="est">Nueva estación</button>
+      </div>
+
+      <div class="card mb16" id="tabDia">
+        <div class="hintbox">Copia los valores tal como vienen en el informe de Cogrowers. Con la temperatura mínima y
+          máxima se calculan los grados-día en base 4,5 y 10 °C; si el informe trae el valor de grados-día, puedes
+          escribirlo y ese manda. Las horas frío y porciones alimentan el reporte de HF y PF, y si hay horas bajo 0 °C
+          se crea además el evento de helada.</div>
+        <div class="formgrid">
+          <label><span class="fl">Estación</span><select id="dEstSel"></select></label>
+          <label><span class="fl">Fecha</span><input type="date" id="dFecha"></label>
+          <label><span class="fl">T° mínima (°C)</span><input type="number" step="0.01" id="dTmin" placeholder="14,45"></label>
+          <label><span class="fl">T° máxima (°C)</span><input type="number" step="0.01" id="dTmax" placeholder="17,33"></label>
+          <label><span class="fl">Horas bajo 0 °C</span><input type="number" step="0.1" id="dH0" placeholder="0"></label>
+          <label><span class="fl">T° promedio bajo 0 °C</span><input type="number" step="0.01" id="dTp" placeholder="opcional"></label>
+          <label><span class="fl">Horas frío</span><input type="number" step="0.1" id="dHF" placeholder="0"></label>
+          <label><span class="fl">Porciones de frío</span><input type="number" step="0.01" id="dPF" placeholder="0,00"></label>
+          <label><span class="fl">Grados día (opcional)</span><input type="number" step="0.01" id="dGD" placeholder="10,03"></label>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
+          <button class="btn" id="mgAddDia">Agregar registro</button>
+          <span class="hint" id="mgMsg" style="align-self:center"></span>
+        </div>
+      </div>
+
+      <div class="card mb16 hide" id="tabHel">
+        <div class="hintbox">Para cargar solo una helada, sin el resto de las variables del día.</div>
+        <div class="formgrid">
+          <label><span class="fl">Estación</span><select id="hEstSel"></select></label>
+          <label><span class="fl">Fecha</span><input type="date" id="hFecha"></label>
+          <label><span class="fl">Horas bajo 0 °C</span><input type="number" step="0.1" id="hH0" placeholder="2,5"></label>
+          <label><span class="fl">T° promedio del evento</span><input type="number" step="0.01" id="hTp" placeholder="-0,20"></label>
+          <label><span class="fl">T° mínima (°C)</span><input type="number" step="0.01" id="hTmin" placeholder="-0,60"></label>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
+          <button class="btn" id="mgAddHel">Agregar helada</button>
+          <span class="hint" id="mgMsg2" style="align-self:center"></span>
+        </div>
+      </div>
+
+      <div class="card mb16 hide" id="tabEst">
+        <div class="hintbox">Las estaciones nuevas aparecen de inmediato en todos los reportes y en el mapa.
+          Si no conoces la altitud, déjala en cero.</div>
+        <div class="formgrid">
+          <label><span class="fl">Nombre de la estación</span><input id="eNom" placeholder="Santina Las Parcelas"></label>
+          <label><span class="fl">Latitud</span><input type="number" step="0.000001" id="eLat" placeholder="-34.512345"></label>
+          <label><span class="fl">Longitud</span><input type="number" step="0.000001" id="eLon" placeholder="-71.123456"></label>
+          <label><span class="fl">Altitud (m)</span><input type="number" id="eAlt" placeholder="380"></label>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
+          <button class="btn" id="mgAddEst">Agregar estación</button>
+          <span class="hint" id="mgMsg3" style="align-self:center"></span>
+        </div>
+      </div>
+
+      <div class="card mb16">
+        <div class="chead">
+          <div><h3>Registros ingresados a mano</h3><p>Se guardan en este dispositivo. Para que los vea todo el equipo,
+            descarga el datos.json y súbelo a GitHub.</p></div>
+          <div class="ptools">
+            <button class="gh" id="mgSave">↓ Descargar datos.json</button>
+            <button class="gh" id="mgClear">Vaciar registros</button>
+          </div>
+        </div>
+        <div class="tscroll"><table>
+          <thead><tr><th>Estación</th><th>Fecha</th><th>Tmín</th><th>Tmáx</th><th>H&lt;0</th><th>HF</th><th>PF</th><th>GDD 10</th><th></th></tr></thead>
+          <tbody id="mgBody"></tbody></table></div>
+      </div>
+    </div>
+  </section>
+
   <!-- ═══ MAPA ═══ -->
   <section id="mapa" class="hide">
     <div class="phead">
@@ -1663,7 +1793,7 @@ const isMob=()=>window.innerWidth<900;
 const days=(a,b)=>Math.round((parseD(b)-parseD(a))/864e5)+1;
 
 /* ═══ navegación ═══ */
-const SECS=['inicio','panel','guide','gdd','helada','frio','mapa','datos'];
+const SECS=['inicio','panel','guide','gdd','helada','frio','mapa','carga','datos'];
 const NAV={
   none:[['inicio','Inicio','<path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/>'],
         ['gdd','Grados-Día (GDD)','<path d="M3 20h18M6 20V12M11 20V6M16 20V15M21 20V9"/>',1],
@@ -1680,6 +1810,7 @@ const NAV={
        ['helada','Eventos de Helada','<path d="M12 2v20M4 6l16 12M20 6L4 18"/>'],
        ['frio','Horas Frío y PF','<path d="M12 2v20M4 6l16 12M20 6L4 18"/><circle cx="12" cy="12" r="2.5"/>'],
        ['mapa','Mapa de Estaciones','<path d="M12 21s7-6.5 7-11a7 7 0 1 0-14 0c0 4.5 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/>'],
+       ['carga','Completar base de datos','<path d="M12 5v14M5 12h14"/><circle cx="12" cy="12" r="9"/>'],
        ['datos','Actualización de datos','<path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/>']]
 };
 let CURSEC='inicio';
@@ -1714,6 +1845,7 @@ function go(id){
   if(id==='frio') setTimeout(()=>safe(renderCold,'Horas Frío y PF'),30);
   if(id==='mapa') setTimeout(()=>safe(initMap,'Mapa de Estaciones'),30);
   if(id==='panel') setTimeout(()=>safe(renderDash,'el Dashboard'),30);
+  if(id==='carga') setTimeout(()=>safe(renderCarga,'la carga manual'),30);
 }
 const veil=document.createElement('div'); veil.id='sideveil'; veil.className='hide';
 document.body.appendChild(veil);
@@ -2867,6 +2999,147 @@ function dashMap(rec){
   setTimeout(()=>dmap.invalidateSize(),120);
 }
 
+
+/* ═══ CARGA MANUAL DE REGISTROS ═══ */
+let BASEPKG=null, MANUAL={est:{},reg:[]}, mgAuth=false;
+const MG_PASS='Olmosmmeza';
+function cargarManual(){try{const g=localStorage.getItem('olmos_manual');if(g)MANUAL=JSON.parse(g);}catch(e){}
+  MANUAL.est=MANUAL.est||{}; MANUAL.reg=MANUAL.reg||[];}
+function guardarManual(){try{localStorage.setItem('olmos_manual',JSON.stringify(MANUAL));}catch(e){}}
+function aplicarManual(){
+  if(!BASEPKG)return;
+  const j=JSON.parse(JSON.stringify(BASEPKG));
+  for(const e in MANUAL.est) j.coords[e]=MANUAL.est[e];
+  MANUAL.reg.forEach(r=>{
+    if(r.g10!=null||r.g45!=null){
+      const arr=j.gdd[r.est]=j.gdd[r.est]||[];
+      const k=arr.findIndex(x=>x[0]===r.fecha);
+      const fila=[r.fecha,r.g45,r.g10];
+      if(k>=0)arr[k]=fila; else arr.push(fila);
+      arr.sort((a,b)=>a[0]<b[0]?-1:1);
+    }
+    const y=+r.fecha.slice(0,4),m=+r.fecha.slice(5,7);
+    if(m>=5&&m<=7&&(r.hf!=null||r.pf!=null)){
+      const idx=Math.round((Date.UTC(y,m-1,+r.fecha.slice(8,10))-Date.UTC(y,4,1))/864e5);
+      if(idx>=0&&idx<92){
+        j.cold[r.est]=j.cold[r.est]||{};
+        j.cold[r.est][y]=j.cold[r.est][y]||{hf:Array(92).fill(null),pf:Array(92).fill(null)};
+        if(r.hf!=null)j.cold[r.est][y].hf[idx]=r.hf;
+        if(r.pf!=null)j.cold[r.est][y].pf[idx]=r.pf;
+      }
+    }
+    if(r.h0>0){
+      const f=j.frost[r.est]=j.frost[r.est]||[];
+      const k2=f.findIndex(x=>x[0]===r.fecha);
+      const fe=[r.fecha,Math.round(r.h0),r.tprom!=null?r.tprom:r.tmin,r.tmin];
+      if(k2>=0)f[k2]=fe; else f.push(fe);
+      f.sort((a,b)=>a[0]<b[0]?-1:1);
+    }
+  });
+  aplicarPaquete(j);
+}
+function refrescarTodo(){
+  aplicarManual();
+  safe(()=>boot(true),'la actualización de datos');
+  renderCarga();
+}
+document.getElementById('mgEnter').onclick=()=>{
+  if(document.getElementById('mgPass').value.trim()===MG_PASS){
+    mgAuth=true; document.getElementById('mgPass').value='';
+    document.getElementById('mgErr').style.display='none'; renderCarga();
+  }else document.getElementById('mgErr').style.display='block';
+};
+document.getElementById('mgPass').onkeydown=e=>{if(e.key==='Enter')document.getElementById('mgEnter').click();};
+document.querySelector('#carga .tabs').onclick=ev=>{
+  const b=ev.target.closest('button'); if(!b)return;
+  document.querySelectorAll('#carga .tabs button').forEach(x=>x.classList.toggle('on',x===b));
+  document.getElementById('tabDia').classList.toggle('hide',b.dataset.t!=='dia');
+  document.getElementById('tabHel').classList.toggle('hide',b.dataset.t!=='hel');
+  document.getElementById('tabEst').classList.toggle('hide',b.dataset.t!=='est');
+};
+function opcionesEst(){
+  const todas=[...new Set([...Object.keys(DATA),...Object.keys(COORDS),...Object.keys(MANUAL.est)])]
+    .sort((a,b)=>a.localeCompare(b,'es'));
+  return todas.map(e=>`<option value="${e}">${e}</option>`).join('');
+}
+function renderCarga(){
+  document.getElementById('mgLock').classList.toggle('hide',mgAuth);
+  document.getElementById('mgPane').classList.toggle('hide',!mgAuth);
+  document.getElementById('mgN').textContent=MANUAL.reg.length;
+  if(!mgAuth)return;
+  const op=opcionesEst();
+  ['dEstSel','hEstSel'].forEach(id=>{
+    const s=document.getElementById(id); const v=s.value; s.innerHTML=op; if(v)s.value=v;
+  });
+  document.getElementById('mgBody').innerHTML=MANUAL.reg.length
+    ? [...MANUAL.reg].sort((a,b)=>a.fecha<b.fecha?1:-1).map((r,i)=>`
+      <tr><td>${r.est}</td><td>${r.fecha}</td>
+        <td>${r.tmin??'—'}</td><td>${r.tmax??'—'}</td><td>${r.h0??'—'}</td>
+        <td>${r.hf??'—'}</td><td>${r.pf??'—'}</td><td>${r.g10!=null?nf(r.g10,2):'—'}</td>
+        <td><button class="gh" data-i="${MANUAL.reg.indexOf(r)}" style="padding:5px 9px">✕</button></td></tr>`).join('')
+    : '<tr><td colspan="9" class="empty">Todavía no hay registros cargados a mano.</td></tr>';
+  document.querySelectorAll('#mgBody button[data-i]').forEach(b=>b.onclick=()=>{
+    MANUAL.reg.splice(+b.dataset.i,1); guardarManual(); refrescarTodo();
+  });
+}
+const numIn=id=>{const v=document.getElementById(id).value.trim().replace(',','.');
+  return v===''?null:(isNaN(parseFloat(v))?null:parseFloat(v));};
+document.getElementById('mgAddDia').onclick=()=>{
+  const est=document.getElementById('dEstSel').value;
+  const fecha=document.getElementById('dFecha').value;
+  const msg=document.getElementById('mgMsg');
+  if(!est||!fecha){msg.textContent='Falta la estación o la fecha.';msg.style.color='var(--red)';return;}
+  const tmin=numIn('dTmin'),tmax=numIn('dTmax'),h0=numIn('dH0'),tp=numIn('dTp'),
+        hf=numIn('dHF'),pf=numIn('dPF'),gd=numIn('dGD');
+  let g10=gd,g45=null;
+  if(tmin!=null&&tmax!=null){
+    const med=(tmax+tmin)/2;
+    if(g10==null)g10=Math.max(0,med-10);
+    g45=Math.max(0,med-4.5);
+  }
+  if(g10==null&&gd!=null)g10=gd;
+  MANUAL.reg=MANUAL.reg.filter(r=>!(r.est===est&&r.fecha===fecha));
+  MANUAL.reg.push({est,fecha,tmin,tmax,h0,tprom:tp,hf,pf,
+    g10:g10!=null?+g10.toFixed(3):null,g45:g45!=null?+g45.toFixed(3):null});
+  guardarManual(); refrescarTodo();
+  msg.textContent='Registro guardado y aplicado en todos los reportes.'; msg.style.color='var(--g)';
+  ['dTmin','dTmax','dH0','dTp','dHF','dPF','dGD'].forEach(x=>document.getElementById(x).value='');
+};
+document.getElementById('mgAddHel').onclick=()=>{
+  const est=document.getElementById('hEstSel').value;
+  const fecha=document.getElementById('hFecha').value;
+  const msg=document.getElementById('mgMsg2');
+  const h0=numIn('hH0'),tp=numIn('hTp'),tmin=numIn('hTmin');
+  if(!est||!fecha||!h0||tmin==null){msg.textContent='Faltan datos: estación, fecha, horas bajo cero y mínima.';
+    msg.style.color='var(--red)';return;}
+  MANUAL.reg=MANUAL.reg.filter(r=>!(r.est===est&&r.fecha===fecha));
+  MANUAL.reg.push({est,fecha,tmin,tmax:null,h0,tprom:tp,hf:null,pf:null,g10:null,g45:null});
+  guardarManual(); refrescarTodo();
+  msg.textContent='Helada registrada.'; msg.style.color='var(--g)';
+  ['hH0','hTp','hTmin'].forEach(x=>document.getElementById(x).value='');
+};
+document.getElementById('mgAddEst').onclick=()=>{
+  const nom=document.getElementById('eNom').value.replace(/\s+/g,' ').trim();
+  const la=numIn('eLat'),lo=numIn('eLon'),al=numIn('eAlt');
+  const msg=document.getElementById('mgMsg3');
+  if(!nom||la==null||lo==null){msg.textContent='Falta el nombre o las coordenadas.';msg.style.color='var(--red)';return;}
+  MANUAL.est[nom]=[la,lo,al||0];
+  guardarManual(); refrescarTodo();
+  msg.textContent='Estación agregada. Ya aparece en los selectores y en el mapa.'; msg.style.color='var(--g)';
+  ['eNom','eLat','eLon','eAlt'].forEach(x=>document.getElementById(x).value='');
+};
+document.getElementById('mgSave').onclick=()=>{
+  const hoy=new Date();
+  META.updated=hoy.getFullYear()+'-'+String(hoy.getMonth()+1).padStart(2,'0')+'-'+String(hoy.getDate()).padStart(2,'0');
+  download(new Blob([JSON.stringify({meta:META,gdd:DATA,coords:COORDS,frost:FROST,cold:COLD,horas:HORAS})],
+    {type:'application/json'}),'datos.json');
+};
+document.getElementById('mgClear').onclick=()=>{
+  if(!MANUAL.reg.length&&!Object.keys(MANUAL.est).length)return;
+  if(!confirm('Se borrarán los registros cargados a mano en este dispositivo. ¿Continuar?'))return;
+  MANUAL={est:{},reg:[]}; guardarManual(); refrescarTodo();
+};
+
 /* ═══ AUTOCHEQUEO · abrir la app con ?check ═══ */
 function autotest(){
   const pruebas=[
@@ -3642,6 +3915,8 @@ function readFile(file){
 }
 document.getElementById('btnApply').onclick=()=>{
   if(!PENDING)return;
+  BASEPKG={meta:META,gdd:PENDING.data,coords:PENDING.coords||COORDS,frost:PENDING.frost||FROST,
+    cold:PENDING.cold||COLD,horas:PENDING.horas||HORAS};
   DATA=PENDING.data;
   if(PENDING.coords)COORDS=PENDING.coords;
   if(PENDING.frost)FROST=PENDING.frost;
@@ -3808,7 +4083,9 @@ async function iniciar(){
   try{
     const r=await fetch('./datos.json?v='+Date.now(),{cache:'no-store'});
     if(!r.ok)throw new Error('HTTP '+r.status);
-    aplicarPaquete(await r.json());
+    BASEPKG=await r.json();
+    cargarManual();
+    aplicarManual();
   }catch(e){
     pantallaCarga('No se pudo cargar datos.json',
       `<p>El archivo <b>datos.json</b> debe estar publicado junto a esta página. Si abriste el archivo
@@ -3818,7 +4095,8 @@ async function iniciar(){
     document.getElementById('jsonIn').onchange=ev=>{
       const f=ev.target.files[0]; if(!f)return;
       const rd=new FileReader();
-      rd.onload=()=>{try{aplicarPaquete(JSON.parse(rd.result));arrancar();}catch(x){errorUI('datos.json inválido: '+x.message);}};
+      rd.onload=()=>{try{BASEPKG=JSON.parse(rd.result);cargarManual();aplicarManual();arrancar();}
+        catch(x){errorUI('datos.json inválido: '+x.message);}};
       rd.readAsText(f);
     };
     return;
