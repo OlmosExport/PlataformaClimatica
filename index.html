@@ -1946,6 +1946,8 @@ document.getElementById('logoMob').src=LOGO_IMG;
 document.getElementById('wmIcon').src=LOGO_ICON;
 
 let ESTACIONES=[],ALL_DATES=[],DMIN='',DMAX='',SEASON=0,SEASON_MIN='',DEF_FROM='',SEASONS=[],FROST_MIN='';
+/* registros anteriores a esta temporada no se muestran: son demasiado incompletos para comparar */
+const MIN_TEMPORADA=2021;
 const S={role:null,base:1,mode:'acum',from:null,to:null,sel:new Set(),near:null,nearKm:null,heat:true,
          mapBase:1,mk:'icon',fSel:new Set(),fFrom:0,fTo:0,fSev:new Set([0,1,2]),fSort:'fecha',fDir:-1,guideFor:null};
 
@@ -2176,7 +2178,7 @@ function rebuildIndex(){
   ALL_DATES.sort();
   DMIN=ALL_DATES[0]; DMAX=ALL_DATES[ALL_DATES.length-1];
   SEASON=seasonOf(DMAX); SEASON_MIN=`${SEASON}-05-01`;
-  SEASONS=[...new Set(ALL_DATES.map(seasonOf))].sort((a,b)=>b-a);
+  SEASONS=[...new Set(ALL_DATES.map(seasonOf))].filter(y=>y>=MIN_TEMPORADA).sort((a,b)=>b-a);
   const j15=`${SEASON}-07-15`;
   DEF_FROM=(j15>=DMIN&&j15<=DMAX)?j15:SEASON_MIN;
   S.from=DEF_FROM; S.to=DMAX; FROST_MIN=SEASON_MIN;
@@ -2717,7 +2719,7 @@ function tablaAnios(sel){
     leg.classList.add('hide'); return;
   }
   const {anios,val,min,max}=tablaAniosValores(sel);
-  head.innerHTML='<th>Estación</th>'+anios.map(y=>`<th${y===SEASON?' style="color:var(--g)"':''}>${y}/${String(y+1).slice(2)}${y===SEASON?' · actual':''}</th>`).join('');
+  head.innerHTML='<th>Estación</th>'+anios.map(y=>`<th${y===SEASON?' style="color:var(--g)"':''}>Temporada ${y}/${String(y+1).slice(2)}${y===SEASON?' · actual':''}</th>`).join('');
   const celda=v=>{
     if(v==null)return '<td><span class="sinreg">s/r</span></td>';
     if(!S.heat)return `<td>${nf(v,0)}</td>`;
@@ -2741,18 +2743,27 @@ function saveTablaAnios(){
   if(!sel.length)return;
   const {anios,val,min,max}=tablaAniosValores(sel);
   const showProm=sel.length>1;
-  const labelW=200,colW=110,rowH=32,pad=18,head=64,foot=36;
+  const labelW=200,colW=140,rowH=32,pad=20,head=64,foot=40;
   const nRows=sel.length+(showProm?1:0);
-  const W=labelW+colW*anios.length+pad*2;
+  const title='Grados-día acumulados por temporada y estación';
+  const sub=kpiLinea();
+  const foot1='Plataforma Agroclimática · Exportadora Los Olmos · Departamento Técnico';
+  const foot2='Generado el '+new Date().toLocaleDateString('es-CL',{day:'2-digit',month:'long',year:'numeric'});
+  const meas=document.createElement('canvas').getContext('2d');
+  meas.font='700 19px Inter, sans-serif'; const wTitle=meas.measureText(title).width;
+  meas.font='500 12.5px Inter, sans-serif'; const wSub=meas.measureText(sub).width;
+  meas.font='400 11px Inter, sans-serif'; const wFoot=meas.measureText(foot1).width+meas.measureText(foot2).width+40;
+  const tableW=labelW+colW*anios.length;
+  const W=Math.max(tableW,wTitle,wSub,wFoot)+pad*2;
   const H=head+rowH*(nRows+1)+foot+pad;
   const cv=document.createElement('canvas'); cv.width=W; cv.height=H;
   const x=cv.getContext('2d');
   x.fillStyle='#fff'; x.fillRect(0,0,W,H);
   x.textBaseline='middle';
   x.fillStyle='#16211A'; x.font='700 19px Inter, sans-serif';
-  x.fillText('Grados-día acumulados por temporada y estación',pad,26);
+  x.fillText(title,pad,26);
   x.fillStyle='#6B7A6E'; x.font='500 12.5px Inter, sans-serif';
-  x.fillText(kpiLinea(),pad,48);
+  x.fillText(sub,pad,48);
   x.fillStyle='#2C7A46'; x.fillRect(0,head-3,W,3);
   let y0=head+rowH/2;
   x.font='700 10px "IBM Plex Mono", monospace'; x.fillStyle='#9AA79C';
@@ -2760,7 +2771,7 @@ function saveTablaAnios(){
   x.textAlign='center';
   anios.forEach((y,i)=>{
     x.fillStyle=y===SEASON?'#2C7A46':'#16211A'; x.font='700 12px Inter, sans-serif';
-    x.fillText(y+'/'+String(y+1).slice(2),labelW+colW*i+colW/2,y0);
+    x.fillText('Temporada '+y+'/'+String(y+1).slice(2)+(y===SEASON?' · actual':''),labelW+colW*i+colW/2,y0);
   });
   x.textAlign='left';
   y0+=rowH;
@@ -2800,9 +2811,9 @@ function saveTablaAnios(){
     y0+=rowH;
   }
   x.fillStyle='#9AA79C'; x.font='400 11px Inter, sans-serif'; x.textAlign='left';
-  x.fillText('Plataforma Agroclimática · Exportadora Los Olmos · Departamento Técnico',pad,H-foot/2);
+  x.fillText(foot1,pad,H-foot/2);
   x.textAlign='right';
-  x.fillText('Generado el '+new Date().toLocaleDateString('es-CL',{day:'2-digit',month:'long',year:'numeric'}),W-pad,H-foot/2);
+  x.fillText(foot2,W-pad,H-foot/2);
   const a=document.createElement('a');
   a.href=cv.toDataURL('image/png',1);
   a.download='grados_dia_por_temporada_y_estacion.png';
@@ -3529,8 +3540,8 @@ document.getElementById('sopOk').onclick=cerrarSop;
 document.getElementById('sopmodal').onclick=e=>{if(e.target.id==='sopmodal')cerrarSop();};
 
 /* ═══ HORAS FRÍO Y PORCIONES ═══ */
-const CY=[2022,2023,2024,2025,2026];
-const CYCUR=2026, CYPREV=2025, CYHIST=[2022,2023,2024,2025];
+const CY=[2021,2022,2023,2024,2025,2026];
+const CYCUR=2026, CYPREV=2025, CYHIST=[2021,2022,2023,2024,2025];
 const CCOL={2022:'#C9DFCE',2023:'#A9CEB3',2024:'#7FB78F',2025:'#4F9E68',2026:'#1E5B33'};
 const MESES=[['Mayo',0,30],['Junio',31,60],['Julio',61,91]];
 S.cEst=null; S.cSel=new Set(); S.cCut=91; S.cRef=CYCUR;
