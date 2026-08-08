@@ -734,7 +734,9 @@ body.modalopen{overflow:hidden}
 .matrix.mini td:first-child{font-size:10.5px;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .matrix.mini .vp{padding:2px 5px;gap:3px}
 .matrix th{padding:0 8px 8px}
-.matrix td{padding:7px 8px;font-size:11.5px}
+.matrix th .thtxt{display:inline-block;max-width:104px;overflow:hidden;text-overflow:ellipsis;
+  white-space:nowrap;vertical-align:bottom}
+.matrix td{padding:7px 8px;font-size:11.5px;min-width:56px}
 .matrix td:first-child{background:var(--g);color:#fff;font-weight:600;border-bottom:1px solid #fff;
   font-size:11.5px;position:sticky;left:0;z-index:2}
 .matrix tbody tr:hover td:first-child{background:var(--g-d)}
@@ -1168,20 +1170,20 @@ body.modalopen{overflow:hidden}
         <div class="estbar">
           <span class="eyebrow">Estaciones <span id="cntSel" style="color:var(--g)"></span></span>
           <div class="estacts">
-            <div class="filtro expOnly">
+            <div class="filtro">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9AA79C" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
               <input id="filtroEst" placeholder="Filtrar estación…" autocomplete="off">
             </div>
+            <button class="gh" id="btnNear">Más cercana</button>
+            <button class="gh" id="btnTop5">Top 5</button>
             <button class="gh expOnly" id="btnAll">Todas</button>
-            <button class="gh expOnly" id="btnNear">Más cercana</button>
           </div>
         </div>
-        <div class="prodOnly" style="max-width:420px"><select id="selEstProd" style="width:100%;max-width:none"></select></div>
-        <div class="chipbox2 expOnly"><div class="chips" id="chips"></div></div>
+        <div class="chipbox2"><div class="chips" id="chips"></div></div>
         <div class="hint" style="margin-top:9px">Viene seleccionada la estación más cercana a tu ubicación.
           Al marcar varias, los indicadores muestran el promedio del grupo.</div>
       </div>
-      <div class="switchrow expOnly">
+      <div class="switchrow">
         <div class="sw2" id="swHist" role="switch" aria-checked="false"></div>
         <div><b>Comparar con temporadas anteriores</b>
           <span>Agrega la curva del promedio histórico, el resumen comparativo y las barras de temporadas previas en el gráfico y la tabla de comparación.
@@ -1200,7 +1202,7 @@ body.modalopen{overflow:hidden}
         <div><div class="kl">Período analizado</div><div class="kv" id="kDays">—</div><div class="ks" id="kDaysS">—</div></div></div>
     </div>
 
-    <div class="card mb16 expOnly">
+    <div class="card mb16">
       <div class="chead">
         <div><h3>Comparación de temporadas por estación</h3><p id="chAniosSub">—</p></div>
         <div class="ptools">
@@ -1211,9 +1213,20 @@ body.modalopen{overflow:hidden}
       <div class="chartbox tall"><canvas id="chAnios"></canvas></div>
     </div>
 
-    <div class="card mb16 expOnly">
-      <div class="chead"><div><h3>Grados-día acumulados por temporada y estación</h3><p>Mismo acumulado del gráfico de arriba, en tabla.</p></div></div>
+    <div class="card mb16">
+      <div class="chead">
+        <div><h3>Grados-día acumulados por temporada y estación</h3><p>Mismo acumulado del gráfico de arriba, en tabla.</p></div>
+        <div class="ptools"><button class="gh" id="btnHeat">▦ Ver como números</button></div>
+      </div>
       <div class="tscroll"><table class="matrix"><thead><tr id="gAnioHead"></tr></thead><tbody id="gAnioBody"></tbody></table></div>
+      <div class="qleg hide" id="gAnioLeg" style="margin-top:12px;justify-content:space-between">
+        <span style="display:flex;align-items:center;gap:8px">
+          <span>Menor acumulación</span>
+          <span style="display:inline-block;width:120px;height:8px;border-radius:4px;background:linear-gradient(90deg,#EAF4EC,#1E5B33)"></span>
+          <span>Mayor acumulación</span>
+        </span>
+        <span id="gAnioLegBase">—</span>
+      </div>
     </div>
 
     <div class="grid g21 mb16">
@@ -1482,11 +1495,11 @@ body.modalopen{overflow:hidden}
       <div class="card">
         <div class="chead"><div><h3>Horas frío base 7,2 °C · toda la red</h3><p>Acumulado por temporada al día de corte.</p></div>
           </div>
-        <div class="tscroll"><table class="matrix mini"><thead><tr id="cMatHead"></tr></thead><tbody id="cMatBody"></tbody></table></div>
+        <div class="tscroll" style="max-height:320px;overflow-y:auto"><table class="matrix mini"><thead><tr id="cMatHead"></tr></thead><tbody id="cMatBody"></tbody></table></div>
       </div>
       <div class="card">
         <div class="chead"><div><h3>Porciones de frío · toda la red</h3><p>Acumulado por temporada al día de corte.</p></div></div>
-        <div class="tscroll"><table class="matrix mini"><thead><tr id="pMatHead"></tr></thead><tbody id="pMatBody"></tbody></table></div>
+        <div class="tscroll" style="max-height:320px;overflow-y:auto"><table class="matrix mini"><thead><tr id="pMatHead"></tr></thead><tbody id="pMatBody"></tbody></table></div>
       </div>
     </div>
 
@@ -1494,12 +1507,12 @@ body.modalopen{overflow:hidden}
       <div class="card">
         <div class="chead"><div><h3>Variación % de horas frío base 7,2 °C</h3>
           <p>Cada temporada comparada con <span id="cVarRef">—</span>.</p></div></div>
-        <div class="tscroll"><table class="matrix mini"><thead><tr id="cVarHead"></tr></thead><tbody id="cVarBody"></tbody></table></div>
+        <div class="tscroll" style="max-height:320px;overflow-y:auto"><table class="matrix mini"><thead><tr id="cVarHead"></tr></thead><tbody id="cVarBody"></tbody></table></div>
       </div>
       <div class="card">
         <div class="chead"><div><h3>Variación % de porciones de frío</h3>
           <p>Cada temporada comparada con <span id="pVarRef">—</span>.</p></div></div>
-        <div class="tscroll"><table class="matrix mini"><thead><tr id="pVarHead"></tr></thead><tbody id="pVarBody"></tbody></table></div>
+        <div class="tscroll" style="max-height:320px;overflow-y:auto"><table class="matrix mini"><thead><tr id="pVarHead"></tr></thead><tbody id="pVarBody"></tbody></table></div>
       </div>
     </div>
 
@@ -1932,7 +1945,7 @@ document.getElementById('logoMob').src=LOGO_IMG;
 document.getElementById('wmIcon').src=LOGO_ICON;
 
 let ESTACIONES=[],ALL_DATES=[],DMIN='',DMAX='',SEASON=0,SEASON_MIN='',DEF_FROM='',SEASONS=[],FROST_MIN='';
-const S={role:null,base:1,mode:'acum',from:null,to:null,sel:new Set(),near:null,nearKm:null,
+const S={role:null,base:1,mode:'acum',from:null,to:null,sel:new Set(),near:null,nearKm:null,heat:true,
          mapBase:1,mk:'icon',fSel:new Set(),fFrom:0,fTo:0,fSev:new Set([0,1,2]),fSort:'fecha',fDir:-1,guideFor:null};
 
 const nf=(v,d=1)=>v==null||isNaN(v)?'—':v.toLocaleString('es-CL',{minimumFractionDigits:d,maximumFractionDigits:d});
@@ -2268,11 +2281,6 @@ document.getElementById('segMarker').onclick=ev=>{
   S.mk=b.dataset.k; drawMap();
 };
 function buildChips(){
-  const sp=document.getElementById('selEstProd');
-  if(sp){
-    sp.innerHTML=ESTACIONES.map(e=>`<option value="${e}" ${S.sel.has(e)&&S.sel.size===1?'selected':''}>${e}${e===S.near?' · la más cercana':''}</option>`).join('');
-    sp.onchange=()=>{S.sel=new Set([sp.value]);buildChips();renderGdd();};
-  }
   const box=document.getElementById('chips');
   const lista=ESTACIONES.filter(e=>!S.filtro||e.toLowerCase().includes(S.filtro));
   box.innerHTML=(lista.length?lista:ESTACIONES).map(e=>`<div class="chip ${S.sel.has(e)?'on':''}" data-e="${e}">
@@ -2280,8 +2288,7 @@ function buildChips(){
     ${e===S.near?'<span class="near">MÁS CERCANA</span>':''}</div>`).join('');
   box.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{
     const e=c.dataset.e;
-    if(S.role==='prod'&&S.sel.size===1&&!S.sel.has(e))S.sel=new Set([e]);
-    else{S.sel.has(e)?S.sel.delete(e):S.sel.add(e); if(!S.sel.size)S.sel.add(e);}
+    S.sel.has(e)?S.sel.delete(e):S.sel.add(e); if(!S.sel.size)S.sel.add(e);
     buildChips(); renderGdd();
   });
   document.getElementById('cntSel').textContent=`(${S.sel.size} de ${ESTACIONES.length})`;
@@ -2291,10 +2298,13 @@ if(swH)swH.onclick=()=>{
   S.hist=!S.hist; swH.classList.toggle('on',S.hist); swH.setAttribute('aria-checked',S.hist);
   renderGdd();
 };
+const btnHeat=document.getElementById('btnHeat');
+if(btnHeat)btnHeat.onclick=()=>{S.heat=!S.heat;tablaAnios(ESTACIONES.filter(e=>S.sel.has(e)));};
 const fEst=document.getElementById('filtroEst');
 if(fEst)fEst.oninput=()=>{S.filtro=fEst.value.trim().toLowerCase();buildChips();};
 document.getElementById('btnAll').onclick=()=>{ESTACIONES.forEach(e=>S.sel.add(e));buildChips();renderGdd();};
 document.getElementById('btnNear').onclick=()=>{S.sel=new Set([S.near||ESTACIONES[0]]);buildChips();renderGdd();};
+document.getElementById('btnTop5').onclick=()=>{S.sel=new Set(computeStats().slice(0,5).map(s=>s.est));buildChips();renderGdd();};
 /* ═══ cálculo ═══ */
 function rowsOf(est,from,to){
   const i=BASES[S.base].i;
@@ -2539,8 +2549,8 @@ function renderGdd(){
     if(rate)rate.textContent='Promedio del período';
   }else{set('kAcum','—','Sin datos');set('kRate','—');}
   set('kDays',days(S.from,S.to)+'<small>días</small>',`${fmtL(S.from)} → ${fmtL(S.to)}`);
-  chartCurva(sel,foco); chartSemana(foco); cmpBoxes(foco);
-  if(S.role==='exp'){chartAnios(sel); tablaAnios(sel);}
+  chartCurva(sel,foco); chartSemana(sel); cmpBoxes(foco);
+  chartAnios(sel); tablaAnios(sel);
 }
 function mmddList(){
   const out=[],d0=parseD(S.from),d1=parseD(S.to);
@@ -2679,31 +2689,65 @@ function chartAnios(sel){
           font:{family:'IBM Plex Mono',size:10}}}}}};
   mount('chAnios',cfg,'Comparación de temporadas por estación · base '+BASES[S.base].lbl);
 }
+function heatColor(v,min,max){
+  const t=max>min?(v-min)/(max-min):.5;
+  const c1=[234,244,236],c2=[30,91,51];
+  const rgb=c1.map((c,k)=>Math.round(c+(c2[k]-c)*t));
+  return '#'+rgb.map(n=>n.toString(16).padStart(2,'0')).join('');
+}
 function tablaAnios(sel){
   const head=document.getElementById('gAnioHead'),body=document.getElementById('gAnioBody');
-  if(!sel.length){head.innerHTML='';body.innerHTML='<tr><td class="empty">Sin estaciones seleccionadas.</td></tr>';return;}
+  const leg=document.getElementById('gAnioLeg'),btn=document.getElementById('btnHeat');
+  if(btn)btn.textContent=S.heat?'# Ver como números':'▦ Ver como mapa de calor';
+  if(!sel.length){
+    head.innerHTML=''; body.innerHTML='<tr><td class="empty">Sin estaciones seleccionadas.</td></tr>';
+    leg.classList.add('hide'); return;
+  }
   const mm=mmddList(),anios=aniosSeleccionados();
-  head.innerHTML='<th>Temporada</th>'+sel.map(e=>`<th>${e}</th>`).join('');
-  body.innerHTML=anios.map(y=>{
-    const cel=sel.map(e=>{
-      const v=totalTemporada(e,mm,y);
-      return `<td>${v!=null?nf(v,0):'<span class="sinreg">s/r</span>'}</td>`;
-    }).join('');
-    return `<tr${y===SEASON?' style="background:var(--g-xl)"':''}><td>${y}/${String(y+1).slice(2)}${y===SEASON?' · actual':''}</td>${cel}</tr>`;
-  }).join('');
+  head.innerHTML='<th>Temporada</th>'+sel.map(e=>`<th title="${e}"><span class="thtxt">${e}</span></th>`).join('');
+  const val={};
+  anios.forEach(y=>{val[y]={}; sel.forEach(e=>{val[y][e]=totalTemporada(e,mm,y);});});
+  const todos=anios.flatMap(y=>sel.map(e=>val[y][e])).filter(v=>v!=null);
+  const min=todos.length?Math.min(...todos):0, max=todos.length?Math.max(...todos):1;
+  const celda=v=>{
+    if(v==null)return '<td><span class="sinreg">s/r</span></td>';
+    if(!S.heat)return `<td>${nf(v,0)}</td>`;
+    const bg=heatColor(v,min,max);
+    return `<td style="background:${bg};color:${darkOn(bg)?'#16211A':'#fff'};font-weight:600">${nf(v,0)}</td>`;
+  };
+  let rows=anios.map(y=>`<tr${y===SEASON?' style="background:var(--g-xl)"':''}><td>${y}/${String(y+1).slice(2)}${y===SEASON?' · actual':''}</td>${sel.map(e=>celda(val[y][e])).join('')}</tr>`).join('');
+  if(anios.length>1){
+    const prom=sel.map(e=>{
+      const vs=anios.map(y=>val[y][e]).filter(v=>v!=null);
+      return vs.length?vs.reduce((a,c)=>a+c,0)/vs.length:null;
+    });
+    rows+=`<tr class="tot"><td>Promedio (${anios.length} temp.)</td>${prom.map(v=>`<td>${v!=null?nf(v,0):'—'}</td>`).join('')}</tr>`;
+  }
+  body.innerHTML=rows;
+  leg.classList.toggle('hide',!S.heat);
+  document.getElementById('gAnioLegBase').textContent='GDD base '+BASES[S.base].lbl;
 }
-function chartSemana(foco){
+function chartSemana(sel){
   const i=BASES[S.base].i;
-  const rs=foco?rowsOf(foco):[];
+  const maps=sel.map(e=>Object.fromEntries((DATA[e]||[]).map(r=>[r[0],r[i]])));
+  const d0=parseD(S.from),d1=parseD(S.to);
   const bk={};
-  rs.forEach(r=>{
-    const k=Math.floor((parseD(r[0])-parseD(S.from))/(7*864e5));
-    const ini=new Date(parseD(S.from).getTime()+k*7*864e5);
-    bk[k]=bk[k]||{lab:fmtD(ini),sem:isoWeek(ini),v:0}; bk[k].v+=r[i];
-  });
+  for(let t=d0.getTime();t<=d1.getTime();t+=864e5){
+    const d=new Date(t);
+    const iso=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    const vs=maps.map(m=>m[iso]).filter(v=>v!=null);
+    if(!vs.length)continue;
+    const avg=vs.reduce((a,c)=>a+c,0)/vs.length;
+    const k=Math.floor((t-d0.getTime())/(7*864e5));
+    const ini=new Date(d0.getTime()+k*7*864e5);
+    bk[k]=bk[k]||{lab:fmtD(ini),sem:isoWeek(ini),v:0}; bk[k].v+=avg;
+  }
   const ks=Object.keys(bk).map(Number).sort((a,b)=>a-b);
   const vals=ks.map(k=>+bk[k].v.toFixed(1));
   const mx=Math.max(...vals,1);
+  document.getElementById('acumSub').textContent=sel.length>1
+    ?`Promedio semanal del grupo (${sel.length} estaciones seleccionadas): muestra si el clima viene acelerando o frenando.`
+    :'Cuánto aportó cada semana agrícola: muestra si el clima viene acelerando o frenando.';
   const cfg={type:'bar',data:{labels:ks.map(k=>[bk[k].lab,'Semana '+bk[k].sem]),
       datasets:[{data:vals,dlUnit:'',dlDec:1,
         backgroundColor:vals.map(v=>v/mx>.75?'#2C7A46':v/mx>.45?'#4F9E68':'#A8CBA0'),
@@ -2716,7 +2760,7 @@ function chartSemana(foco){
       scales:{x:{grid:{display:false},border:{color:'#E5EAE4'},
           ticks:{color:'#9AA79C',maxRotation:0,autoSkip:false,font:{family:'IBM Plex Mono',size:9.5}}},
         y:{...AX,grace:'14%',title:{display:true,text:'°D por semana',color:'#9AA79C',font:{family:'IBM Plex Mono',size:10}}}}}};
-  mount('chSem',cfg,'Acumulación semanal · '+(foco||''));
+  mount('chSem',cfg,sel.length>1?`Acumulación semanal · promedio de ${sel.length} estaciones`:'Acumulación semanal · '+(sel[0]||''));
 }
 const qcol=p=>p>=95?'#2C7A46':p>=90?'#6FB98A':p>=80?'#E0A73C':'#C0503C';
 const qlab=p=>p>=95?'Excelente':p>=90?'Buena':p>=80?'Regular':'Baja';
@@ -3628,9 +3672,13 @@ function matrices(){
   const es=cEsts();
   const arma=(met,dec,headId,bodyId)=>{
     document.getElementById(headId).innerHTML='<th>Estación</th>'+CY.map(y=>`<th>${y}</th>`).join('');
+    const todos=es.flatMap(e=>CY.map(y=>{const a=cAcc(e,y,met);return a?a.v:null;})).filter(v=>v!=null);
+    const min=todos.length?Math.min(...todos):0, max=todos.length?Math.max(...todos):1;
     document.getElementById(bodyId).innerHTML=es.map(e=>{
       const cel=CY.map(y=>{const a=cAcc(e,y,met);
-        return `<td>${a?nf(a.v,dec):'<span class="sinreg">s/r</span>'}</td>`;}).join('');
+        if(!a)return '<td><span class="sinreg">s/r</span></td>';
+        const bg=heatColor(a.v,min,max);
+        return `<td style="background:${bg};color:${darkOn(bg)?'#16211A':'#fff'}">${nf(a.v,dec)}</td>`;}).join('');
       return `<tr><td title="${e}">${e}</td>${cel}</tr>`;
     }).join('')+`<tr class="tot"><td>Promedio</td>${CY.map(y=>`<td>${nf(cNet(y,met),dec)}</td>`).join('')}</tr>`;
   };
