@@ -439,6 +439,38 @@ tbody tr:hover td{background:var(--g-xl)}
   .searchbox{flex:1 1 100%;order:3}
 }
 
+/* ══ CALIDAD DE DATOS ══ */
+.qgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.qcard{border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.qcard .qn{font-size:28px;font-weight:700;line-height:1}
+.qcard .ql{font-size:13px;font-weight:600;margin-top:3px}
+.qcard .qr{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--mut);margin-top:2px}
+.qb{display:inline-flex;align-items:center;gap:6px;border-radius:20px;padding:3px 9px;font-size:10.5px;font-weight:700;white-space:nowrap}
+.qb i{width:7px;height:7px;border-radius:50%;display:inline-block}
+.qtrack{width:64px}
+/* ══ SELECTOR DE ESTACIONES ══ */
+.estblock{margin-top:16px;padding-top:15px;border-top:1px solid var(--line)}
+.estbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.estacts{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.filtro{position:relative;display:flex;align-items:center}
+.filtro svg{position:absolute;left:10px;pointer-events:none}
+.filtro input{border:1px solid var(--line);border-radius:9px;padding:8px 12px 8px 31px;font-size:12.5px;
+  font-family:"Inter",sans-serif;width:180px;background:#fff}
+.chipbox2{background:#FAFBF9;border:1px solid var(--line);border-radius:12px;padding:11px;max-height:154px;overflow-y:auto}
+.chipbox2 .chips{gap:6px}
+.chipbox2 .chip{background:#fff;font-size:12px;padding:0 12px;height:34px;border-radius:9px}
+.chipbox2 .chip.on{background:var(--g-l);border-color:var(--g);box-shadow:inset 0 0 0 1px var(--g)}
+.chipbox2 .chip .near{background:var(--g);color:#fff;border-color:var(--g)}
+.switchrow{display:flex;gap:13px;align-items:flex-start;margin-top:14px;padding:13px 15px;
+  background:var(--g-xl);border:1px solid var(--g-l);border-radius:12px}
+.switchrow b{display:block;font-size:13px}
+.switchrow span{display:block;font-size:11.5px;color:var(--mut);line-height:1.5;margin-top:2px}
+.sw2{width:42px;height:24px;border-radius:14px;background:#D8DED8;position:relative;cursor:pointer;
+  transition:.18s;flex:0 0 42px;margin-top:2px}
+.sw2::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;
+  background:#fff;transition:.18s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.sw2.on{background:var(--g)}
+.sw2.on::after{left:21px}
 /* ══ BARRA CONTRAÍDA ══ */
 .mini2{display:none}
 .side.mini{width:66px;flex:0 0 66px}
@@ -1041,17 +1073,28 @@ body.modalopen{overflow:hidden}
           <button class="gh on" data-m="acum">Acumulado</button><button class="gh" data-m="dia">Día a día</button></div></div>
         
       </div>
-      <div style="margin-top:15px;padding-top:14px;border-top:1px solid var(--line)">
-        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:9px">
+      <div class="estblock">
+        <div class="estbar">
           <span class="eyebrow">Estaciones <span id="cntSel" style="color:var(--g)"></span></span>
-          <div style="display:flex;gap:7px" class="expOnly">
-            <button class="gh" id="btnAll">Todas</button>
-            <button class="gh" id="btnNear">Solo la más cercana</button>
+          <div class="estacts">
+            <div class="filtro expOnly">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9AA79C" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+              <input id="filtroEst" placeholder="Filtrar estación…" autocomplete="off">
+            </div>
+            <button class="gh expOnly" id="btnAll">Todas</button>
+            <button class="gh expOnly" id="btnNear">Más cercana</button>
           </div>
         </div>
         <div class="prodOnly" style="max-width:420px"><select id="selEstProd" style="width:100%;max-width:none"></select></div>
-        <div class="chips expOnly" id="chips"></div>
-        <div class="hint" style="margin-top:9px">Viene seleccionada la estación más cercana a tu ubicación.</div>
+        <div class="chipbox2 expOnly"><div class="chips" id="chips"></div></div>
+        <div class="hint" style="margin-top:9px">Viene seleccionada la estación más cercana a tu ubicación.
+          Al marcar varias, los indicadores muestran el promedio del grupo.</div>
+      </div>
+      <div class="switchrow expOnly">
+        <div class="sw2" id="swHist" role="switch" aria-checked="false"></div>
+        <div><b>Comparar con temporadas anteriores</b>
+          <span>Agrega la curva del promedio histórico, el resumen comparativo y las temporadas previas en la tabla mensual.
+            Actívalo solo si confías en los registros antiguos de esa estación.</span></div>
       </div>
     </div>
 
@@ -1539,7 +1582,7 @@ body.modalopen{overflow:hidden}
       <div class="card">
         <div class="chead"><div><h3>Estaciones (<span id="mapCount">—</span>)</h3><p>Disponibilidad de datos horarios en el período seleccionado</p></div></div>
         <div class="mlist"><table>
-          <thead><tr><th>Estación</th><th>Horas</th><th>Faltan</th><th>% completitud</th></tr></thead>
+          <thead><tr><th>Estación</th><th>Calidad</th><th>Horas registradas</th><th>Faltan</th><th>Completitud</th></tr></thead>
           <tbody id="mlist"></tbody></table></div>
         
       </div>
@@ -1554,6 +1597,12 @@ body.modalopen{overflow:hidden}
         <div><div class="kl">Completitud de la red</div><div class="kv" id="mk3">—</div><div class="ks" id="mk3s">—</div></div></div>
       <div class="kpi warn"><div class="ki"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E0A73C" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></div>
         <div><div class="kl">Período analizado</div><div class="kv" id="mk4" style="font-size:16px">—</div><div class="ks" id="mk4s">—</div></div></div>
+    </div>
+
+    <div class="card mb16">
+      <div class="chead"><div><h3>Calidad de los datos de la red</h3>
+        <p>Cuántas estaciones hay en cada nivel de completitud dentro del período elegido.</p></div></div>
+      <div class="qgrid" id="mResumen"></div>
     </div>
 
     <div class="card mb16">
@@ -1573,9 +1622,9 @@ body.modalopen{overflow:hidden}
         concentrarse de noche, que es justamente cuando ocurren las heladas y se acumula el frío.</p>
         <div class="qleg" style="margin-top:9px">
           <span><i style="background:#2C7A46"></i>Excelente ≥ 95 %</span>
-          <span><i style="background:#4F9E68"></i>Bueno 90–95 %</span>
+          <span><i style="background:#6FB98A"></i>Buena 90–95 %</span>
           <span><i style="background:#E0A73C"></i>Regular 80–90 %</span>
-          <span><i style="background:#C0503C"></i>Bajo &lt; 80 %</span>
+          <span><i style="background:#C0503C"></i>Baja &lt; 80 %</span>
         </div></div>
     </div>
   </section>
@@ -1836,6 +1885,7 @@ function saludoTxt(){
 function go(id){
   CURSEC=id;
   document.getElementById('tophead').classList.toggle('hide',id==='inicio'||!S.role);
+  if(S.role)aplicarRol();
   SECS.forEach(s=>document.getElementById(s).classList.add('hide'));
   const el=document.getElementById(id);
   el.classList.remove('hide'); el.classList.add('fade');
@@ -1880,9 +1930,14 @@ function tryPass(){
   }else{document.getElementById('passErr').style.display='block';
     box.classList.add('bad');setTimeout(()=>box.classList.remove('bad'),400);}
 }
+function aplicarRol(){
+  const role=S.role;
+  document.querySelectorAll('.expOnly').forEach(e=>e.classList.toggle('hide',role!=='exp'));
+  document.querySelectorAll('.prodOnly').forEach(e=>e.classList.toggle('hide',role!=='prod'));
+}
 function entrar(role){
   S.role=role;
-  document.querySelectorAll('.expOnly').forEach(e=>e.classList.toggle('hide',role!=='exp'));
+  aplicarRol();
   document.getElementById('roleMob').textContent=role==='exp'?'Exportadora':'Productores';
   document.getElementById('gRole').textContent=role==='exp'?'Exportadora':'Productores';
   document.getElementById('uName').textContent=role==='exp'?'Departamento Técnico':'Productor';
@@ -2089,10 +2144,11 @@ function segButtons(box,items,active,cb,extra){
 segButtons(document.getElementById('segBase'),BASES,S.base,i=>{S.base=i;renderGdd();},
   b=>`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14 14.8V4a2 2 0 1 0-4 0v10.8a4 4 0 1 0 4 0z"/></svg> Base ${b.lbl}`);
 segButtons(document.getElementById('segBaseMap'),BASES,S.mapBase,i=>{S.mapBase=i;drawMap();},b=>`Base ${b.lbl}`);
-const QUICK=[['j15','Desde el 15 de julio'],['d30','Últimos 30 días'],['temp','Temporada completa']];
+const QUICK=[['j15','Desde el 15 de julio'],['ago','Desde agosto'],['d30','Últimos 30 días'],['temp','Temporada completa']];
 segButtons(document.getElementById('segQuick'),QUICK.map(q=>q[1]),0,i=>{
   const k=QUICK[i][0];
   if(k==='j15'){S.from=DEF_FROM;S.to=DMAX;}
+  if(k==='ago'){const a=`${SEASON}-08-01`; S.from=a>DMAX?DEF_FROM:a; S.to=DMAX;}
   if(k==='d30'){const d=new Date(parseD(DMAX).getTime()-29*864e5).toISOString().slice(0,10);
     S.from=d<SEASON_MIN?SEASON_MIN:d;S.to=DMAX;}
   if(k==='temp'){S.from=SEASON_MIN;S.to=DMAX;}
@@ -2118,7 +2174,8 @@ function buildChips(){
     sp.onchange=()=>{S.sel=new Set([sp.value]);buildChips();renderGdd();};
   }
   const box=document.getElementById('chips');
-  box.innerHTML=ESTACIONES.map(e=>`<div class="chip ${S.sel.has(e)?'on':''}" data-e="${e}">
+  const lista=ESTACIONES.filter(e=>!S.filtro||e.toLowerCase().includes(S.filtro));
+  box.innerHTML=(lista.length?lista:ESTACIONES).map(e=>`<div class="chip ${S.sel.has(e)?'on':''}" data-e="${e}">
     <span class="dot" style="background:${S.sel.has(e)?'#2C7A46':'#D6DCD4'}"></span>${e}
     ${e===S.near?'<span class="near">MÁS CERCANA</span>':''}</div>`).join('');
   box.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{
@@ -2129,6 +2186,13 @@ function buildChips(){
   });
   document.getElementById('cntSel').textContent=`(${S.sel.size} de ${ESTACIONES.length})`;
 }
+const swH=document.getElementById('swHist');
+if(swH)swH.onclick=()=>{
+  S.hist=!S.hist; swH.classList.toggle('on',S.hist); swH.setAttribute('aria-checked',S.hist);
+  renderGdd();
+};
+const fEst=document.getElementById('filtroEst');
+if(fEst)fEst.oninput=()=>{S.filtro=fEst.value.trim().toLowerCase();buildChips();};
 document.getElementById('btnAll').onclick=()=>{ESTACIONES.forEach(e=>S.sel.add(e));buildChips();renderGdd();};
 document.getElementById('btnNear').onclick=()=>{S.sel=new Set([S.near||ESTACIONES[0]]);buildChips();renderGdd();};
 document.querySelectorAll('th[data-s]').forEach(th=>th.onclick=()=>{
@@ -2367,9 +2431,19 @@ function renderGdd(){
   const foco=(S.near&&S.sel.has(S.near))?S.near:sel[0];
   const mine=stats.find(s=>s.est===foco)||stats[0];
   const set=(id,v,s)=>{document.getElementById(id).innerHTML=v;const e2=document.getElementById(id+'S');if(e2&&s!=null)e2.textContent=s;};
-  if(mine){
+  const multi=stats.length>1;
+  if(multi){
+    const prom=stats.reduce((a,c)=>a+c.gdd,0)/stats.length;
+    const promD=stats.reduce((a,c)=>a+c.gd,0)/stats.length;
+    set('kAcum',nf(prom,0)+'<small>°D</small>',`Promedio de ${stats.length} estaciones · base ${b.lbl}`);
+    set('kRate',nf(promD,1)+'<small>°D/día</small>');
+    const rate=document.getElementById('kRate').parentElement.querySelector('.ks');
+    if(rate)rate.textContent='Promedio diario del grupo';
+  }else if(mine){
     set('kAcum',nf(mine.gdd,0)+'<small>°D</small>',`${mine.est} · base ${b.lbl}`);
     set('kRate',nf(mine.gd,1)+'<small>°D/día</small>');
+    const rate=document.getElementById('kRate').parentElement.querySelector('.ks');
+    if(rate)rate.textContent='Promedio del período';
   }else{set('kAcum','—','Sin datos');set('kRate','—');}
   set('kDays',days(S.from,S.to)+'<small>días</small>',`${fmtL(S.from)} → ${fmtL(S.to)}`);
   chartCurva(sel,foco); chartSemana(foco); cmpBoxes(foco); tablaMes();
@@ -2393,15 +2467,16 @@ function chartCurva(sel,foco){
   const ds=sel.map(e=>{
     const m=Object.fromEntries((DATA[e]||[]).map(r=>[r[0],r[i]]));
     let acc=0,any=false;
-    return {label:e,borderColor:e===foco?'#2C7A46':'#9AA79C',
+    const col=sel.length>1?colorOf(e):'#2C7A46';
+    return {label:e,borderColor:col,
       backgroundColor:e===foco?'rgba(44,122,70,.10)':'transparent',
-      borderWidth:e===foco?2.8:1.4,pointRadius:0,pointHoverRadius:4,tension:.28,spanGaps:true,
+      borderWidth:e===foco?2.8:1.8,pointRadius:0,pointHoverRadius:4,tension:.28,spanGaps:true,
       fill:(S.mode==='acum'&&e===foco&&sel.length<=3)?'origin':false,
       dl:(e===foco||sel.length<=4),dlUnit:' °D',dlDec:S.mode==='acum'?0:1,
       data:dates.map(d=>{ if(m[d]==null)return S.mode==='acum'?(any?acc:null):null;
         acc+=m[d];any=true;return S.mode==='acum'?acc:m[d];})};
   });
-  if(S.mode==='acum'&&foco&&SEASONS.length>1){
+  if(S.hist&&S.mode==='acum'&&foco&&SEASONS.length>1){
     const prev=SEASONS.filter(y=>y!==SEASON);
     const curves=prev.map(y=>histCurve(foco,mm,y)).filter(c=>c.some(v=>v!=null));
     if(curves.length){
@@ -2416,7 +2491,8 @@ function chartCurva(sel,foco){
   document.getElementById('chTitle').textContent=S.mode==='acum'
     ?`Acumulado GDD (base ${BASES[S.base].lbl})`:`GDD diarios (base ${BASES[S.base].lbl})`;
   document.getElementById('chSub').textContent=S.mode==='acum'
-    ?'Línea verde: temporada actual. Línea punteada: promedio de temporadas anteriores en la misma fecha.'
+    ?(S.hist?'Temporada actual frente al promedio de las temporadas anteriores en la misma fecha.'
+            :'Acumulación de la temporada actual. Activa la comparación histórica si quieres la referencia de años previos.')
     :'Cuánto aportó cada día. Los valles son días fríos y los peaks, días cálidos.';
   const cfg={type:'line',data:{labels:dates.map(d=>fmtD(parseD(d))),datasets:ds},
     options:{responsive:true,maintainAspectRatio:false,animation:{duration:700},
@@ -2435,6 +2511,11 @@ function chartCurva(sel,foco){
 function cmpBoxes(foco){
   const box=document.getElementById('cmpBoxes');
   if(!foco){box.innerHTML='<div class="empty">Sin estación seleccionada.</div>';return;}
+  if(!S.hist){
+    box.innerHTML=`<div class="hintbox" style="margin:0">La comparación con temporadas anteriores está desactivada.
+      Actívala en el bloque de estaciones para ver el desvío contra el historial de ${foco}.</div>`;
+    return;
+  }
   const i=BASES[S.base].i;
   const act=sumOf(foco,i,S.from,S.to);
   const mm=mmddList();
@@ -2491,7 +2572,7 @@ function tablaMes(){
     if(meses.length>24)break;
   }
   const dd0=S.from.slice(5),dd1=S.to.slice(5);
-  const temporadas=SEASONS.slice().sort((a,b)=>b-a);
+  const temporadas=(S.hist?SEASONS.slice():[SEASON]).sort((a,b)=>b-a);
   const foco=(S.near&&S.sel.has(S.near))?S.near:[...S.sel][0];
   document.getElementById('mesSub').textContent=
     `${foco||'—'} · base ${BASES[S.base].lbl} · los meses con días entre paréntesis están cubiertos solo en parte por el rango elegido.`;
@@ -2563,7 +2644,17 @@ function renderTable(){
         <span style="margin-left:7px">${nf(r.pct,1)} %</span></td></tr>`;
   }).join('');
 }
-const qcol=p=>p>=95?'#2C7A46':p>=90?'#4F9E68':p>=80?'#E0A73C':'#C0503C';
+const qcol=p=>p>=95?'#2C7A46':p>=90?'#6FB98A':p>=80?'#E0A73C':'#C0503C';
+const qlab=p=>p>=95?'Excelente':p>=90?'Buena':p>=80?'Regular':'Baja';
+const qbg=p=>p>=95?'#E8F2EA':p>=90?'#EEF6F0':p>=80?'#FBF1DE':'#FBEDEA';
+const qbadge=p=>`<span class="qb" style="background:${qbg(p)};color:${qcol(p)}">
+  <i style="background:${qcol(p)}"></i>${qlab(p)}</span>`;
+function faltaTxt(hs){
+  if(hs==null)return '—';
+  if(hs<=0)return 'completa';
+  const d=Math.floor(hs/24),r=Math.round(hs%24);
+  return d<=0?hs+' h':`${hs} h · ${d} día${d===1?'':'s'}${r?' y '+r+' h':''}`;
+}
 
 
 /* ═══ HELADAS ═══ */
@@ -2813,7 +2904,7 @@ async function buscarLoc(){
 
 
 /* ═══ DASHBOARD ═══ */
-S.dMet='gdd';
+S.dMet='gdd'; S.hist=false; S.filtro='';
 document.getElementById('btnMini').onclick=()=>{
   const s=document.getElementById('side'); s.classList.toggle('mini');
   document.getElementById('btnMini').textContent=s.classList.contains('mini')?'»':'«';
@@ -3689,19 +3780,19 @@ function drawMap(){
       ${BASES.map(b=>`<tr><td>${b.corto}</td><td style="text-align:right"><b>${nf(sumOf(s.est,b.i,S.from,S.to),0)}</b> °D</td></tr>`).join('')}
       <tr><td>Red / frecuencia</td><td style="text-align:right">${s.red}${s.freq?' · '+s.freq+' min':''}</td></tr>
       <tr><td>Horas registradas</td><td style="text-align:right"><b>${s.horas.toLocaleString('es-CL')}</b> de ${s.esp.toLocaleString('es-CL')}</td></tr>
-      <tr><td>Horas faltantes</td><td style="text-align:right">${s.falta==null?'—':s.falta.toLocaleString('es-CL')}</td></tr>
-      <tr><td>Completitud</td><td style="text-align:right"><b>${nf(s.pct,1)} %</b></td></tr>
+      <tr><td>Horas faltantes</td><td style="text-align:right">${faltaTxt(s.falta)}</td></tr>
+      <tr><td>Completitud</td><td style="text-align:right"><b style="color:${qcol(s.pct)}">${nf(s.pct,1)} % · ${qlab(s.pct)}</b></td></tr>
       ${FROST[s.est]?`<tr><td>Heladas del período</td><td style="text-align:right">${FROST[s.est].filter(r=>r[0]>=S.from&&r[0]<=S.to).length}</td></tr>`:''}
       </table></div>`,{maxWidth:270});
     m.addTo(map); markers[s.est]=m;
   });
   document.getElementById('mlist').innerHTML=st.map(s=>`
-    <tr data-e="${s.est}" style="cursor:pointer"><td>
-      <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${qcol(s.pct)};margin-right:7px"></span>${s.est}</td>
-      <td>${s.horas.toLocaleString('es-CL')}</td>
-      <td style="color:${s.falta>0?'var(--red)':'var(--mut2)'}">${s.falta==null?'—':s.falta}</td>
+    <tr data-e="${s.est}" style="cursor:pointer">
+      <td>${s.est}</td><td>${qbadge(s.pct)}</td>
+      <td>${s.horas.toLocaleString('es-CL')} <span style="color:var(--mut2)">/ ${s.esp.toLocaleString('es-CL')}</span></td>
+      <td style="color:${s.falta>0?qcol(s.pct):'var(--mut2)'}">${faltaTxt(s.falta)}</td>
       <td><span class="qtrack"><span class="qbar" style="width:${Math.min(s.pct,100)}%;background:${qcol(s.pct)}"></span></span>
-        <span style="margin-left:7px">${nf(s.pct,1)} %</span></td></tr>`).join('');
+        <b style="margin-left:7px;color:${qcol(s.pct)}">${nf(s.pct,1)} %</b></td></tr>`).join('');
   document.querySelectorAll('#mlist tr').forEach(r=>r.onclick=()=>{
     const m=markers[r.dataset.e]; if(m){map.setView(m.getLatLng(),12,{animate:true});m.openPopup();}
   });
@@ -3709,8 +3800,16 @@ function drawMap(){
   document.getElementById('mk2').innerHTML=Math.round(st.reduce((a,s)=>a+s.alt,0)/(st.length||1))+'<small>m</small>';
   const conH=st.filter(s=>!s.sinred);
   const totH=conH.reduce((a,s)=>a+s.horas,0),totE=conH.reduce((a,s)=>a+s.esp,0);
-  document.getElementById('mk3').innerHTML=nf(totE?totH/totE*100:0,1)+'<small>%</small>';
-  document.getElementById('mk3s').textContent=`${(totE-totH).toLocaleString('es-CL')} horas faltantes de ${totE.toLocaleString('es-CL')}`;
+  const pctRed=totE?totH/totE*100:0,faltaRed=totE-totH;
+  document.getElementById('mk3').innerHTML=nf(pctRed,1)+'<small>%</small>';
+  document.getElementById('mk3').style.color=qcol(pctRed);
+  document.getElementById('mk3s').textContent=`Faltan ${faltaRed.toLocaleString('es-CL')} h ≈ ${nf(faltaRed/24,1)} días de registro`;
+  const gr=[0,0,0,0];
+  conH.forEach(s=>{gr[s.pct>=95?0:s.pct>=90?1:s.pct>=80?2:3]++;});
+  const rs=document.getElementById('mResumen');
+  if(rs)rs.innerHTML=[['Excelente','95 % o más',97],['Buena','90 a 95 %',92],['Regular','80 a 90 %',85],['Baja','bajo 80 %',70]]
+    .map(([l,r2,p],i)=>`<div class="qcard" style="background:${qbg(p)};border-color:${qcol(p)}33">
+      <div class="qn" style="color:${qcol(p)}">${gr[i]}</div><div class="ql">${l}</div><div class="qr">${r2}</div></div>`).join('');
   document.getElementById('mk4').textContent=`${fmtL(hDate(S.hFrom))} → ${fmtL(hDate(S.hTo))}`;
   document.getElementById('mk4s').textContent=(S.hTo-S.hFrom+1)+' días · '+((S.hTo-S.hFrom+1)*24).toLocaleString('es-CL')+' horas esperadas';
   chartHoras(st);
