@@ -734,8 +734,6 @@ body.modalopen{overflow:hidden}
 .matrix.mini td:first-child{font-size:10.5px;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .matrix.mini .vp{padding:2px 5px;gap:3px}
 .matrix th{padding:0 8px 8px}
-.matrix th .thtxt{display:inline-block;max-width:104px;overflow:hidden;text-overflow:ellipsis;
-  white-space:nowrap;vertical-align:bottom}
 .matrix td{padding:7px 8px;font-size:11.5px;min-width:56px}
 .matrix td:first-child{background:var(--g);color:#fff;font-weight:600;border-bottom:1px solid #fff;
   font-size:11.5px;position:sticky;left:0;z-index:2}
@@ -1216,9 +1214,12 @@ body.modalopen{overflow:hidden}
     <div class="card mb16">
       <div class="chead">
         <div><h3>Grados-día acumulados por temporada y estación</h3><p>Mismo acumulado del gráfico de arriba, en tabla.</p></div>
-        <div class="ptools"><button class="gh" id="btnHeat">▦ Ver como números</button></div>
+        <div class="ptools">
+          <button class="gh" id="btnHeat">▦ Ver como números</button>
+          <button class="gh" onclick="saveTablaAnios()">↓ Descargar imagen</button>
+        </div>
       </div>
-      <div class="tscroll"><table class="matrix"><thead><tr id="gAnioHead"></tr></thead><tbody id="gAnioBody"></tbody></table></div>
+      <div class="tscroll" style="max-height:380px;overflow-y:auto"><table class="matrix mini"><thead><tr id="gAnioHead"></tr></thead><tbody id="gAnioBody"></tbody></table></div>
       <div class="qleg hide" id="gAnioLeg" style="margin-top:12px;justify-content:space-between">
         <span style="display:flex;align-items:center;gap:8px">
           <span>Menor acumulación</span>
@@ -2492,6 +2493,11 @@ function saveImg(ch,t){
 function kpiLinea(){
   if(CURSEC==='gdd'){
     const st=computeStats().filter(s=>S.sel.has(s.est));
+    if(S.sel.size>1){
+      const prom=st.length?st.reduce((a,c)=>a+c.gdd,0)/st.length:null;
+      return `Promedio de ${S.sel.size} estaciones · base ${BASES[S.base].lbl} · ${fmtL(S.from)} a ${fmtL(S.to)}`+
+        (prom!=null?` · ${nf(prom,0)} °D acumulados`:'');
+    }
     const foco=(S.near&&S.sel.has(S.near))?S.near:[...S.sel][0];
     const m=st.find(s=>s.est===foco);
     return `${foco||''} · base ${BASES[S.base].lbl} · ${fmtL(S.from)} a ${fmtL(S.to)}`+
@@ -2695,6 +2701,13 @@ function heatColor(v,min,max){
   const rgb=c1.map((c,k)=>Math.round(c+(c2[k]-c)*t));
   return '#'+rgb.map(n=>n.toString(16).padStart(2,'0')).join('');
 }
+function tablaAniosValores(sel){
+  const mm=mmddList(),anios=aniosSeleccionados();
+  const val={};
+  anios.forEach(y=>{val[y]={}; sel.forEach(e=>{val[y][e]=totalTemporada(e,mm,y);});});
+  const todos=anios.flatMap(y=>sel.map(e=>val[y][e])).filter(v=>v!=null);
+  return {anios,val,min:todos.length?Math.min(...todos):0,max:todos.length?Math.max(...todos):1};
+}
 function tablaAnios(sel){
   const head=document.getElementById('gAnioHead'),body=document.getElementById('gAnioBody');
   const leg=document.getElementById('gAnioLeg'),btn=document.getElementById('btnHeat');
@@ -2703,29 +2716,97 @@ function tablaAnios(sel){
     head.innerHTML=''; body.innerHTML='<tr><td class="empty">Sin estaciones seleccionadas.</td></tr>';
     leg.classList.add('hide'); return;
   }
-  const mm=mmddList(),anios=aniosSeleccionados();
-  head.innerHTML='<th>Temporada</th>'+sel.map(e=>`<th title="${e}"><span class="thtxt">${e}</span></th>`).join('');
-  const val={};
-  anios.forEach(y=>{val[y]={}; sel.forEach(e=>{val[y][e]=totalTemporada(e,mm,y);});});
-  const todos=anios.flatMap(y=>sel.map(e=>val[y][e])).filter(v=>v!=null);
-  const min=todos.length?Math.min(...todos):0, max=todos.length?Math.max(...todos):1;
+  const {anios,val,min,max}=tablaAniosValores(sel);
+  head.innerHTML='<th>Estación</th>'+anios.map(y=>`<th${y===SEASON?' style="color:var(--g)"':''}>${y}/${String(y+1).slice(2)}${y===SEASON?' · actual':''}</th>`).join('');
   const celda=v=>{
     if(v==null)return '<td><span class="sinreg">s/r</span></td>';
     if(!S.heat)return `<td>${nf(v,0)}</td>`;
     const bg=heatColor(v,min,max);
     return `<td style="background:${bg};color:${darkOn(bg)?'#16211A':'#fff'};font-weight:600">${nf(v,0)}</td>`;
   };
-  let rows=anios.map(y=>`<tr${y===SEASON?' style="background:var(--g-xl)"':''}><td>${y}/${String(y+1).slice(2)}${y===SEASON?' · actual':''}</td>${sel.map(e=>celda(val[y][e])).join('')}</tr>`).join('');
-  if(anios.length>1){
-    const prom=sel.map(e=>{
-      const vs=anios.map(y=>val[y][e]).filter(v=>v!=null);
+  let rows=sel.map(e=>`<tr><td title="${e}">${e}</td>${anios.map(y=>celda(val[y][e])).join('')}</tr>`).join('');
+  if(sel.length>1){
+    const prom=anios.map(y=>{
+      const vs=sel.map(e=>val[y][e]).filter(v=>v!=null);
       return vs.length?vs.reduce((a,c)=>a+c,0)/vs.length:null;
     });
-    rows+=`<tr class="tot"><td>Promedio (${anios.length} temp.)</td>${prom.map(v=>`<td>${v!=null?nf(v,0):'—'}</td>`).join('')}</tr>`;
+    rows+=`<tr class="tot"><td>Promedio (${sel.length} est.)</td>${prom.map(v=>`<td>${v!=null?nf(v,0):'—'}</td>`).join('')}</tr>`;
   }
   body.innerHTML=rows;
   leg.classList.toggle('hide',!S.heat);
   document.getElementById('gAnioLegBase').textContent='GDD base '+BASES[S.base].lbl;
+}
+function saveTablaAnios(){
+  const sel=ESTACIONES.filter(e=>S.sel.has(e));
+  if(!sel.length)return;
+  const {anios,val,min,max}=tablaAniosValores(sel);
+  const showProm=sel.length>1;
+  const labelW=200,colW=110,rowH=32,pad=18,head=64,foot=36;
+  const nRows=sel.length+(showProm?1:0);
+  const W=labelW+colW*anios.length+pad*2;
+  const H=head+rowH*(nRows+1)+foot+pad;
+  const cv=document.createElement('canvas'); cv.width=W; cv.height=H;
+  const x=cv.getContext('2d');
+  x.fillStyle='#fff'; x.fillRect(0,0,W,H);
+  x.textBaseline='middle';
+  x.fillStyle='#16211A'; x.font='700 19px Inter, sans-serif';
+  x.fillText('Grados-día acumulados por temporada y estación',pad,26);
+  x.fillStyle='#6B7A6E'; x.font='500 12.5px Inter, sans-serif';
+  x.fillText(kpiLinea(),pad,48);
+  x.fillStyle='#2C7A46'; x.fillRect(0,head-3,W,3);
+  let y0=head+rowH/2;
+  x.font='700 10px "IBM Plex Mono", monospace'; x.fillStyle='#9AA79C';
+  x.fillText('ESTACIÓN',pad,y0);
+  x.textAlign='center';
+  anios.forEach((y,i)=>{
+    x.fillStyle=y===SEASON?'#2C7A46':'#16211A'; x.font='700 12px Inter, sans-serif';
+    x.fillText(y+'/'+String(y+1).slice(2),labelW+colW*i+colW/2,y0);
+  });
+  x.textAlign='left';
+  y0+=rowH;
+  sel.forEach(e=>{
+    x.fillStyle='#2C7A46'; x.fillRect(0,y0-rowH/2+2,labelW-4,rowH-4);
+    x.fillStyle='#fff'; x.font='600 12px Inter, sans-serif';
+    x.fillText(e.length>26?e.slice(0,25)+'…':e,pad,y0);
+    anios.forEach((yr,i)=>{
+      const v=val[yr][e],cx=labelW+colW*i;
+      if(v==null){
+        x.fillStyle='#F6F8F5'; x.fillRect(cx,y0-rowH/2+2,colW-4,rowH-4);
+        x.fillStyle='#9AA79C'; x.font='italic 11px Inter, sans-serif'; x.textAlign='center';
+        x.fillText('s/r',cx+colW/2,y0);
+      }else{
+        const bg=heatColor(v,min,max);
+        x.fillStyle=bg; x.fillRect(cx,y0-rowH/2+2,colW-4,rowH-4);
+        x.fillStyle=darkOn(bg)?'#16211A':'#fff'; x.font='700 12.5px "IBM Plex Mono", monospace'; x.textAlign='center';
+        x.fillText(nf(v,0),cx+colW/2,y0);
+      }
+      x.textAlign='left';
+    });
+    y0+=rowH;
+  });
+  if(showProm){
+    x.fillStyle='#16211A'; x.fillRect(0,y0-rowH/2+2,labelW-4,rowH-4);
+    x.fillStyle='#fff'; x.font='700 12px Inter, sans-serif';
+    x.fillText('Promedio ('+sel.length+' est.)',pad,y0);
+    anios.forEach((yr,i)=>{
+      const vs=sel.map(e=>val[yr][e]).filter(v=>v!=null);
+      const avg=vs.length?vs.reduce((a,c)=>a+c,0)/vs.length:null;
+      const cx=labelW+colW*i;
+      x.fillStyle='#16211A'; x.fillRect(cx,y0-rowH/2+2,colW-4,rowH-4);
+      x.fillStyle='#fff'; x.font='700 12.5px "IBM Plex Mono", monospace'; x.textAlign='center';
+      x.fillText(avg!=null?nf(avg,0):'—',cx+colW/2,y0);
+      x.textAlign='left';
+    });
+    y0+=rowH;
+  }
+  x.fillStyle='#9AA79C'; x.font='400 11px Inter, sans-serif'; x.textAlign='left';
+  x.fillText('Plataforma Agroclimática · Exportadora Los Olmos · Departamento Técnico',pad,H-foot/2);
+  x.textAlign='right';
+  x.fillText('Generado el '+new Date().toLocaleDateString('es-CL',{day:'2-digit',month:'long',year:'numeric'}),W-pad,H-foot/2);
+  const a=document.createElement('a');
+  a.href=cv.toDataURL('image/png',1);
+  a.download='grados_dia_por_temporada_y_estacion.png';
+  a.click();
 }
 function chartSemana(sel){
   const i=BASES[S.base].i;
