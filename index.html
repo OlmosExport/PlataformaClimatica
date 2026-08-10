@@ -1282,6 +1282,17 @@ body.modalopen{overflow:hidden}
       </div>
     </div>
 
+    <div class="card mb16" style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+      <div style="flex:1;min-width:220px">
+        <div style="display:flex;align-items:center;gap:9px">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#2E6B8F" stroke-width="1.8"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>
+          <b style="font-size:14px">Reporte Heladas por Comuna</b>
+        </div>
+        <p style="margin:4px 0 0;font-size:12px;color:var(--mut)">Datos de la red pública de Cogrowers para las comunas cercanas, con gráfico y detalle por comuna.</p>
+      </div>
+      <button class="btn sm" onclick="abrirCogrowers()">Ver reporte Cogrowers →</button>
+    </div>
+
     <div class="grid g2 mb16">
       <div class="card">
         <div class="chead"><div><h3>Resumen del período</h3></div></div>
@@ -1884,6 +1895,35 @@ body.modalopen{overflow:hidden}
       <div class="ptools"><button class="gh" id="mDown">↓ Descargar imagen</button>
         <button class="btn sm" id="mClose">Cerrar ✕</button></div></div>
     <div class="mbody"><div class="chartbox"><canvas id="mCanvas"></canvas></div></div>
+  </div>
+</div>
+
+<div id="cogModal" class="hide">
+  <div class="mbox" style="max-width:1000px">
+    <div class="mhead">
+      <h3>Reporte Heladas por Comuna <span style="font-weight:400;color:var(--mut);font-size:12.5px">· Cogrowers</span></h3>
+      <div class="ptools">
+        <div class="segm tight" id="cogDates"></div>
+        <button class="btn sm" id="cogClose">Cerrar ✕</button>
+      </div>
+    </div>
+    <div class="mbody" id="cogBody2" style="flex:1;overflow-y:auto;min-height:0">
+      <div class="grid g3 mb16" id="cogKpis"></div>
+      <div class="card mb16">
+        <div class="chead">
+          <div><h3>Horas bajo 0 °C por comuna</h3><p>Ordenadas de mayor a menor, coloreadas por severidad.</p></div>
+          <div class="ptools"><button class="gh" onclick="downloadChart('chCogrowers')">↓ Descargar imagen</button></div>
+        </div>
+        <div id="cogChartWrap" style="position:relative"><canvas id="chCogrowers"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="chead"><div><h3>Detalle por comuna</h3></div></div>
+        <div class="tscroll" style="max-height:360px;overflow-y:auto"><table class="matrix mini">
+          <thead><tr><th>Comuna</th><th>T° promedio bajo 0°C</th><th>Horas bajo 0°C</th><th>T° mínima</th></tr></thead>
+          <tbody id="cogTbody"></tbody></table></div>
+      </div>
+      <div class="hint" style="margin-top:12px" id="cogNota">—</div>
+    </div>
   </div>
 </div>
 
@@ -2493,6 +2533,8 @@ function saveImg(ch,t){
   src.src=ch.toBase64Image('image/png',1);
 }
 function kpiLinea(){
+  if(!document.getElementById('cogModal').classList.contains('hide'))
+    return `Cogrowers · reporte de heladas por comuna del ${fmtL(S.cogFecha)}`;
   if(CURSEC==='gdd'){
     const st=computeStats().filter(s=>S.sel.has(s.est));
     if(S.sel.size>1){
@@ -3017,6 +3059,65 @@ function chartFrost(ev){
   mount('chFrost',cfg,'Heladas por fecha · mínima alcanzada');
 }
 
+/* ═══ REPORTE COGROWERS · heladas por comuna ═══ */
+let COG=null;
+S.cogFecha=null;
+async function cargarCogrowers(){
+  try{const r=await fetch('./heladas_comunas.json?v='+Date.now(),{cache:'no-store'}); if(r.ok)COG=await r.json();}catch(e){}
+}
+function abrirCogrowers(){
+  document.getElementById('cogModal').classList.remove('hide');
+  document.body.classList.add('modalopen');
+  if(COG)safe(renderCogrowers,'el reporte Cogrowers');
+  else cargarCogrowers().then(()=>{
+    if(COG&&COG.reportes&&COG.reportes.length)safe(renderCogrowers,'el reporte Cogrowers');
+    else document.getElementById('cogNota').textContent='No se pudo cargar el reporte. Revisa tu conexión e inténtalo de nuevo.';
+  });
+}
+function cerrarCogrowers(){
+  document.getElementById('cogModal').classList.add('hide');
+  document.body.classList.remove('modalopen');
+}
+document.getElementById('cogClose').onclick=cerrarCogrowers;
+document.getElementById('cogModal').onclick=e=>{if(e.target.id==='cogModal')cerrarCogrowers();};
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!document.getElementById('cogModal').classList.contains('hide'))cerrarCogrowers();});
+function renderCogrowers(){
+  const fechas=COG.reportes.map(r=>r.fecha).sort((a,b)=>b<a?-1:1);
+  if(!S.cogFecha||!fechas.includes(S.cogFecha))S.cogFecha=fechas[0];
+  const dbox=document.getElementById('cogDates');
+  dbox.innerHTML=fechas.map(f=>`<button class="gh ${f===S.cogFecha?'on':''}" data-f="${f}">${fmtL(f)}</button>`).join('');
+  dbox.querySelectorAll('button').forEach(b=>b.onclick=()=>{S.cogFecha=b.dataset.f;renderCogrowers();});
+  const rep=COG.reportes.find(r=>r.fecha===S.cogFecha);
+  const comunas=[...rep.comunas].sort((a,b)=>b.h-a.h);
+  const peor=comunas.length?[...comunas].sort((a,b)=>a.tmin-b.tmin)[0]:null;
+  const promH=comunas.length?comunas.reduce((a,c)=>a+c.h,0)/comunas.length:0;
+  document.getElementById('cogKpis').innerHTML=`
+    <div class="kpi ice"><div class="ki"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#2E6B8F" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+      <div><div class="kl">Comunas reportadas</div><div class="kv">${comunas.length}</div></div></div>
+    <div class="kpi warn"><div class="ki"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#E0A73C" stroke-width="1.8"><path d="M12 2v20M4 6l16 12M20 6L4 18"/></svg></div>
+      <div><div class="kl">Comuna más fría</div><div class="kv" style="font-size:18px">${peor?peor.c:'—'}</div><div class="ks">${peor?nf(peor.tmin,2)+' °C mínima':'—'}</div></div></div>
+    <div class="kpi blue"><div class="ki"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#2E6B8F" stroke-width="1.8"><path d="M14 14.8V4a2 2 0 1 0-4 0v10.8a4 4 0 1 0 4 0z"/></svg></div>
+      <div><div class="kl">Promedio horas bajo 0 °C</div><div class="kv">${nf(promH,1)}<small>h</small></div></div></div>`;
+  document.getElementById('cogTbody').innerHTML=comunas.map(c=>{
+    const sev=sevOf(c.tmin);
+    return `<tr><td title="${c.c}">${c.c}</td><td>${nf(c.tprom,2)}</td><td>${c.htxt}</td><td>${nf(c.tmin,2)}</td></tr>`;
+  }).join('');
+  document.getElementById('cogChartWrap').style.height=Math.max(320,comunas.length*17)+'px';
+  const cfg={type:'bar',data:{labels:comunas.map(c=>c.c),
+      datasets:[{data:comunas.map(c=>+c.h.toFixed(2)),dlUnit:' h',dlDec:1,
+        backgroundColor:comunas.map(c=>SEV[sevOf(c.tmin)].c),borderRadius:4,maxBarThickness:15}]},
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,animation:{duration:600},
+      layout:{padding:{right:56}},
+      plugins:{legend:{display:false},
+        tooltip:{...TT,callbacks:{label:c=>{
+          const co=comunas[c.dataIndex];
+          return [' Horas bajo 0°C: '+co.htxt,' T° promedio: '+nf(co.tprom,2)+' °C',' T° mínima: '+nf(co.tmin,2)+' °C'];
+        }}}},
+      scales:{x:{...AX,beginAtZero:true,grace:'10%',title:{display:true,text:'horas bajo 0 °C',color:'#9AA79C',font:{family:'IBM Plex Mono',size:10}}},
+        y:{grid:{display:false},border:{display:false},ticks:{color:'#16211A',font:{family:'Inter',size:10.5}}}}}};
+  mount('chCogrowers',cfg,'Heladas por comuna · Cogrowers · '+fmtL(S.cogFecha));
+  document.getElementById('cogNota').innerHTML=`Fuente: ${COG.fuente||'Cogrowers'}. La temperatura mínima corresponde al dato más bajo registrado por algún sensor en esa comuna.`;
+}
 
 
 
@@ -4316,7 +4417,7 @@ if('serviceWorker' in navigator && location.protocol==='https:'){
           if(nw.state==='installed'&&navigator.serviceWorker.controller){waitingSW=nw;showUpd();}
         });
       });
-      setInterval(()=>reg.update(),30*60*1000);
+      setInterval(()=>reg.update().catch(()=>{}),30*60*1000);
     }).catch(()=>{});
   });
 }

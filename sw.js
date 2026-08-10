@@ -1,6 +1,6 @@
 /* Service Worker · Plataforma Agroclimática Los Olmos */
-const CACHE = 'olmos-agroclima-v3';
-const CORE = ['./','./index.html','./datos.json','./config.json','./manifest.webmanifest',
+const CACHE = 'olmos-agroclima-v4';
+const CORE = ['./','./index.html','./datos.json','./config.json','./heladas_comunas.json','./manifest.webmanifest',
   './icon-192.png','./icon-512.png','./apple-touch-icon.png',
   'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js',
   'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js',
@@ -35,7 +35,7 @@ self.addEventListener('fetch', e => {
 
   // documento, datos y configuración: primero la red, así llegan las actualizaciones
   const vivo = req.mode === 'navigate' || req.destination === 'document' ||
-               /\/(datos|config)\.json$/.test(url.pathname);
+               /\/(datos|config|heladas_comunas)\.json$/.test(url.pathname);
   if (vivo) {
     e.respondWith(
       fetch(req).then(r => { const cp = r.clone(); caches.open(CACHE).then(c => c.put(req, cp)); return r; })
