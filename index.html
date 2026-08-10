@@ -283,7 +283,7 @@ tbody tr:hover td{background:var(--g-xl)}
 .qleg i{width:9px;height:9px;border-radius:50%;display:inline-block}
 
 /* ══ MODAL ══ */
-#modal{position:fixed;inset:0;background:rgba(22,33,26,.6);z-index:2000;display:flex;align-items:center;justify-content:center;padding:22px}
+#modal,#cogModal{position:fixed;inset:0;background:rgba(22,33,26,.6);z-index:2000;display:flex;align-items:center;justify-content:center;padding:22px}
 .mbox{background:#fff;border-radius:16px;width:100%;max-width:1150px;max-height:92vh;display:flex;flex-direction:column;
   box-shadow:0 24px 60px rgba(0,0,0,.3);animation:fade .3s ease both}
 .mhead{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:16px 20px;border-bottom:1px solid var(--line);flex-wrap:wrap}
@@ -1904,6 +1904,7 @@ body.modalopen{overflow:hidden}
       <h3>Reporte Heladas por Comuna <span style="font-weight:400;color:var(--mut);font-size:12.5px">· Cogrowers</span></h3>
       <div class="ptools">
         <div class="segm tight" id="cogDates"></div>
+        <button class="gh" id="cogBack1">← Volver a Reportes Los Olmos</button>
         <button class="btn sm" id="cogClose">Cerrar ✕</button>
       </div>
     </div>
@@ -1923,6 +1924,7 @@ body.modalopen{overflow:hidden}
           <tbody id="cogTbody"></tbody></table></div>
       </div>
       <div class="hint" style="margin-top:12px" id="cogNota">—</div>
+      <button class="btn" id="cogBack2" style="width:100%;justify-content:center;margin-top:16px">← Volver a Reportes Los Olmos</button>
     </div>
   </div>
 </div>
@@ -3079,6 +3081,8 @@ function cerrarCogrowers(){
   document.body.classList.remove('modalopen');
 }
 document.getElementById('cogClose').onclick=cerrarCogrowers;
+document.getElementById('cogBack1').onclick=cerrarCogrowers;
+document.getElementById('cogBack2').onclick=cerrarCogrowers;
 document.getElementById('cogModal').onclick=e=>{if(e.target.id==='cogModal')cerrarCogrowers();};
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!document.getElementById('cogModal').classList.contains('hide'))cerrarCogrowers();});
 function renderCogrowers(){
