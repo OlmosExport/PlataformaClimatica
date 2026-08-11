@@ -1174,7 +1174,7 @@ body.modalopen{overflow:hidden}
             </div>
             <button class="gh" id="btnNear">Más cercana</button>
             <button class="gh" id="btnTop5">Top 5</button>
-            <button class="gh expOnly" id="btnAll">Todas</button>
+            <button class="gh" id="btnAll">Todas</button>
           </div>
         </div>
         <div class="chipbox2"><div class="chips" id="chips"></div></div>
@@ -2223,7 +2223,8 @@ function rebuildIndex(){
   SEASONS=[...new Set(ALL_DATES.map(seasonOf))].filter(y=>y>=MIN_TEMPORADA).sort((a,b)=>b-a);
   const j15=`${SEASON}-07-15`;
   DEF_FROM=(j15>=DMIN&&j15<=DMAX)?j15:SEASON_MIN;
-  S.from=DEF_FROM; S.to=DMAX; FROST_MIN=SEASON_MIN;
+  const ago1=`${SEASON}-08-01`;
+  S.from=(ago1>=DMIN&&ago1<=DMAX)?ago1:DEF_FROM; S.to=DMAX; FROST_MIN=SEASON_MIN;
 }
 function distKm(la,lo,e){
   const c=COORDS[e]; if(!c)return 1e9;
@@ -2303,7 +2304,7 @@ segButtons(document.getElementById('segBase'),BASES,S.base,i=>{S.base=i;renderGd
   b=>`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M14 14.8V4a2 2 0 1 0-4 0v10.8a4 4 0 1 0 4 0z"/></svg> Base ${b.lbl}`);
 segButtons(document.getElementById('segBaseMap'),BASES,S.mapBase,i=>{S.mapBase=i;drawMap();},b=>`Base ${b.lbl}`);
 const QUICK=[['j15','Desde el 15 de julio'],['ago','Desde agosto'],['d30','Últimos 30 días'],['temp','Temporada completa']];
-segButtons(document.getElementById('segQuick'),QUICK.map(q=>q[1]),0,i=>{
+segButtons(document.getElementById('segQuick'),QUICK.map(q=>q[1]),1,i=>{
   const k=QUICK[i][0];
   if(k==='j15'){S.from=DEF_FROM;S.to=DMAX;}
   if(k==='ago'){const a=`${SEASON}-08-01`; S.from=a>DMAX?DEF_FROM:a; S.to=DMAX;}
@@ -4220,23 +4221,52 @@ function readFile(file){
           }
         }
       }
+      /* heladas: se calculan desde los registros crudos de "Heladas real" (una fila por lectura bajo 0 °C).
+         Se agrupa por estación+día: la mínima del día y las horas bajo 0 se suman nosotros mismos,
+         porque cada fila ya trae listas las horas que representa esa lectura según su frecuencia (60/15/10 min). */
       let frost=null,nfr=0;
-      const fh=wb.Sheets['Eventos_Helada_Detalle'];
-      if(fh){
-        const fa=XLSX.utils.sheet_to_json(fh,{header:1,raw:true});
+      const fhReal=wb.Sheets['Heladas real'];
+      if(fhReal){
+        const fa=XLSX.utils.sheet_to_json(fhReal,{header:1,raw:true});
         const fhh=(fa[0]||[]).map(x=>String(x||'').trim().toLowerCase());
-        const je=fhh.indexOf('estacion'),jf=fhh.indexOf('fecha'),jh=fhh.indexOf('horas_helada'),
-              jp=fhh.indexOf('temp_prom_helada'),jm=fhh.indexOf('temp_min_helada');
-        if(je>=0&&jf>=0&&jh>=0&&jm>=0){
-          frost={};
+        const je=fhh.indexOf('estacion'),jf=fhh.indexOf('fecha'),
+              jt=fhh.findIndex(h=>h.startsWith('temp.')||h.includes('promedio')),jh=fhh.indexOf('horas_helada');
+        if(je>=0&&jf>=0&&jt>=0){
+          const porDia={};
           for(let r=1;r<fa.length;r++){
             const row=fa[r];if(!row||!row[je])continue;
             const f=isoOf(row[jf]);if(!f)continue;
-            (frost[limpiaEst(row[je])]=frost[limpiaEst(row[je])]||[])
-              .push([f,Math.round(num(row[jh])||0),num(row[jp]),num(row[jm])]);
-            nfr++;
+            const t=num(row[jt]);if(t==null||t>=0)continue;
+            const k=limpiaEst(row[je])+'|'+f;
+            const d=porDia[k]=porDia[k]||{e:limpiaEst(row[je]),f,horas:0,tempSum:0,tempN:0,tempMin:t};
+            d.horas+=jh>=0?(num(row[jh])||0):0; d.tempSum+=t; d.tempN++; if(t<d.tempMin)d.tempMin=t;
           }
+          frost={};
+          Object.values(porDia).forEach(d=>{
+            (frost[d.e]=frost[d.e]||[]).push([d.f,Math.round(d.horas),+(d.tempSum/d.tempN).toFixed(2),+d.tempMin.toFixed(2)]);
+            nfr++;
+          });
           for(const e in frost)frost[e].sort((a,b)=>a[0]<b[0]?-1:1);
+        }
+      }else{
+        /* respaldo por si el archivo no trae "Heladas real": hoja antigua ya agregada por día */
+        const fh=wb.Sheets['Eventos_Helada_Detalle'];
+        if(fh){
+          const fa=XLSX.utils.sheet_to_json(fh,{header:1,raw:true});
+          const fhh=(fa[0]||[]).map(x=>String(x||'').trim().toLowerCase());
+          const je=fhh.indexOf('estacion'),jf=fhh.indexOf('fecha'),jh=fhh.indexOf('horas_helada'),
+                jp=fhh.indexOf('temp_prom_helada'),jm=fhh.indexOf('temp_min_helada');
+          if(je>=0&&jf>=0&&jh>=0&&jm>=0){
+            frost={};
+            for(let r=1;r<fa.length;r++){
+              const row=fa[r];if(!row||!row[je])continue;
+              const f=isoOf(row[jf]);if(!f)continue;
+              (frost[limpiaEst(row[je])]=frost[limpiaEst(row[je])]||[])
+                .push([f,Math.round(num(row[jh])||0),num(row[jp]),num(row[jm])]);
+              nfr++;
+            }
+            for(const e in frost)frost[e].sort((a,b)=>a[0]<b[0]?-1:1);
+          }
         }
       }
       /* HF y PF: hoja Resumen_Agroclimatico_Master */
