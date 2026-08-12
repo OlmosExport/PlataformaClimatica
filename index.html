@@ -283,7 +283,7 @@ tbody tr:hover td{background:var(--g-xl)}
 .qleg i{width:9px;height:9px;border-radius:50%;display:inline-block}
 
 /* ══ MODAL ══ */
-#modal,#cogModal{position:fixed;inset:0;background:rgba(22,33,26,.6);z-index:2000;display:flex;align-items:center;justify-content:center;padding:22px}
+#modal,#cogModal,#tblModal{position:fixed;inset:0;background:rgba(22,33,26,.6);z-index:2000;display:flex;align-items:center;justify-content:center;padding:22px}
 .mbox{background:#fff;border-radius:16px;width:100%;max-width:1150px;max-height:92vh;display:flex;flex-direction:column;
   box-shadow:0 24px 60px rgba(0,0,0,.3);animation:fade .3s ease both}
 .mhead{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:16px 20px;border-bottom:1px solid var(--line);flex-wrap:wrap}
@@ -727,22 +727,28 @@ input[type=range]{touch-action:none}
 body.navopen{overflow:hidden}
 body.modalopen{overflow:hidden}
 /* ══ HF / PF ══ */
-.matrix{font-size:11.5px}
+.matrix{font-size:11.5px;border-radius:10px;overflow:hidden}
 .matrix.mini{font-size:10.5px}
-.matrix.mini td{padding:5px 6px;font-size:10.5px}
-.matrix.mini th{padding:0 6px 7px;font-size:8.5px}
-.matrix.mini td:first-child{font-size:10.5px;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.matrix.mini td{padding:7px 10px;font-size:10.5px}
+.matrix.mini th{padding:10px 10px;font-size:8.5px}
+.matrix.mini td:first-child{font-size:10.5px;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .matrix.mini .vp{padding:2px 5px;gap:3px}
-.matrix th{padding:0 8px 8px}
-.matrix td{padding:7px 8px;font-size:11.5px;min-width:56px}
-.matrix td:first-child{background:var(--g);color:#fff;font-weight:600;border-bottom:1px solid #fff;
-  font-size:11.5px;position:sticky;left:0;z-index:2}
+.matrix th{background:var(--g-d);color:#fff;padding:12px;font-family:"IBM Plex Mono",monospace;
+  font-size:9px;letter-spacing:.12em;text-transform:uppercase;border-bottom:0;position:sticky;top:0;z-index:3}
+.matrix th:first-child{text-align:left}
+.matrix th .sarrow{margin-left:4px;opacity:.85;font-size:8px}
+.matrix td{padding:9px 12px;font-size:11.5px;min-width:56px}
+.matrix td:first-child{background:var(--g);color:#fff;font-weight:600;border-bottom:1px solid rgba(255,255,255,.14);
+  font-size:11.5px;position:sticky;left:0;z-index:2;text-align:left;white-space:nowrap}
+.matrix td:first-child svg{vertical-align:-2px;margin-right:5px;flex:none;opacity:.9}
 .matrix tbody tr:hover td:first-child{background:var(--g-d)}
 .matrix .tot td{background:var(--ink);color:#fff;font-weight:700}
 .matrix .tot td:first-child{background:var(--ink)}
 .vp{display:inline-flex;align-items:center;gap:5px;justify-content:flex-end;padding:3px 7px;border-radius:6px;width:100%}
 .vp.up{background:#E8F2EA;color:#1E5B33}.vp.dn{background:#FBECE9;color:#A33A28}
 .sinreg{color:var(--mut2);font-style:italic;font-family:"Inter",sans-serif}
+.mleg{display:flex;gap:18px;flex-wrap:wrap;align-items:center;font-size:11.5px;color:var(--mut);margin-top:12px}
+.mleg b{font-weight:700}
 .cutwrap{display:flex;gap:22px;flex-wrap:wrap;align-items:flex-end}
 .cutlbl{font-size:20px;font-weight:700;color:var(--g-d)}
 .estcard{background:linear-gradient(165deg,#2C7A46,#1B4E2C);color:#fff;border-radius:var(--r);
@@ -1183,9 +1189,12 @@ body.modalopen{overflow:hidden}
       </div>
       <div class="switchrow">
         <div class="sw2" id="swHist" role="switch" aria-checked="false"></div>
-        <div><b>Comparar con temporadas anteriores</b>
+        <div style="flex:1">
+          <b>Comparar con temporadas anteriores</b>
           <span>Agrega la curva del promedio histórico, el resumen comparativo y las barras de temporadas previas en el gráfico y la tabla de comparación.
-            Actívalo solo si confías en los registros antiguos de esa estación.</span></div>
+            Actívalo solo si confías en los registros antiguos de esa estación.</span>
+          <div class="chips hide" id="histAniosBox" style="margin-top:10px"></div>
+        </div>
       </div>
     </div>
 
@@ -1216,10 +1225,11 @@ body.modalopen{overflow:hidden}
         <div><h3>Grados-día acumulados por temporada y estación</h3><p>Mismo acumulado del gráfico de arriba, en tabla.</p></div>
         <div class="ptools">
           <button class="gh" id="btnHeat">▦ Ver como números</button>
-          <button class="gh" onclick="saveTablaAnios()">↓ Descargar imagen</button>
+          <button class="gh" onclick="ampliarTabla('gAnioTable','Grados-día acumulados por temporada y estación')">⤢ Ampliar</button>
+          <button class="gh" onclick="descargarTabla('gAnioTable','Grados-día acumulados por temporada y estación')">↓ Descargar imagen</button>
         </div>
       </div>
-      <div class="tscroll" style="max-height:380px;overflow-y:auto"><table class="matrix mini"><thead><tr id="gAnioHead"></tr></thead><tbody id="gAnioBody"></tbody></table></div>
+      <div class="tscroll" style="max-height:380px;overflow-y:auto"><table class="matrix mini" id="gAnioTable"><thead><tr id="gAnioHead"></tr></thead><tbody id="gAnioBody"></tbody></table></div>
       <div class="qleg hide" id="gAnioLeg" style="margin-top:12px;justify-content:space-between">
         <span style="display:flex;align-items:center;gap:8px">
           <span>Menor acumulación</span>
@@ -1227,6 +1237,25 @@ body.modalopen{overflow:hidden}
           <span>Mayor acumulación</span>
         </span>
         <span id="gAnioLegBase">—</span>
+      </div>
+    </div>
+
+    <div class="card mb16" id="gVarCard">
+      <div class="chead">
+        <div><h3>Variación % entre temporadas</h3><p>Cada temporada activa comparada con <span id="gVarRef">—</span>.</p></div>
+        <div class="ptools">
+          <button class="gh" onclick="ampliarTabla('gVarTable','Variación % entre temporadas')">⤢ Ampliar</button>
+          <button class="gh" onclick="descargarTabla('gVarTable','Variación % entre temporadas')">↓ Descargar imagen</button>
+        </div>
+      </div>
+      <div class="hintbox" id="gVarHint">Activa «Comparar con temporadas anteriores» en el bloque de estaciones para ver la variación porcentual.</div>
+      <div class="hide" id="gVarWrap">
+        <div class="tscroll" style="max-height:380px;overflow-y:auto"><table class="matrix mini" id="gVarTable"><thead><tr id="gVarHead"></tr></thead><tbody id="gVarBody"></tbody></table></div>
+        <div class="qleg" style="margin-top:12px">
+          <span><i style="background:#1E5B33;border-radius:3px;width:7px;height:11px"></i>▲ Aumento respecto al año de comparación</span>
+          <span><i style="background:#A33A28;border-radius:3px;width:7px;height:11px"></i>▼ Disminución respecto al año de comparación</span>
+          <span><span class="sinreg">s/r</span> Sin referencia disponible</span>
+        </div>
       </div>
     </div>
 
@@ -1369,17 +1398,28 @@ body.modalopen{overflow:hidden}
         </div>
       </div>
       <div class="card">
-        <div class="chead"><div><h3>Detalle por estación</h3><p>Resumen del período para las estaciones seleccionadas.</p></div></div>
-        <div class="tscroll" style="max-height:300px;overflow-y:auto"><table>
-          <thead><tr><th>Estación</th><th>Eventos</th><th>Mínima (°C)</th><th>Última helada</th></tr></thead>
+        <div class="chead">
+          <div><h3>Detalle por estación</h3><p>Resumen del período para las estaciones seleccionadas.</p></div>
+          <div class="ptools">
+            <button class="gh" onclick="ampliarTabla('fEstTable','Detalle por estación')">⤢ Ampliar</button>
+            <button class="gh" onclick="descargarTabla('fEstTable','Detalle por estación')">↓ Descargar imagen</button>
+          </div>
+        </div>
+        <div class="tscroll" style="max-height:300px;overflow-y:auto"><table class="matrix mini" id="fEstTable">
+          <thead><tr><th>Estación <span class="sarrow">▾</span></th><th>Eventos</th><th>Mínima (°C)</th><th>Última helada</th></tr></thead>
           <tbody id="fEstBody"></tbody></table></div>
       </div>
     </div>
 
     <div class="card mb16">
-      <div class="chead"><div><h3>Detalle de eventos</h3><p>Ordena haciendo clic en cualquier columna.</p></div>
+      <div class="chead">
+        <div><h3>Detalle de eventos</h3><p>Ordena haciendo clic en cualquier columna.</p></div>
+        <div class="ptools">
+          <button class="gh" onclick="ampliarTabla('ftable','Detalle de eventos de helada')">⤢ Ampliar</button>
+          <button class="gh" onclick="descargarTabla('ftable','Detalle de eventos de helada')">↓ Descargar imagen</button>
         </div>
-      <div class="tscroll"><table>
+      </div>
+      <div class="tscroll" style="max-height:380px;overflow-y:auto"><table class="matrix mini" id="ftable">
         <thead><tr><th data-f="est">Estación</th><th data-f="fecha" class="sorted">Fecha</th><th data-f="horas">Horas bajo 0 °C</th>
           <th data-f="tprom">T° promedio del evento</th><th data-f="tmin">T° mínima</th><th data-f="sev">Severidad</th></tr></thead>
         <tbody id="ftbody"></tbody></table></div>
@@ -1446,15 +1486,25 @@ body.modalopen{overflow:hidden}
     <div class="grid g3 mb16">
       <div class="estcard" id="cEstCard"></div>
       <div class="card">
-        <div class="chead"><div><h3>Horas frío base 7,2 °C por temporada</h3><p>Acumulado al día de corte</p></div>
+        <div class="chead">
+          <div><h3>Horas frío base 7,2 °C por temporada</h3><p>Acumulado al día de corte</p></div>
+          <div class="ptools">
+            <button class="gh" onclick="ampliarTabla('cTabHFTable','Horas frío base 7,2 °C por temporada')">⤢ Ampliar</button>
+            <button class="gh" onclick="descargarTabla('cTabHFTable','Horas frío base 7,2 °C por temporada')">↓ Descargar imagen</button>
           </div>
-        <div class="tscroll"><table><thead><tr><th>Temporada</th><th id="cThEst">Estación</th><th>Promedio red</th></tr></thead>
+        </div>
+        <div class="tscroll"><table class="matrix mini" id="cTabHFTable"><thead><tr><th>Temporada</th><th id="cThEst">Estación</th><th>Promedio red</th></tr></thead>
           <tbody id="cTabHF"></tbody></table></div>
       </div>
       <div class="card">
-        <div class="chead"><div><h3>Porciones de frío acumuladas por temporada</h3><p>Modelo dinámico · al día de corte</p></div>
+        <div class="chead">
+          <div><h3>Porciones de frío acumuladas por temporada</h3><p>Modelo dinámico · al día de corte</p></div>
+          <div class="ptools">
+            <button class="gh" onclick="ampliarTabla('cTabPFTable','Porciones de frío acumuladas por temporada')">⤢ Ampliar</button>
+            <button class="gh" onclick="descargarTabla('cTabPFTable','Porciones de frío acumuladas por temporada')">↓ Descargar imagen</button>
           </div>
-        <div class="tscroll"><table><thead><tr><th>Temporada</th><th id="cThEst2">Estación</th><th>Promedio red</th></tr></thead>
+        </div>
+        <div class="tscroll"><table class="matrix mini" id="cTabPFTable"><thead><tr><th>Temporada</th><th id="cThEst2">Estación</th><th>Promedio red</th></tr></thead>
           <tbody id="cTabPF"></tbody></table></div>
       </div>
     </div>
@@ -1505,26 +1555,75 @@ body.modalopen{overflow:hidden}
 
     <div class="grid g2 mb16 expOnly">
       <div class="card">
-        <div class="chead"><div><h3>Horas frío base 7,2 °C · toda la red</h3><p>Acumulado por temporada al día de corte.</p></div>
+        <div class="chead">
+          <div><h3>Horas frío base 7,2 °C · toda la red</h3><p>Acumulado por temporada al día de corte.</p></div>
+          <div class="ptools">
+            <button class="gh" onclick="ampliarTabla('cMatTable','Horas frío base 7,2 °C · toda la red')">⤢ Ampliar</button>
+            <button class="gh" onclick="descargarTabla('cMatTable','Horas frío base 7,2 °C · toda la red')">↓ Descargar imagen</button>
           </div>
-        <div class="tscroll" style="max-height:320px;overflow-y:auto"><table class="matrix mini"><thead><tr id="cMatHead"></tr></thead><tbody id="cMatBody"></tbody></table></div>
+        </div>
+        <div class="tscroll" style="max-height:320px;overflow-y:auto"><table class="matrix mini" id="cMatTable"><thead><tr id="cMatHead"></tr></thead><tbody id="cMatBody"></tbody></table></div>
+        <div class="qleg" style="margin-top:12px;justify-content:space-between">
+          <span style="display:flex;align-items:center;gap:8px">
+            <span>Menor acumulado</span>
+            <span style="display:inline-block;width:120px;height:8px;border-radius:4px;background:linear-gradient(90deg,#EAF4EC,#1E5B33)"></span>
+            <span>Mayor acumulado</span>
+          </span>
+          <span><span class="sinreg">s/r</span> Sin referencia disponible</span>
+        </div>
       </div>
       <div class="card">
-        <div class="chead"><div><h3>Porciones de frío · toda la red</h3><p>Acumulado por temporada al día de corte.</p></div></div>
-        <div class="tscroll" style="max-height:320px;overflow-y:auto"><table class="matrix mini"><thead><tr id="pMatHead"></tr></thead><tbody id="pMatBody"></tbody></table></div>
+        <div class="chead">
+          <div><h3>Porciones de frío · toda la red</h3><p>Acumulado por temporada al día de corte.</p></div>
+          <div class="ptools">
+            <button class="gh" onclick="ampliarTabla('pMatTable','Porciones de frío · toda la red')">⤢ Ampliar</button>
+            <button class="gh" onclick="descargarTabla('pMatTable','Porciones de frío · toda la red')">↓ Descargar imagen</button>
+          </div>
+        </div>
+        <div class="tscroll" style="max-height:320px;overflow-y:auto"><table class="matrix mini" id="pMatTable"><thead><tr id="pMatHead"></tr></thead><tbody id="pMatBody"></tbody></table></div>
+        <div class="qleg" style="margin-top:12px;justify-content:space-between">
+          <span style="display:flex;align-items:center;gap:8px">
+            <span>Menor acumulado</span>
+            <span style="display:inline-block;width:120px;height:8px;border-radius:4px;background:linear-gradient(90deg,#EAF4EC,#1E5B33)"></span>
+            <span>Mayor acumulado</span>
+          </span>
+          <span><span class="sinreg">s/r</span> Sin referencia disponible</span>
+        </div>
       </div>
     </div>
 
     <div class="grid g2 mb16 expOnly">
       <div class="card">
-        <div class="chead"><div><h3>Variación % de horas frío base 7,2 °C</h3>
-          <p>Cada temporada comparada con <span id="cVarRef">—</span>.</p></div></div>
-        <div class="tscroll" style="max-height:320px;overflow-y:auto"><table class="matrix mini"><thead><tr id="cVarHead"></tr></thead><tbody id="cVarBody"></tbody></table></div>
+        <div class="chead">
+          <div><h3>Variación % de horas frío base 7,2 °C</h3>
+          <p>Cada temporada comparada con <span id="cVarRef">—</span>.</p></div>
+          <div class="ptools">
+            <button class="gh" onclick="ampliarTabla('cVarTable','Variación % de horas frío base 7,2 °C')">⤢ Ampliar</button>
+            <button class="gh" onclick="descargarTabla('cVarTable','Variación % de horas frío base 7,2 °C')">↓ Descargar imagen</button>
+          </div>
+        </div>
+        <div class="tscroll" style="max-height:320px;overflow-y:auto"><table class="matrix mini" id="cVarTable"><thead><tr id="cVarHead"></tr></thead><tbody id="cVarBody"></tbody></table></div>
+        <div class="qleg" style="margin-top:12px">
+          <span><i style="background:#1E5B33;border-radius:3px;width:7px;height:11px"></i>▲ Aumento respecto al año de comparación</span>
+          <span><i style="background:#A33A28;border-radius:3px;width:7px;height:11px"></i>▼ Disminución respecto al año de comparación</span>
+          <span><span class="sinreg">s/r</span> Sin referencia disponible</span>
+        </div>
       </div>
       <div class="card">
-        <div class="chead"><div><h3>Variación % de porciones de frío</h3>
-          <p>Cada temporada comparada con <span id="pVarRef">—</span>.</p></div></div>
-        <div class="tscroll" style="max-height:320px;overflow-y:auto"><table class="matrix mini"><thead><tr id="pVarHead"></tr></thead><tbody id="pVarBody"></tbody></table></div>
+        <div class="chead">
+          <div><h3>Variación % de porciones de frío</h3>
+          <p>Cada temporada comparada con <span id="pVarRef">—</span>.</p></div>
+          <div class="ptools">
+            <button class="gh" onclick="ampliarTabla('pVarTable','Variación % de porciones de frío')">⤢ Ampliar</button>
+            <button class="gh" onclick="descargarTabla('pVarTable','Variación % de porciones de frío')">↓ Descargar imagen</button>
+          </div>
+        </div>
+        <div class="tscroll" style="max-height:320px;overflow-y:auto"><table class="matrix mini" id="pVarTable"><thead><tr id="pVarHead"></tr></thead><tbody id="pVarBody"></tbody></table></div>
+        <div class="qleg" style="margin-top:12px">
+          <span><i style="background:#1E5B33;border-radius:3px;width:7px;height:11px"></i>▲ Aumento respecto al año de comparación</span>
+          <span><i style="background:#A33A28;border-radius:3px;width:7px;height:11px"></i>▼ Disminución respecto al año de comparación</span>
+          <span><span class="sinreg">s/r</span> Sin referencia disponible</span>
+        </div>
       </div>
     </div>
 
@@ -1536,10 +1635,25 @@ body.modalopen{overflow:hidden}
         <div class="chartbox"><canvas id="chGen"></canvas></div>
       </div>
       <div class="card">
-        <div class="chead"><div><h3>Ranking de estaciones · temporada actual</h3><p>De la más fría a la menos fría al día de corte.</p></div>
+        <div class="chead"><div><h3>Ranking de estaciones · horas frío</h3><p>De la más fría a la menos fría al día de corte.</p></div>
           <div class="ptools"><button class="gh" onclick="expandChart('chRank')">⤢ Ampliar</button>
             <button class="gh" onclick="downloadChart('chRank')">↓ Imagen</button></div></div>
         <div class="chartbox"><canvas id="chRank"></canvas></div>
+      </div>
+    </div>
+
+    <div class="grid g2 mb16 expOnly">
+      <div class="card">
+        <div class="chead"><div><h3>Promedio general de porciones de frío</h3><p>Promedio de todas las estaciones con registro.</p></div>
+          <div class="ptools"><button class="gh" onclick="expandChart('chGenPF')">⤢ Ampliar</button>
+            <button class="gh" onclick="downloadChart('chGenPF')">↓ Imagen</button></div></div>
+        <div class="chartbox"><canvas id="chGenPF"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="chead"><div><h3>Ranking de estaciones · porciones de frío</h3><p>De la más fría a la menos fría al día de corte.</p></div>
+          <div class="ptools"><button class="gh" onclick="expandChart('chRankPF')">⤢ Ampliar</button>
+            <button class="gh" onclick="downloadChart('chRankPF')">↓ Imagen</button></div></div>
+        <div class="chartbox"><canvas id="chRankPF"></canvas></div>
       </div>
     </div>
 
@@ -1643,11 +1757,13 @@ body.modalopen{overflow:hidden}
           <div><h3>Registros ingresados a mano</h3><p>Se guardan en este dispositivo. Para que los vea todo el equipo,
             descarga el datos.json y súbelo a GitHub.</p></div>
           <div class="ptools">
+            <button class="gh" onclick="ampliarTabla('mgTable','Registros ingresados a mano')">⤢ Ampliar</button>
+            <button class="gh" onclick="descargarTabla('mgTable','Registros ingresados a mano')">↓ Descargar imagen</button>
             <button class="gh" id="mgSave">↓ Descargar datos.json</button>
             <button class="gh" id="mgClear">Vaciar registros</button>
           </div>
         </div>
-        <div class="tscroll"><table>
+        <div class="tscroll" style="max-height:380px;overflow-y:auto"><table class="matrix mini" id="mgTable">
           <thead><tr><th>Estación</th><th>Fecha</th><th>Tmín</th><th>Tmáx</th><th>H&lt;0</th><th>HF</th><th>PF</th><th>GDD 10</th><th></th></tr></thead>
           <tbody id="mgBody"></tbody></table></div>
       </div>
@@ -1696,11 +1812,17 @@ body.modalopen{overflow:hidden}
     <div class="grid g21 mb16">
       <div class="card" style="padding:12px"><div id="map"></div></div>
       <div class="card">
-        <div class="chead"><div><h3>Estaciones (<span id="mapCount">—</span>)</h3><p>Disponibilidad de datos horarios en el período seleccionado</p></div></div>
-        <div class="mlist"><table>
-          <thead><tr><th>Estación</th><th>Calidad</th><th>Horas registradas</th><th>Faltan</th><th>Completitud</th></tr></thead>
+        <div class="chead">
+          <div><h3>Estaciones (<span id="mapCount">—</span>)</h3><p>Disponibilidad de datos horarios en el período seleccionado</p></div>
+          <div class="ptools">
+            <button class="gh" onclick="ampliarTabla('mlistTable','Cobertura horaria por estación')">⤢ Ampliar</button>
+            <button class="gh" onclick="descargarTabla('mlistTable','Cobertura horaria por estación')">↓ Descargar imagen</button>
+          </div>
+        </div>
+        <div class="mlist"><table class="matrix mini" id="mlistTable">
+          <thead><tr><th>Estación <span class="sarrow">▾</span></th><th>Calidad</th><th>Horas registradas</th><th>Faltan</th><th>Completitud</th></tr></thead>
           <tbody id="mlist"></tbody></table></div>
-        
+
       </div>
     </div>
 
@@ -1929,6 +2051,19 @@ body.modalopen{overflow:hidden}
   </div>
 </div>
 
+<div id="tblModal" class="hide">
+  <div class="mbox" style="max-width:1150px">
+    <div class="mhead">
+      <h3 id="tblTitle">—</h3>
+      <div class="ptools">
+        <button class="gh" id="tblDown">↓ Descargar imagen</button>
+        <button class="btn sm" id="tblClose">Cerrar ✕</button>
+      </div>
+    </div>
+    <div class="mbody" style="flex:1;overflow:auto;min-height:0" id="tblHost"></div>
+  </div>
+</div>
+
 <script>
 const APP_START=1;
 /* ═══ CAPTURA DE ERRORES ═══ */
@@ -1972,6 +2107,8 @@ function saveCfg(){
 const CLAVE='Olmos2026';
 const BASES=[{i:1,lbl:'4,5 °C',corto:'Base 4,5 °C',color:'#4F9E68'},{i:2,lbl:'10 °C',corto:'Base 10 °C',color:'#2C7A46'}];
 const SEV=[{l:'Leve',c:'#BFDCEF',r:'sobre −2 °C'},{l:'Moderada',c:'#4A90C4',r:'−2 a −4 °C'},{l:'Severa',c:'#1B4F8A',r:'bajo −4 °C'}];
+/* icono de estación usado en la primera columna de las tablas tipo matriz */
+const PINSVG='<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="vertical-align:-1px"><path d="M12 21s7-6.5 7-11a7 7 0 1 0-14 0c0 4.5 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>';
 const sevOf=t=>t>-2?0:(t>-4?1:2);
 /* paleta para comparar estaciones entre sí */
 const PAL=['#2C7A46','#2E6B8F','#B5602F','#C99A2E','#7E5EA8','#1E5B33','#3E8E7E','#A83A2C',
@@ -1989,8 +2126,8 @@ document.getElementById('wmIcon').src=LOGO_ICON;
 
 let ESTACIONES=[],ALL_DATES=[],DMIN='',DMAX='',SEASON=0,SEASON_MIN='',DEF_FROM='',SEASONS=[],FROST_MIN='';
 /* registros anteriores a esta temporada no se muestran: son demasiado incompletos para comparar */
-const MIN_TEMPORADA=2021;
-const S={role:null,base:1,mode:'acum',from:null,to:null,sel:new Set(),near:null,nearKm:null,heat:true,
+const MIN_TEMPORADA=2022;
+const S={role:null,base:1,mode:'acum',from:null,to:null,sel:new Set(),near:null,nearKm:null,heat:true,temporadasOff:new Set(),
          mapBase:1,mk:'icon',fSel:new Set(),fFrom:0,fTo:0,fSev:new Set([0,1,2]),fSort:'fecha',fDir:-1,guideFor:null};
 
 const nf=(v,d=1)=>v==null||isNaN(v)?'—':v.toLocaleString('es-CL',{minimumFractionDigits:d,maximumFractionDigits:d});
@@ -2339,10 +2476,23 @@ function buildChips(){
   });
   document.getElementById('cntSel').textContent=`(${S.sel.size} de ${ESTACIONES.length})`;
 }
+function buildHistChips(){
+  const box=document.getElementById('histAniosBox');
+  if(!box)return;
+  box.classList.toggle('hide',!S.hist);
+  const prev=SEASONS.filter(y=>y!==SEASON).sort((a,b)=>b-a);
+  box.innerHTML=prev.map(y=>`<div class="chip ${S.temporadasOff.has(y)?'':'on'}" data-y="${y}">
+    <span class="dot" style="background:${S.temporadasOff.has(y)?'#D6DCD4':'#2C7A46'}"></span>${y}/${String(y+1).slice(2)}</div>`).join('');
+  box.querySelectorAll('.chip').forEach(c=>c.onclick=()=>{
+    const y=+c.dataset.y;
+    S.temporadasOff.has(y)?S.temporadasOff.delete(y):S.temporadasOff.add(y);
+    buildHistChips(); renderGdd();
+  });
+}
 const swH=document.getElementById('swHist');
 if(swH)swH.onclick=()=>{
   S.hist=!S.hist; swH.classList.toggle('on',S.hist); swH.setAttribute('aria-checked',S.hist);
-  renderGdd();
+  buildHistChips(); renderGdd();
 };
 const btnHeat=document.getElementById('btnHeat');
 if(btnHeat)btnHeat.onclick=()=>{S.heat=!S.heat;tablaAnios(ESTACIONES.filter(e=>S.sel.has(e)));};
@@ -2603,7 +2753,7 @@ function renderGdd(){
   }else{set('kAcum','—','Sin datos');set('kRate','—');}
   set('kDays',days(S.from,S.to)+'<small>días</small>',`${fmtL(S.from)} → ${fmtL(S.to)}`);
   chartCurva(sel,foco); chartSemana(sel); cmpBoxes(foco);
-  chartAnios(sel); tablaAnios(sel);
+  chartAnios(sel); tablaAnios(sel); tablaVariacionGdd(sel);
 }
 function mmddList(){
   const out=[],d0=parseD(S.from),d1=parseD(S.to);
@@ -2715,7 +2865,10 @@ function isoWeek(d){
   return Math.ceil(((t-y0)/864e5+1)/7);
 }
 /* acumulado a la fecha equivalente de cada temporada, para comparar estaciones entre sí */
-function aniosSeleccionados(){ return (S.hist?SEASONS.slice():[SEASON]).sort((a,b)=>b-a); }
+function aniosSeleccionados(){
+  if(!S.hist)return [SEASON];
+  return SEASONS.filter(y=>y===SEASON||!S.temporadasOff.has(y)).sort((a,b)=>b-a);
+}
 function totalTemporada(est,mm,y){
   const c=histCurve(est,mm,y),vs=c.filter(v=>v!=null);
   return vs.length?vs[vs.length-1]:null;
@@ -2764,14 +2917,14 @@ function tablaAnios(sel){
     leg.classList.add('hide'); return;
   }
   const {anios,val,min,max}=tablaAniosValores(sel);
-  head.innerHTML='<th>Estación</th>'+anios.map(y=>`<th${y===SEASON?' style="color:var(--g)"':''}>Temporada ${y}/${String(y+1).slice(2)}${y===SEASON?' · actual':''}</th>`).join('');
+  head.innerHTML='<th>Estación <span class="sarrow">▾</span></th>'+anios.map(y=>`<th${y===SEASON?' style="color:var(--g)"':''}>Temporada ${y}/${String(y+1).slice(2)}${y===SEASON?' · actual':''}</th>`).join('');
   const celda=v=>{
     if(v==null)return '<td><span class="sinreg">s/r</span></td>';
     if(!S.heat)return `<td>${nf(v,0)}</td>`;
     const bg=heatColor(v,min,max);
     return `<td style="background:${bg};color:${darkOn(bg)?'#16211A':'#fff'};font-weight:600">${nf(v,0)}</td>`;
   };
-  let rows=sel.map(e=>`<tr><td title="${e}">${e}</td>${anios.map(y=>celda(val[y][e])).join('')}</tr>`).join('');
+  let rows=sel.map(e=>`<tr><td title="${e}">${PINSVG}${e}</td>${anios.map(y=>celda(val[y][e])).join('')}</tr>`).join('');
   if(sel.length>1){
     const prom=anios.map(y=>{
       const vs=sel.map(e=>val[y][e]).filter(v=>v!=null);
@@ -2783,85 +2936,129 @@ function tablaAnios(sel){
   leg.classList.toggle('hide',!S.heat);
   document.getElementById('gAnioLegBase').textContent='GDD base '+BASES[S.base].lbl;
 }
-function saveTablaAnios(){
-  const sel=ESTACIONES.filter(e=>S.sel.has(e));
-  if(!sel.length)return;
-  const {anios,val,min,max}=tablaAniosValores(sel);
-  const showProm=sel.length>1;
-  const labelW=200,colW=140,rowH=32,pad=20,head=64,foot=40;
-  const nRows=sel.length+(showProm?1:0);
-  const title='Grados-día acumulados por temporada y estación';
-  const sub=kpiLinea();
+function tablaVariacionGdd(sel){
+  const hint=document.getElementById('gVarHint'),wrap=document.getElementById('gVarWrap');
+  const mm=mmddList();
+  const anios=aniosSeleccionados();
+  const prevs=anios.filter(y=>y!==SEASON).sort((a,b)=>b-a);
+  if(!sel.length||!prevs.length){
+    hint.classList.remove('hide'); wrap.classList.add('hide');
+    return;
+  }
+  hint.classList.add('hide'); wrap.classList.remove('hide');
+  document.getElementById('gVarRef').textContent=prevs.length>1
+    ?`cada temporada anterior activa`:`${prevs[0]}/${String(prevs[0]+1).slice(2)}`;
+  document.getElementById('gVarHead').innerHTML='<th>Estación <span class="sarrow">▾</span></th>'+
+    prevs.map(y=>`<th>${SEASON} / ${y} (%)</th>`).join('');
+  const curOf=e=>totalTemporada(e,mm,SEASON);
+  let rows=sel.map(e=>{
+    const cur=curOf(e);
+    const cel=prevs.map(y=>{
+      const v=totalTemporada(e,mm,y);
+      const pct=(cur!=null&&v)?(cur-v)/v*100:null;
+      return `<td>${(cur!=null&&v!=null)?vpill(pct):'<span class="sinreg">s/r</span>'}</td>`;
+    }).join('');
+    return `<tr><td title="${e}">${PINSVG}${e}</td>${cel}</tr>`;
+  }).join('');
+  if(sel.length>1){
+    const cel=prevs.map(y=>{
+      const curs=sel.map(curOf).filter(v=>v!=null);
+      const olds=sel.map(e=>totalTemporada(e,mm,y)).filter(v=>v!=null);
+      const c=curs.length?curs.reduce((a,b)=>a+b,0)/curs.length:null;
+      const o=olds.length?olds.reduce((a,b)=>a+b,0)/olds.length:null;
+      return `<td>${(c!=null&&o)?((c-o)/o*100>=0?'▲ ':'▼ ')+nf(Math.abs((c-o)/o*100),1)+' %':'—'}</td>`;
+    }).join('');
+    rows+=`<tr class="tot"><td>Promedio</td>${cel}</tr>`;
+  }
+  document.getElementById('gVarBody').innerHTML=rows;
+}
+/* ═══ TABLAS: ampliar y descargar imagen (genérico, cualquier tabla .matrix) ═══ */
+function ampliarTabla(id,titulo){
+  const src=document.getElementById(id);
+  if(!src)return;
+  document.getElementById('tblTitle').textContent=titulo||'—';
+  const host=document.getElementById('tblHost');
+  host.innerHTML='';
+  const clone=src.cloneNode(true);
+  clone.removeAttribute('id');
+  host.appendChild(clone);
+  document.getElementById('tblModal').dataset.src=id;
+  document.getElementById('tblModal').dataset.titulo=titulo||'';
+  document.getElementById('tblModal').classList.remove('hide');
+  document.body.classList.add('modalopen');
+}
+function cerrarTabla(){
+  document.getElementById('tblModal').classList.add('hide');
+  document.body.classList.remove('modalopen');
+}
+document.getElementById('tblClose').onclick=cerrarTabla;
+document.getElementById('tblModal').onclick=e=>{if(e.target.id==='tblModal')cerrarTabla();};
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!document.getElementById('tblModal').classList.contains('hide'))cerrarTabla();});
+document.getElementById('tblDown').onclick=()=>{
+  const m=document.getElementById('tblModal');
+  if(m.dataset.src)descargarTabla(m.dataset.src,m.dataset.titulo);
+};
+function descargarTabla(id,titulo,subtitulo){
+  const table=document.getElementById(id);
+  const headRow=table&&table.querySelector('thead tr');
+  const trs=table?[...table.querySelectorAll('tbody tr')]:[];
+  if(!headRow||!trs.length)return;
+  const ths=[...headRow.children];
+  const widths=ths.map((th,i)=>i===0?210:126);
+  const pad=20,head=66,foot=36,rowH=32;
+  const sub=subtitulo||kpiLinea();
   const foot1='Plataforma Agroclimática · Exportadora Los Olmos · Departamento Técnico';
   const foot2='Generado el '+new Date().toLocaleDateString('es-CL',{day:'2-digit',month:'long',year:'numeric'});
   const meas=document.createElement('canvas').getContext('2d');
-  meas.font='700 19px Inter, sans-serif'; const wTitle=meas.measureText(title).width;
-  meas.font='500 12.5px Inter, sans-serif'; const wSub=meas.measureText(sub).width;
+  meas.font='700 18px Inter, sans-serif'; const wTitle=meas.measureText(titulo||'').width;
+  meas.font='500 12px Inter, sans-serif'; const wSub=meas.measureText(sub).width;
   meas.font='400 11px Inter, sans-serif'; const wFoot=meas.measureText(foot1).width+meas.measureText(foot2).width+40;
-  const tableW=labelW+colW*anios.length;
+  const tableW=widths.reduce((a,b)=>a+b,0);
   const W=Math.max(tableW,wTitle,wSub,wFoot)+pad*2;
-  const H=head+rowH*(nRows+1)+foot+pad;
+  const H=head+rowH*(trs.length+1)+foot+pad;
   const cv=document.createElement('canvas'); cv.width=W; cv.height=H;
   const x=cv.getContext('2d');
   x.fillStyle='#fff'; x.fillRect(0,0,W,H);
   x.textBaseline='middle';
-  x.fillStyle='#16211A'; x.font='700 19px Inter, sans-serif';
-  x.fillText(title,pad,26);
-  x.fillStyle='#6B7A6E'; x.font='500 12.5px Inter, sans-serif';
-  x.fillText(sub,pad,48);
+  x.fillStyle='#16211A'; x.font='700 18px Inter, sans-serif';
+  x.fillText(titulo||'',pad,24);
+  x.fillStyle='#6B7A6E'; x.font='500 12px Inter, sans-serif';
+  x.fillText(sub,pad,45);
   x.fillStyle='#2C7A46'; x.fillRect(0,head-3,W,3);
-  let y0=head+rowH/2;
-  x.font='700 10px "IBM Plex Mono", monospace'; x.fillStyle='#9AA79C';
-  x.fillText('ESTACIÓN',pad,y0);
-  x.textAlign='center';
-  anios.forEach((y,i)=>{
-    x.fillStyle=y===SEASON?'#2C7A46':'#16211A'; x.font='700 12px Inter, sans-serif';
-    x.fillText('Temporada '+y+'/'+String(y+1).slice(2)+(y===SEASON?' · actual':''),labelW+colW*i+colW/2,y0);
+  const colX=[]; let acc=pad;
+  widths.forEach(w=>{colX.push(acc);acc+=w;});
+  let y=head+rowH/2;
+  ths.forEach((th,i)=>{
+    x.fillStyle='#1E5B33'; x.fillRect(colX[i],y-rowH/2,widths[i]-3,rowH-3);
+    x.fillStyle='#fff'; x.font='700 10.5px Inter, sans-serif'; x.textAlign=i===0?'left':'center';
+    const tx=i===0?colX[i]+12:colX[i]+widths[i]/2;
+    const txt=th.innerText.replace(/\s+/g,' ').trim().toUpperCase();
+    x.fillText(txt.length>20?txt.slice(0,19)+'…':txt,tx,y);
+  });
+  y+=rowH;
+  trs.forEach((tr,ri)=>{
+    [...tr.children].forEach((td,i)=>{
+      let bg=i===0?'#2C7A46':getComputedStyle(td).backgroundColor;
+      if(!bg||bg==='rgba(0, 0, 0, 0)'||bg==='transparent')bg=ri%2?'#FCFDFB':'#fff';
+      x.fillStyle=bg; x.fillRect(colX[i],y-rowH/2,widths[i]-3,rowH-3);
+      x.fillStyle=i===0?'#fff':(getComputedStyle(td).color||'#16211A');
+      x.font=(i===0?'600 ':'700 ')+'11.5px "IBM Plex Mono", monospace';
+      x.textAlign=i===0?'left':'center';
+      const tx=i===0?colX[i]+12:colX[i]+widths[i]/2;
+      let txt=td.innerText.replace(/\s+/g,' ').trim();
+      x.fillText(txt.length>22?txt.slice(0,21)+'…':txt,tx,y);
+    });
+    y+=rowH;
   });
   x.textAlign='left';
-  y0+=rowH;
-  sel.forEach(e=>{
-    x.fillStyle='#2C7A46'; x.fillRect(0,y0-rowH/2+2,labelW-4,rowH-4);
-    x.fillStyle='#fff'; x.font='600 12px Inter, sans-serif';
-    x.fillText(e.length>26?e.slice(0,25)+'…':e,pad,y0);
-    anios.forEach((yr,i)=>{
-      const v=val[yr][e],cx=labelW+colW*i;
-      if(v==null){
-        x.fillStyle='#F6F8F5'; x.fillRect(cx,y0-rowH/2+2,colW-4,rowH-4);
-        x.fillStyle='#9AA79C'; x.font='italic 11px Inter, sans-serif'; x.textAlign='center';
-        x.fillText('s/r',cx+colW/2,y0);
-      }else{
-        const bg=heatColor(v,min,max);
-        x.fillStyle=bg; x.fillRect(cx,y0-rowH/2+2,colW-4,rowH-4);
-        x.fillStyle=darkOn(bg)?'#16211A':'#fff'; x.font='700 12.5px "IBM Plex Mono", monospace'; x.textAlign='center';
-        x.fillText(nf(v,0),cx+colW/2,y0);
-      }
-      x.textAlign='left';
-    });
-    y0+=rowH;
-  });
-  if(showProm){
-    x.fillStyle='#16211A'; x.fillRect(0,y0-rowH/2+2,labelW-4,rowH-4);
-    x.fillStyle='#fff'; x.font='700 12px Inter, sans-serif';
-    x.fillText('Promedio ('+sel.length+' est.)',pad,y0);
-    anios.forEach((yr,i)=>{
-      const vs=sel.map(e=>val[yr][e]).filter(v=>v!=null);
-      const avg=vs.length?vs.reduce((a,c)=>a+c,0)/vs.length:null;
-      const cx=labelW+colW*i;
-      x.fillStyle='#16211A'; x.fillRect(cx,y0-rowH/2+2,colW-4,rowH-4);
-      x.fillStyle='#fff'; x.font='700 12.5px "IBM Plex Mono", monospace'; x.textAlign='center';
-      x.fillText(avg!=null?nf(avg,0):'—',cx+colW/2,y0);
-      x.textAlign='left';
-    });
-    y0+=rowH;
-  }
-  x.fillStyle='#9AA79C'; x.font='400 11px Inter, sans-serif'; x.textAlign='left';
+  x.fillStyle='#9AA79C'; x.font='400 11px Inter, sans-serif';
   x.fillText(foot1,pad,H-foot/2);
   x.textAlign='right';
   x.fillText(foot2,W-pad,H-foot/2);
   const a=document.createElement('a');
   a.href=cv.toDataURL('image/png',1);
-  a.download='grados_dia_por_temporada_y_estacion.png';
+  a.download=(titulo||'tabla').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'')
+    .replace(/[^\w -]/g,'').trim().replace(/\s+/g,'_')+'.png';
   a.click();
 }
 function chartSemana(sel){
@@ -3027,7 +3224,7 @@ function renderFrost(){
     return (va-vb)*S.fDir;
   });
   document.getElementById('ftbody').innerHTML=rows.map(x=>`
-    <tr><td>${x.est}</td><td>${fmtL(x.fecha)}</td><td><b>${x.horas}</b></td>
+    <tr><td>${PINSVG}${x.est}</td><td>${fmtL(x.fecha)}</td><td><b>${x.horas}</b></td>
       <td>${nf(x.tprom,2)}</td><td><b>${nf(x.tmin,1)}</b></td>
       <td><span style="color:${x.sev===0?'#5C93BF':SEV[x.sev].c};font-weight:600">${SEV[x.sev].l}</span></td></tr>`).join('');
   drawFMap(Object.values(per));
@@ -3482,7 +3679,7 @@ function renderCarga(){
   });
   document.getElementById('mgBody').innerHTML=MANUAL.reg.length
     ? [...MANUAL.reg].sort((a,b)=>a.fecha<b.fecha?1:-1).map((r,i)=>`
-      <tr><td>${r.est}</td><td>${r.fecha}</td>
+      <tr><td>${PINSVG}${r.est}</td><td>${r.fecha}</td>
         <td>${r.tmin??'—'}</td><td>${r.tmax??'—'}</td><td>${r.h0??'—'}</td>
         <td>${r.hf??'—'}</td><td>${r.pf??'—'}</td><td>${r.g10!=null?nf(r.g10,2):'—'}</td>
         <td><button class="gh" data-i="${MANUAL.reg.indexOf(r)}" style="padding:5px 9px">✕</button></td></tr>`).join('')
@@ -3554,9 +3751,9 @@ function autotest(){
   const pruebas=[
     ['Dashboard y navegación',()=>{renderDash();buildNav();}],
     ['Grados-Día',()=>{CURSEC='gdd';renderGdd();}],
-    ['Comparación de temporadas GDD',()=>{const sel=ESTACIONES.filter(e=>S.sel.has(e));chartAnios(sel);tablaAnios(sel);}],
+    ['Comparación de temporadas GDD',()=>{const sel=ESTACIONES.filter(e=>S.sel.has(e));chartAnios(sel);tablaAnios(sel);tablaVariacionGdd(sel);}],
     ['Horas frío y porciones',()=>{CURSEC='frio';buildCChips();renderCold();}],
-    ['Matrices de toda la red',()=>{matrices();chartGen();chartRank();}],
+    ['Matrices de toda la red',()=>{matrices();chartGen();chartRank();chartGenPF();chartRankPF();}],
     ['Eventos de helada',()=>{CURSEC='helada';setupFSlider();renderFrost();}],
     ['Disponibilidad horaria',()=>setupHSlider()],
     ['Clima en línea',()=>cargarClima()]
@@ -3646,8 +3843,8 @@ document.getElementById('sopOk').onclick=cerrarSop;
 document.getElementById('sopmodal').onclick=e=>{if(e.target.id==='sopmodal')cerrarSop();};
 
 /* ═══ HORAS FRÍO Y PORCIONES ═══ */
-const CY=[2021,2022,2023,2024,2025,2026];
-const CYCUR=2026, CYPREV=2025, CYHIST=[2021,2022,2023,2024,2025];
+const CY=[2022,2023,2024,2025,2026];
+const CYCUR=2026, CYPREV=2025, CYHIST=[2022,2023,2024,2025];
 const CCOL={2022:'#C9DFCE',2023:'#A9CEB3',2024:'#7FB78F',2025:'#4F9E68',2026:'#1E5B33'};
 const MESES=[['Mayo',0,30],['Junio',31,60],['Julio',61,91]];
 S.cEst=null; S.cSel=new Set(); S.cCut=91; S.cRef=CYCUR;
@@ -3782,7 +3979,7 @@ function renderCold(){
   chartEvol('chEvol',est,'hf'); chartEvol('chEvolPF',est,'pf');
   document.getElementById('cEvolT').textContent='Evolución horas frío base 7,2 °C · '+est;
   document.getElementById('cEvolT2').textContent='Evolución de las porciones de frío · '+est;
-  if(S.role==='exp'){matrices();chartGen();chartRank();}
+  if(S.role==='exp'){matrices();chartGen();chartRank();chartGenPF();chartRankPF();}
 }
 
 function chartVar(est){
@@ -3869,7 +4066,7 @@ function chartEvol(id,est,met){
 function matrices(){
   const es=cEsts();
   const arma=(met,dec,headId,bodyId)=>{
-    document.getElementById(headId).innerHTML='<th>Estación</th>'+CY.map(y=>`<th>${y}</th>`).join('');
+    document.getElementById(headId).innerHTML='<th>Estación <span class="sarrow">▾</span></th>'+CY.map(y=>`<th>${y}</th>`).join('');
     const todos=es.flatMap(e=>CY.map(y=>{const a=cAcc(e,y,met);return a?a.v:null;})).filter(v=>v!=null);
     const min=todos.length?Math.min(...todos):0, max=todos.length?Math.max(...todos):1;
     document.getElementById(bodyId).innerHTML=es.map(e=>{
@@ -3877,23 +4074,23 @@ function matrices(){
         if(!a)return '<td><span class="sinreg">s/r</span></td>';
         const bg=heatColor(a.v,min,max);
         return `<td style="background:${bg};color:${darkOn(bg)?'#16211A':'#fff'}">${nf(a.v,dec)}</td>`;}).join('');
-      return `<tr><td title="${e}">${e}</td>${cel}</tr>`;
+      return `<tr><td title="${e}">${PINSVG}${e}</td>${cel}</tr>`;
     }).join('')+`<tr class="tot"><td>Promedio</td>${CY.map(y=>`<td>${nf(cNet(y,met),dec)}</td>`).join('')}</tr>`;
   };
   arma('hf',0,'cMatHead','cMatBody');
   arma('pf',1,'pMatHead','pMatBody');
-  const prevs=CY.filter(y=>y!==S.cRef);
+  const prevs=CY.filter(y=>y!==S.cRef).sort((a,b)=>b-a);
   document.getElementById('cVarRef').textContent=S.cRef;
   document.getElementById('pVarRef').textContent=S.cRef;
   const armaVar=(met,headId,bodyId)=>{
-    document.getElementById(headId).innerHTML='<th>Estación</th>'+prevs.map(y=>`<th>${S.cRef} / ${y}</th>`).join('');
+    document.getElementById(headId).innerHTML='<th>Estación <span class="sarrow">▾</span></th>'+prevs.map(y=>`<th>${S.cRef} / ${y} (%)</th>`).join('');
     document.getElementById(bodyId).innerHTML=es.map(e=>{
       const cur=cAcc(e,S.cRef,met);
       const cel=prevs.map(y=>{
         const a=cAcc(e,y,met);
         const v=(a&&cur&&a.v)?(cur.v-a.v)/a.v*100:null;
         return `<td>${a&&cur?vpill(v):'<span class="sinreg">s/r</span>'}</td>`;}).join('');
-      return `<tr><td title="${e}">${e}</td>${cel}</tr>`;
+      return `<tr><td title="${e}">${PINSVG}${e}</td>${cel}</tr>`;
     }).join('')+`<tr class="tot"><td>Promedio</td>${prevs.map(y=>{
         const a=cNet(y,met),c=cNet(S.cRef,met);
         return `<td>${(a&&c)?((c-a)/a*100>=0?'▲ ':'▼ ')+nf(Math.abs((c-a)/a*100),1)+' %':'—'}</td>`;}).join('')}</tr>`;
@@ -3925,6 +4122,31 @@ function chartRank(){
       scales:{x:{...AX,beginAtZero:true,grace:'12%'},y:{grid:{display:false},border:{display:false},
         ticks:{color:'#16211A',font:{family:'Inter',size:10.5}}}}}};
   mount('chRank',cfg,'Ranking de horas frío base 7,2 °C · '+S.cRef);
+}
+function chartGenPF(){
+  const vals=CY.map(y=>cNet(y,'pf'));
+  const cfg={type:'bar',data:{labels:CY.map(String),
+    datasets:[{data:vals.map(v=>v==null?null:+v.toFixed(1)),dlUnit:'',dlDec:1,
+      backgroundColor:CY.map(y=>CCOL[y]),borderRadius:6,maxBarThickness:56}]},
+    options:{responsive:true,maintainAspectRatio:false,animation:{duration:700},
+      layout:{padding:{top:22}},
+      plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>` ${nf(c.parsed.y,1)} porciones de frío promedio`}}},
+      scales:{x:{grid:{display:false},border:{color:'#E5EAE4'},ticks:{color:'#16211A',font:{family:'Inter',size:12}}},
+        y:{...AX,beginAtZero:true,grace:'14%',title:{display:true,text:'porciones de frío',color:'#9AA79C',font:{family:'IBM Plex Mono',size:10}}}}}};
+  mount('chGenPF',cfg,'Promedio general de porciones de frío por temporada');
+}
+function chartRankPF(){
+  const d=cEsts().map(e=>({e,v:(cAcc(e,CYCUR,'pf')||{}).v}))
+    .filter(x=>x.v!=null).sort((a,b)=>b.v-a.v);
+  const cfg={type:'bar',data:{labels:d.map(x=>x.e),
+    datasets:[{data:d.map(x=>+x.v.toFixed(1)),dlUnit:' PF',dlDec:1,
+      backgroundColor:d.map(x=>x.e===S.cEst?'#1E5B33':'#7FB78F'),borderRadius:5,maxBarThickness:22}]},
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,animation:{duration:700},
+      layout:{padding:{right:62}},
+      plugins:{legend:{display:false},tooltip:{...TT,callbacks:{label:c=>` ${nf(c.parsed.x,1)} porciones de frío`}}},
+      scales:{x:{...AX,beginAtZero:true,grace:'12%'},y:{grid:{display:false},border:{display:false},
+        ticks:{color:'#16211A',font:{family:'Inter',size:10.5}}}}}};
+  mount('chRankPF',cfg,'Ranking de porciones de frío · '+S.cRef);
 }
 
 
@@ -4108,7 +4330,7 @@ function drawMap(){
   });
   document.getElementById('mlist').innerHTML=st.map(s=>`
     <tr data-e="${s.est}" style="cursor:pointer">
-      <td>${s.est}</td><td>${qbadge(s.pct)}</td>
+      <td>${PINSVG}${s.est}</td><td>${qbadge(s.pct)}</td>
       <td>${s.horas.toLocaleString('es-CL')} <span style="color:var(--mut2)">/ ${s.esp.toLocaleString('es-CL')}</span></td>
       <td style="color:${s.falta>0?qcol(s.pct):'var(--mut2)'}">${faltaTxt(s.falta)}</td>
       <td><span class="qtrack"><span class="qbar" style="width:${Math.min(s.pct,100)}%;background:${qcol(s.pct)}"></span></span>
@@ -4504,7 +4726,7 @@ function boot(keep){
   document.getElementById('stEst').innerHTML=ESTACIONES.length+'<small style="font-size:11px;color:var(--mut)"> estaciones</small>';
   document.getElementById('stReg').textContent=ALL_DATES.length.toLocaleString('es-CL');
   document.getElementById('stTemp').textContent=SEASONS.length;
-  buildChips(); buildFChips(); buildCChips(); setupFSlider(); setupHSlider(); buildNav();
+  buildChips(); buildFChips(); buildCChips(); buildHistChips(); setupFSlider(); setupHSlider(); buildNav();
   if(CURSEC==='frio')renderCold();
   if(CURSEC==='gdd')renderGdd();
   if(CURSEC==='helada')renderFrost();
