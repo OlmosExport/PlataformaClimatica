@@ -1406,7 +1406,7 @@ body.modalopen{overflow:hidden}
           </div>
         </div>
         <div class="tscroll" style="max-height:300px;overflow-y:auto"><table class="matrix mini" id="fEstTable">
-          <thead><tr><th>Estación <span class="sarrow">▾</span></th><th>Eventos</th><th>Mínima (°C)</th><th>Última helada</th></tr></thead>
+          <thead><tr><th>Estación <span class="sarrow">▾</span></th><th>Eventos</th><th>Última helada</th><th>Duración</th><th>Mínima (°C)</th></tr></thead>
           <tbody id="fEstBody"></tbody></table></div>
       </div>
     </div>
@@ -3193,8 +3193,9 @@ function renderFrost(){
     const b=document.getElementById(id+'S');if(b&&s!=null)b.textContent=s;};
   document.getElementById('fRange').textContent=`${fmtL(FUNIQ[S.fFrom])} → ${fmtL(FUNIQ[S.fTo])}`;
   const per={};
-  ev.forEach(x=>{const q=per[x.est]=per[x.est]||{est:x.est,n:0,h:0,tmin:99,ult:''};
-    q.n++;q.h+=x.horas;q.tmin=Math.min(q.tmin,x.tmin);if(x.fecha>q.ult)q.ult=x.fecha;});
+  ev.forEach(x=>{const q=per[x.est]=per[x.est]||{est:x.est,n:0,h:0,tmin:99,ult:'',ultH:0,ultT:0};
+    q.n++;q.h+=x.horas;q.tmin=Math.min(q.tmin,x.tmin);
+    if(x.fecha>=q.ult){q.ult=x.fecha;q.ultH=x.horas;q.ultT=x.tmin;}});
   const cnt=[0,0,0]; ev.forEach(x=>cnt[x.sev]++);
   document.getElementById('sevlist').innerHTML=SEV.map((s,i)=>`
     <div class="sevrow"><span class="sq" style="background:${s.c}"></span>
@@ -3204,7 +3205,7 @@ function renderFrost(){
   if(!ev.length){
     set('fk1','0','Sin eventos en el período');set('fk3','—','—');set('fk5','—','—');
     document.getElementById('ftbody').innerHTML='<tr><td colspan="6" class="empty">Sin eventos con los filtros actuales.</td></tr>';
-    document.getElementById('fEstBody').innerHTML='<tr><td colspan="4" class="empty">Sin eventos.</td></tr>';
+    document.getElementById('fEstBody').innerHTML='<tr><td colspan="5" class="empty">Sin eventos.</td></tr>';
     chartFrost([]); drawFMap([]); return;
   }
   const horas=ev.reduce((a,b)=>a+b.horas,0);
@@ -3212,12 +3213,12 @@ function renderFrost(){
   const ult=[...ev].sort((a,b)=>a.fecha<b.fecha?1:-1)[0];
   set('fk1',ev.length,`${Object.keys(per).length} estación${Object.keys(per).length===1?'':'es'} · ${horas} h bajo cero`);
   set('fk3',nf(peor.tmin,1)+'<small>°C</small>',`${peor.est} · ${fmtL(peor.fecha)}`);
-  set('fk5',fmtD(parseD(ult.fecha)),`${ult.est} · ${nf(ult.tmin,1)} °C · ${ult.horas} h`);
+  set('fk5',fmtD(parseD(ult.fecha)),`${ult.est} · ${nf(ult.tmin,1)} °C mínima · ${horas} h bajo cero en total`);
   chartFrost(ev);
-  document.getElementById('fEstBody').innerHTML=Object.values(per).sort((a,b)=>a.tmin-b.tmin).map(q=>`
-    <tr><td><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${SEV[sevOf(q.tmin)].c};margin-right:7px"></span>${q.est}
+  document.getElementById('fEstBody').innerHTML=Object.values(per).sort((a,b)=>a.ult<b.ult?1:-1).map(q=>`
+    <tr><td><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${SEV[sevOf(q.ultT)].c};margin-right:7px"></span>${q.est}
       ${q.est===S.near?'<span class="near" style="font-size:8.5px">MÁS CERCANA</span>':''}</td>
-      <td>${q.n}</td><td><b>${nf(q.tmin,1)}</b></td><td>${fmtL(q.ult)}</td></tr>`).join('');
+      <td>${q.n}</td><td>${fmtL(q.ult)}</td><td>${q.ultH} h</td><td><b>${nf(q.ultT,1)}</b></td></tr>`).join('');
   const rows=[...ev].sort((a,b)=>{
     const va=a[S.fSort],vb=b[S.fSort];
     if(typeof va==='string')return va.localeCompare(vb,'es')*S.fDir;
