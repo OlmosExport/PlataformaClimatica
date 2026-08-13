@@ -290,6 +290,11 @@ tbody tr:hover td{background:var(--g-xl)}
 .mhead h3{margin:0;font-size:16px;font-weight:700}
 .mbody{padding:18px 20px 22px}
 .mbody .chartbox{height:min(66vh,540px)}
+/* "Ampliar" siempre a pantalla completa: se ve mucho más grande que en la sección normal */
+#modal,#tblModal{padding:0}
+#modal .mbox,#tblModal .mbox{max-width:none;width:100vw;max-height:100vh;height:100vh;border-radius:0}
+#modal .mbody,#tblModal .mbody{flex:1;min-height:0}
+#modal .mbody .chartbox{height:100%}
 
 /* ══ ACTUALIZAR ══ */
 .drop{border:2px dashed var(--g-m);border-radius:12px;background:var(--g-xl);padding:38px 22px;text-align:center;cursor:pointer;transition:.15s}
@@ -2167,7 +2172,7 @@ body.modalopen{overflow:hidden}
 </div>
 
 <div id="tblModal" class="hide">
-  <div class="mbox" style="max-width:1150px">
+  <div class="mbox">
     <div class="mhead">
       <h3 id="tblTitle">—</h3>
       <div class="ptools">
