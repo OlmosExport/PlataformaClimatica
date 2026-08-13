@@ -1268,6 +1268,11 @@ body.modalopen{overflow:hidden}
           <button class="gh" onclick="downloadChart('chAnios')">↓ Descargar imagen</button>
         </div>
       </div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap">
+        <span class="eyebrow" style="white-space:nowrap">Ancho de barra</span>
+        <input type="range" id="chAniosBarW" min="14" max="80" value="48" style="max-width:220px;flex:1">
+        <span class="hint" id="chAniosBarWLbl" style="min-width:38px">48 px</span>
+      </div>
       <div class="chartbox tall"><canvas id="chAnios"></canvas></div>
     </div>
 
@@ -2247,7 +2252,7 @@ document.getElementById('wmIcon').src=LOGO_ICON;
 let ESTACIONES=[],ALL_DATES=[],DMIN='',DMAX='',SEASON=0,SEASON_MIN='',DEF_FROM='',SEASONS=[],FROST_MIN='';
 /* registros anteriores a esta temporada no se muestran: son demasiado incompletos para comparar */
 const MIN_TEMPORADA=2022;
-const S={role:null,base:1,mode:'acum',from:null,to:null,sel:new Set(),near:null,nearKm:null,heat:true,temporadasOff:new Set(),
+const S={role:null,base:1,mode:'acum',from:null,to:null,sel:new Set(),near:null,nearKm:null,heat:true,temporadasOff:new Set(),barW:48,
          mapBase:1,mk:'icon',fSel:new Set(),fFrom:0,fTo:0,fSev:new Set([0,1,2]),fSort:'fecha',fDir:-1,guideFor:null};
 
 const nf=(v,d=1)=>v==null||isNaN(v)?'—':v.toLocaleString('es-CL',{minimumFractionDigits:d,maximumFractionDigits:d});
@@ -2620,6 +2625,12 @@ if(swH)swH.onclick=()=>{
 };
 const btnHeat=document.getElementById('btnHeat');
 if(btnHeat)btnHeat.onclick=()=>{S.heat=!S.heat;tablaAnios(ESTACIONES.filter(e=>S.sel.has(e)));};
+const chAniosBarW=document.getElementById('chAniosBarW');
+if(chAniosBarW)chAniosBarW.oninput=()=>{
+  S.barW=+chAniosBarW.value;
+  document.getElementById('chAniosBarWLbl').textContent=S.barW+' px';
+  chartAnios(ESTACIONES.filter(e=>S.sel.has(e)));
+};
 const fEst=document.getElementById('filtroEst');
 if(fEst)fEst.oninput=()=>{S.filtro=fEst.value.trim().toLowerCase();buildChips();};
 document.getElementById('btnAll').onclick=()=>{ESTACIONES.forEach(e=>S.sel.add(e));buildChips();renderGdd();};
@@ -3026,7 +3037,7 @@ function chartAnios(sel){
   const ds=anios.map(y=>({label:String(y)+(y===SEASON?' (actual)':''),
     data:sel.map(e=>{const v=totalTemporada(e,mm,y);return v==null?null:Math.round(v);}),
     backgroundColor:CCOL[y]||PAL[Math.abs(y)%PAL.length],borderRadius:5,
-    maxBarThickness:isMob()?26:48,dlUnit:' °D',dlDec:0}));
+    maxBarThickness:isMob()?Math.min(26,S.barW):S.barW,dlUnit:' °D',dlDec:0}));
   const cfg={type:'bar',data:{labels:sel,datasets:ds},
     options:{responsive:true,maintainAspectRatio:false,animation:{duration:700},
       layout:{padding:{top:22}},
@@ -3062,7 +3073,7 @@ function tablaAnios(sel){
     leg.classList.add('hide'); return;
   }
   const {anios,val,min,max}=tablaAniosValores(sel);
-  head.innerHTML='<th>Estación <span class="sarrow">▾</span></th>'+anios.map(y=>`<th${y===SEASON?' style="color:var(--g)"':''}>Temporada ${y}/${String(y+1).slice(2)}${y===SEASON?' · actual':''}</th>`).join('');
+  head.innerHTML='<th>Estación <span class="sarrow">▾</span></th>'+anios.map(y=>`<th>${y===SEASON?'<span style="color:#F4C563">●</span> ':''}Temporada ${y}/${String(y+1).slice(2)}${y===SEASON?' · actual':''}</th>`).join('');
   const celda=v=>{
     if(v==null)return '<td><span class="sinreg">Sin datos</span></td>';
     if(!S.heat)return `<td>${nf(v,0)}</td>`;
@@ -3204,8 +3215,9 @@ function descargarTabla(id,titulo,subtitulo){
       x.fillStyle=i===0?'#fff':(getComputedStyle(td).color||'#16211A');
       x.font=(i===0?'700 ':'700 ')+'12px "IBM Plex Mono", monospace';
       x.textAlign=i===0?'left':'center';
-      const tx=i===0?colX[i]+14:colX[i]+widths[i]/2;
-      x.fillText(fitText(x,cellRows[ri][i]||'',widths[i]-(i===0?24:16)),tx,y);
+      let tx=i===0?colX[i]+14:colX[i]+widths[i]/2;
+      if(i===0){ x.beginPath(); x.arc(tx+3,y,3,0,Math.PI*2); x.fill(); tx+=13; }
+      x.fillText(fitText(x,cellRows[ri][i]||'',widths[i]-(i===0?38:16)),tx,y);
     });
     y+=rowH;
   });
