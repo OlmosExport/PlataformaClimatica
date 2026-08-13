@@ -813,15 +813,25 @@ body.modalopen{overflow:hidden}
   @page{margin:16mm 14mm}
 }
 /* ══ CONSTRUCTOR DE INFORMES ══ */
+.rbPage{position:relative;background:#fff;box-shadow:0 4px 20px rgba(0,0,0,.14);flex:none}
+.rbPageBar{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--mut);
+  margin-bottom:6px;width:100%}
+.rbPageBar .rbPageDel{cursor:pointer;color:var(--red);font-weight:600}
 .rbBlock{position:absolute;border:1.5px dashed var(--g-m);border-radius:8px;background:#fff;overflow:hidden;
   box-shadow:0 2px 8px rgba(22,33,26,.08)}
 .rbBlock .rbHandle{background:var(--g-xl);padding:5px 9px;font-size:10.5px;font-weight:600;color:var(--g-d);
-  display:flex;justify-content:space-between;align-items:center;cursor:move;user-select:none}
-.rbBlock .rbClose{cursor:pointer;color:var(--red);font-weight:700;font-size:13px;padding:0 3px}
+  display:flex;justify-content:space-between;align-items:center;cursor:move;user-select:none;gap:8px}
+.rbBlock .rbTools{display:flex;gap:8px;align-items:center;flex:none}
+.rbBlock .rbRefresh{cursor:pointer;font-weight:700}
+.rbBlock .rbClose{cursor:pointer;color:var(--red);font-weight:700;font-size:13px}
 .rbBlock .rbBody{padding:9px;overflow:auto;height:calc(100% - 30px)}
 .rbBlock .rbResize{position:absolute;right:0;bottom:0;width:15px;height:15px;cursor:nwse-resize;
   background:var(--g-m);border-radius:8px 0 0 0;opacity:.6}
 @media print{
+  #rbPages{padding:0!important;gap:0!important;background:none!important}
+  .rbPageBar{display:none!important}
+  .rbPage{box-shadow:none!important;page-break-after:always;margin:0 auto}
+  .rbPage:last-child{page-break-after:auto}
   .rbBlock{border:none!important;box-shadow:none!important}
   .rbBlock .rbHandle,.rbBlock .rbResize{display:none!important}
   .rbBlock .rbBody{height:100%;padding:4px}
@@ -1710,25 +1720,34 @@ body.modalopen{overflow:hidden}
       <div class="ptitle2">
         <div class="picon"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#2C7A46" stroke-width="1.9"
           stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h6M9 9h2"/></svg></div>
-        <div><h1>Informes PDF</h1><p class="sub">Arma tu propia hoja: agrega los bloques que quieras, ubícalos donde quieras y genera el PDF</p></div>
+        <div><h1>Informes PDF</h1><p class="sub">Arma tu propio informe: agrega bloques, arrástralos y cámbiales el tamaño, en tantas páginas como quieras</p></div>
       </div>
     </div>
 
     <div class="card mb16">
       <div class="chead">
-        <div><h3>Bloques disponibles</h3><p>Haz clic para agregarlos a la hoja de abajo. Usa la barra de cada bloque para arrastrarlo, y la esquina para cambiar su tamaño.</p></div>
+        <div><h3>Bloques disponibles</h3><p>Haz clic para agregarlos a la última página. Usa la barra de cada bloque para arrastrarlo, "↻" para actualizarlo y la esquina para cambiar su tamaño.</p></div>
         <div class="ptools">
-          <button class="gh" id="rbClear">Vaciar hoja</button>
+          <button class="gh" id="rbClear">Vaciar todo</button>
           <button class="btn" id="rbPrint">Generar PDF →</button>
         </div>
       </div>
       <div id="rbPalette"></div>
     </div>
 
-    <div class="card" style="overflow:auto;padding:20px">
-      <div id="rbPageWrap" style="display:flex;justify-content:center;background:#EEF1ED;padding:24px;border-radius:12px">
-        <div id="rbPage" style="position:relative;width:794px;min-height:1123px;background:#fff;box-shadow:0 4px 20px rgba(0,0,0,.14);flex:none"></div>
+    <div class="card mb16">
+      <div class="chead"><div><h3>Hoja</h3></div></div>
+      <div class="crow">
+        <div class="fld"><span class="eyebrow">Tamaño</span><div class="segm tight" id="rbSize">
+          <button class="gh on" data-v="carta">Carta</button><button class="gh" data-v="oficio">Oficio</button></div></div>
+        <div class="fld"><span class="eyebrow">Orientación</span><div class="segm tight" id="rbOrient">
+          <button class="gh on" data-v="v">Vertical</button><button class="gh" data-v="h">Horizontal</button></div></div>
+        <div class="fld"><span class="eyebrow">Páginas</span><button class="btn sm" id="rbAddPage">+ Agregar página</button></div>
       </div>
+    </div>
+
+    <div class="card" style="overflow:auto;padding:20px">
+      <div id="rbPages" style="display:flex;flex-direction:column;align-items:center;gap:28px;background:#EEF1ED;padding:24px;border-radius:12px"></div>
     </div>
   </section>
 
@@ -3539,19 +3558,30 @@ function renderCogEvol(){
 let RB_ID=0;
 function rbDefs(){
   return [
-    {cat:'Grados-Día',key:'gdd-kpi',label:'Resumen GDD',build:rbGddKpi},
-    {cat:'Grados-Día',key:'gdd-chart',label:'Gráfico comparación de temporadas',build:()=>rbChartImg('chAnios','Comparación de temporadas · GDD')},
-    {cat:'Grados-Día',key:'gdd-curva',label:'Gráfico acumulado / día a día',build:()=>rbChartImg('chCurva',document.getElementById('chTitle')?.textContent||'GDD')},
-    {cat:'Grados-Día',key:'gdd-tabla',label:'Tabla por temporada',build:()=>rbTableClone('gAnioTable','Grados-día acumulados por temporada')},
-    {cat:'Grados-Día',key:'gdd-var',label:'Tabla variación %',build:()=>rbTableClone('gVarTable','Variación % entre temporadas')},
-    {cat:'Horas Frío',key:'frio-hf',label:'Tabla Horas Frío por temporada',build:()=>rbTableClone('cTabHFTable','Horas frío base 7,2 °C por temporada')},
-    {cat:'Horas Frío',key:'frio-pf',label:'Tabla Porciones de Frío por temporada',build:()=>rbTableClone('cTabPFTable','Porciones de frío por temporada')},
-    {cat:'Horas Frío',key:'frio-evol',label:'Gráfico evolución Horas Frío',build:()=>rbChartImg('chEvol','Evolución horas frío')},
-    {cat:'Horas Frío',key:'frio-evolpf',label:'Gráfico evolución Porciones de Frío',build:()=>rbChartImg('chEvolPF','Evolución porciones de frío')},
-    {cat:'Heladas',key:'hel-kpi',label:'Resumen Heladas',build:rbHeladaKpi},
-    {cat:'Heladas',key:'hel-est',label:'Tabla detalle por estación',build:()=>rbTableClone('fEstTable','Detalle por estación')},
-    {cat:'Heladas',key:'hel-ev',label:'Tabla detalle de eventos',build:()=>rbTableClone('ftable','Detalle de eventos')},
-    {cat:'Heladas',key:'hel-chart',label:'Gráfico heladas por fecha',build:()=>rbChartImg('chFrost','Heladas por fecha')},
+    {cat:'Grados-Día',key:'gdd-kpi',label:'Texto resumen GDD',build:rbGddKpi},
+    {cat:'Grados-Día',key:'gdd-kpi1',label:'KPI: Grados-día acumulados',build:rbKpiClone('kAcum')},
+    {cat:'Grados-Día',key:'gdd-kpi2',label:'KPI: Promedio diario',build:rbKpiClone('kRate')},
+    {cat:'Grados-Día',key:'gdd-kpi3',label:'KPI: Período analizado',build:rbKpiClone('kDays')},
+    {cat:'Grados-Día',key:'gdd-chart',label:'Gráfico comparación de temporadas',build:rbChartLive('chAnios','Comparación de temporadas · GDD')},
+    {cat:'Grados-Día',key:'gdd-curva',label:'Gráfico acumulado / día a día',build:rbChartLive('chCurva',()=>document.getElementById('chTitle')?.textContent||'GDD')},
+    {cat:'Grados-Día',key:'gdd-sem',label:'Gráfico acumulado semanal',build:rbChartLive('chSem','Acumulado semanal')},
+    {cat:'Grados-Día',key:'gdd-tabla',label:'Tabla por temporada',build:rbTableClone('gAnioTable','Grados-día acumulados por temporada')},
+    {cat:'Grados-Día',key:'gdd-var',label:'Tabla variación %',build:rbTableClone('gVarTable','Variación % entre temporadas')},
+    {cat:'Horas Frío',key:'frio-kpi1',label:'KPI: HF acumuladas',build:rbKpiClone('ck1')},
+    {cat:'Horas Frío',key:'frio-kpi2',label:'KPI: PF acumuladas',build:rbKpiClone('ck2')},
+    {cat:'Horas Frío',key:'frio-kpi3',label:'KPI: Variación HF',build:rbKpiClone('ck3')},
+    {cat:'Horas Frío',key:'frio-kpi4',label:'KPI: Variación PF',build:rbKpiClone('ck4')},
+    {cat:'Horas Frío',key:'frio-hf',label:'Tabla Horas Frío por temporada',build:rbTableClone('cTabHFTable','Horas frío base 7,2 °C por temporada')},
+    {cat:'Horas Frío',key:'frio-pf',label:'Tabla Porciones de Frío por temporada',build:rbTableClone('cTabPFTable','Porciones de frío por temporada')},
+    {cat:'Horas Frío',key:'frio-evol',label:'Gráfico evolución Horas Frío',build:rbChartLive('chEvol','Evolución horas frío')},
+    {cat:'Horas Frío',key:'frio-evolpf',label:'Gráfico evolución Porciones de Frío',build:rbChartLive('chEvolPF','Evolución porciones de frío')},
+    {cat:'Heladas',key:'hel-kpi',label:'Texto resumen Heladas',build:rbHeladaKpi},
+    {cat:'Heladas',key:'hel-kpi1',label:'KPI: Eventos de helada',build:rbKpiClone('fk1')},
+    {cat:'Heladas',key:'hel-kpi2',label:'KPI: Mínima más baja',build:rbKpiClone('fk3')},
+    {cat:'Heladas',key:'hel-kpi3',label:'KPI: Última helada',build:rbKpiClone('fk5')},
+    {cat:'Heladas',key:'hel-est',label:'Tabla detalle por estación',build:rbTableClone('fEstTable','Detalle por estación')},
+    {cat:'Heladas',key:'hel-ev',label:'Tabla detalle de eventos',build:rbTableClone('ftable','Detalle de eventos')},
+    {cat:'Heladas',key:'hel-chart',label:'Gráfico heladas por fecha',build:rbChartLive('chFrost','Heladas por fecha')},
     {cat:'General',key:'titulo',label:'+ Título de texto',build:rbTitulo}
   ];
 }
@@ -3570,68 +3600,128 @@ function renderInformes(){
     const def=defs.find(d=>d.key===b.dataset.k);
     if(def)rbAdd(def);
   });
+  if(!document.getElementById('rbPages').children.length)rbAddPage();
 }
-function rbChartImg(chId,titulo){
-  const it=CHARTS[chId];
-  if(!it||!it.chart){errorUI('Ese gráfico no está disponible: visita la sección correspondiente primero para que se dibuje.');return null;}
-  const src=it.chart.toBase64Image('image/png',1);
-  return `<div style="font-size:10.5px;font-weight:700;color:var(--g-d);margin-bottom:5px">${titulo}</div>
-    <img src="${src}" style="width:100%;height:calc(100% - 16px);object-fit:contain">`;
+/* cada build(body) llena el contenedor y devuelve true/false según si había datos */
+function rbChartLive(chId,tituloOrFn){
+  return body=>{
+    const it=CHARTS[chId];
+    if(!it||!it.chart){errorUI('Ese gráfico no está disponible: visita la sección correspondiente primero para que se dibuje.');return false;}
+    const titulo=typeof tituloOrFn==='function'?tituloOrFn():tituloOrFn;
+    const label=document.createElement('div');
+    label.style.cssText='font-size:10.5px;font-weight:700;color:var(--g-d);margin-bottom:5px;flex:none';
+    label.textContent=titulo;
+    const wrap=document.createElement('div');
+    wrap.style.cssText='position:relative;flex:1;min-height:0';
+    const cv=document.createElement('canvas');
+    wrap.appendChild(cv);
+    body.style.display='flex'; body.style.flexDirection='column';
+    body.appendChild(label); body.appendChild(wrap);
+    const cfg=JSON.parse(JSON.stringify({type:it.cfg.type,data:it.cfg.data,options:it.cfg.options}));
+    cfg.options=cfg.options||{}; cfg.options.responsive=true; cfg.options.maintainAspectRatio=false; cfg.options.animation=false;
+    if(it.cfg.options?.plugins?.tooltip?.callbacks){
+      cfg.options.plugins=cfg.options.plugins||{};
+      cfg.options.plugins.tooltip=cfg.options.plugins.tooltip||{};
+      cfg.options.plugins.tooltip.callbacks=it.cfg.options.plugins.tooltip.callbacks;
+    }
+    cfg.plugins=it.cfg.plugins;
+    new Chart(cv,cfg);
+    return true;
+  };
 }
 function rbTableClone(id,titulo){
-  const t=document.getElementById(id);
-  if(!t||!t.querySelector('tbody')?.children.length){
-    errorUI('Esa tabla está vacía: visita la sección correspondiente primero para que se genere.');return null;
-  }
-  const clone=t.cloneNode(true); clone.removeAttribute('id');
-  return `<div style="font-size:10.5px;font-weight:700;color:var(--g-d);margin-bottom:5px">${titulo}</div>
-    <div style="overflow:auto">${clone.outerHTML}</div>`;
+  return body=>{
+    const t=document.getElementById(id);
+    if(!t||!t.querySelector('tbody')?.children.length){
+      errorUI('Esa tabla está vacía: visita la sección correspondiente primero para que se genere.');return false;
+    }
+    const label=document.createElement('div');
+    label.style.cssText='font-size:10.5px;font-weight:700;color:var(--g-d);margin-bottom:5px';
+    label.textContent=titulo;
+    const wrap=document.createElement('div'); wrap.style.overflow='auto';
+    const clone=t.cloneNode(true); clone.removeAttribute('id');
+    wrap.appendChild(clone);
+    body.appendChild(label); body.appendChild(wrap);
+    return true;
+  };
+}
+function rbKpiClone(elId){
+  return body=>{
+    const src=document.getElementById(elId)?.closest('.kpi');
+    if(!src){errorUI('Ese KPI no está disponible: visita la sección correspondiente primero.');return false;}
+    const clone=src.cloneNode(true);
+    clone.querySelectorAll('[id]').forEach(e=>e.removeAttribute('id'));
+    clone.style.cssText='width:100%;height:100%;box-shadow:none;box-sizing:border-box';
+    body.appendChild(clone);
+    return true;
+  };
 }
 function rbGddKpi(){
-  const sel=ESTACIONES.filter(e=>S.sel.has(e));
-  if(!sel.length){errorUI('No hay estaciones marcadas en Grados-Día.');return null;}
-  const stats=computeStats().filter(s=>sel.includes(s.est));
-  const prom=stats.length?stats.reduce((a,c)=>a+c.gdd,0)/stats.length:null;
-  return `<div style="font-size:11.5px;line-height:1.8">
-    <b style="color:var(--g-d)">Grados-Día</b><br>Estaciones: ${sel.join(', ')}<br>
-    Período: ${fmtL(S.from)} → ${fmtL(S.to)} · base ${BASES[S.base].lbl}<br>
-    ${sel.length>1?'Promedio del grupo':'Acumulado'}: <b>${prom!=null?nf(prom,0)+' °D':'—'}</b></div>`;
+  return body=>{
+    const sel=ESTACIONES.filter(e=>S.sel.has(e));
+    if(!sel.length){errorUI('No hay estaciones marcadas en Grados-Día.');return false;}
+    const stats=computeStats().filter(s=>sel.includes(s.est));
+    const prom=stats.length?stats.reduce((a,c)=>a+c.gdd,0)/stats.length:null;
+    body.innerHTML=`<div style="font-size:11.5px;line-height:1.8">
+      <b style="color:var(--g-d)">Grados-Día</b><br>Estaciones: ${sel.join(', ')}<br>
+      Período: ${fmtL(S.from)} → ${fmtL(S.to)} · base ${BASES[S.base].lbl}<br>
+      ${sel.length>1?'Promedio del grupo':'Acumulado'}: <b>${prom!=null?nf(prom,0)+' °D':'—'}</b></div>`;
+    return true;
+  };
 }
 function rbHeladaKpi(){
-  const fsel=[...S.fSel];
-  if(!fsel.length){errorUI('No hay estaciones marcadas en Eventos de Helada.');return null;}
-  return `<div style="font-size:11.5px;line-height:1.8">
-    <b style="color:var(--g-d)">Eventos de Helada</b><br>Estaciones: ${fsel.join(', ')}<br>
-    Período: ${fmtL(FUNIQ[S.fFrom])} → ${fmtL(FUNIQ[S.fTo])}<br>
-    Eventos: <b>${document.getElementById('fk1').textContent}</b> ·
-    Mínima: <b>${document.getElementById('fk3').textContent}</b><br>
-    Última helada: <b>${document.getElementById('fk5').textContent}</b></div>`;
+  return body=>{
+    const fsel=[...S.fSel];
+    if(!fsel.length){errorUI('No hay estaciones marcadas en Eventos de Helada.');return false;}
+    body.innerHTML=`<div style="font-size:11.5px;line-height:1.8">
+      <b style="color:var(--g-d)">Eventos de Helada</b><br>Estaciones: ${fsel.join(', ')}<br>
+      Período: ${fmtL(FUNIQ[S.fFrom])} → ${fmtL(FUNIQ[S.fTo])}<br>
+      Eventos: <b>${document.getElementById('fk1').textContent}</b> ·
+      Mínima: <b>${document.getElementById('fk3').textContent}</b><br>
+      Última helada: <b>${document.getElementById('fk5').textContent}</b></div>`;
+    return true;
+  };
 }
 function rbTitulo(){
-  const t=prompt('Texto del título:','Informe Agroclimático · Exportadora Los Olmos');
-  if(!t)return null;
-  return `<div style="font-size:21px;font-weight:700;color:#1E5B33;padding-top:4px">${t}</div>`;
+  return body=>{
+    const t=prompt('Texto del título:','Informe Agroclimático · Exportadora Los Olmos');
+    if(!t)return false;
+    body.innerHTML=`<div style="font-size:21px;font-weight:700;color:#1E5B33;padding-top:4px">${t}</div>`;
+    return true;
+  };
+}
+function rbFill(div,def){
+  const body=div.querySelector('.rbBody');
+  body.innerHTML=''; body.style.display=''; body.style.flexDirection='';
+  return safe(()=>def.build(body),'agregar el bloque');
 }
 function rbAdd(def){
-  const html=safe(def.build,'agregar el bloque');
-  if(!html)return;
+  const page=[...document.querySelectorAll('.rbPage')].pop();
+  if(!page)return;
   const id='rb'+(RB_ID++);
-  const page=document.getElementById('rbPage');
-  const n=page.children.length;
+  const n=page.querySelectorAll('.rbBlock').length;
   const x=20+(n%2)*380,y=20+Math.floor(n/2)*220;
   const div=document.createElement('div');
-  div.className='rbBlock'; div.id=id;
+  div.className='rbBlock'; div.id=id; div.dataset.defKey=def.key;
   div.style.left=x+'px'; div.style.top=y+'px'; div.style.width='360px'; div.style.height='200px';
-  div.innerHTML=`<div class="rbHandle"><span>${def.label}</span><span class="rbClose">✕</span></div>
-    <div class="rbBody">${html}</div><div class="rbResize"></div>`;
+  div.innerHTML=`<div class="rbHandle"><span>${def.label}</span>
+      <span class="rbTools"><span class="rbRefresh" title="Actualizar">↻</span><span class="rbClose" title="Quitar">✕</span></span></div>
+    <div class="rbBody"></div><div class="rbResize"></div>`;
   page.appendChild(div);
+  const ok=rbFill(div,def);
+  if(!ok){div.remove();return;}
   div.querySelector('.rbClose').onclick=()=>div.remove();
+  div.querySelector('.rbRefresh').onclick=()=>{
+    const d2=rbDefs().find(d=>d.key===div.dataset.defKey);
+    if(d2)rbFill(div,d2);
+  };
   rbDrag(div,div.querySelector('.rbHandle'));
   rbResize(div,div.querySelector('.rbResize'));
 }
 function rbDrag(div,handle){
   let on=false,sx=0,sy=0,ox=0,oy=0;
   handle.addEventListener('mousedown',e=>{
+    if(e.target.closest('.rbTools'))return;
     on=true; sx=e.clientX; sy=e.clientY;
     ox=parseInt(div.style.left)||0; oy=parseInt(div.style.top)||0;
     e.preventDefault();
@@ -3654,17 +3744,70 @@ function rbResize(div,handle){
     div.style.width=Math.max(140,ow+(e.clientX-sx))+'px';
     div.style.height=Math.max(90,oh+(e.clientY-sy))+'px';
   });
-  window.addEventListener('mouseup',()=>{on=false;});
+  window.addEventListener('mouseup',()=>{
+    if(!on)return; on=false;
+    const cv=div.querySelector('canvas');
+    if(cv){const ch=Chart.getChart(cv); if(ch)ch.resize();}
+  });
 }
+/* ── hojas: tamaño, orientación y páginas ── */
+const RB_SIZES={carta:{w:816,h:1056},oficio:{w:816,h:1248}};
+let RB_PAPER='carta',RB_LANDSCAPE=false;
+function rbPageDims(){
+  const s=RB_SIZES[RB_PAPER];
+  return RB_LANDSCAPE?{w:s.h,h:s.w}:{w:s.w,h:s.h};
+}
+function rbApplyPaper(){
+  const {w,h}=rbPageDims();
+  document.querySelectorAll('#rbPages>div').forEach(hd=>{hd.style.width=w+'px';});
+  document.querySelectorAll('.rbPage').forEach(p=>{p.style.width=w+'px';p.style.minHeight=h+'px';});
+  let st=document.getElementById('rbPageSizeCss');
+  if(!st){st=document.createElement('style');st.id='rbPageSizeCss';document.head.appendChild(st);}
+  const kw=(RB_PAPER==='carta'?'letter':'legal')+(RB_LANDSCAPE?' landscape':'');
+  st.textContent=`@media print{ @page{ size:${kw}; margin:14mm 12mm; } }`;
+}
+function rbAddPage(){
+  const wrap=document.getElementById('rbPages');
+  const n=wrap.children.length+1;
+  const holder=document.createElement('div');
+  holder.style.cssText='display:flex;flex-direction:column;align-items:center';
+  const {w}=rbPageDims();
+  holder.style.width=w+'px';
+  const bar=document.createElement('div');
+  bar.className='rbPageBar';
+  bar.innerHTML=`<span>Página ${n}</span><span class="rbPageDel">✕ quitar página</span>`;
+  const page=document.createElement('div');
+  page.className='rbPage';
+  holder.appendChild(bar); holder.appendChild(page);
+  wrap.appendChild(holder);
+  bar.querySelector('.rbPageDel').onclick=()=>{
+    if(wrap.children.length<=1){errorUI('Debe quedar al menos una página.');return;}
+    if(confirm('¿Quitar esta página y los bloques que tenga?'))holder.remove();
+  };
+  rbApplyPaper();
+  return page;
+}
+document.getElementById('rbAddPage').onclick=()=>rbAddPage();
+document.getElementById('rbSize').querySelectorAll('button').forEach(b=>b.onclick=()=>{
+  document.getElementById('rbSize').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));
+  RB_PAPER=b.dataset.v; rbApplyPaper();
+});
+document.getElementById('rbOrient').querySelectorAll('button').forEach(b=>b.onclick=()=>{
+  document.getElementById('rbOrient').querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));
+  RB_LANDSCAPE=b.dataset.v==='h'; rbApplyPaper();
+});
 document.getElementById('rbClear').onclick=()=>{
-  if(!document.getElementById('rbPage').children.length)return;
-  if(confirm('¿Vaciar toda la hoja? Se perderán los bloques que agregaste.'))document.getElementById('rbPage').innerHTML='';
+  if(!document.getElementById('rbPages').children.length)return;
+  if(confirm('¿Vaciar todo el informe? Se perderán todas las páginas y bloques.')){
+    document.getElementById('rbPages').innerHTML=''; rbAddPage();
+  }
 };
 document.getElementById('rbPrint').onclick=()=>{
-  const page=document.getElementById('rbPage');
-  if(!page.children.length){errorUI('Agrega al menos un bloque a la hoja antes de generar el PDF.');return;}
-  document.getElementById('printArea').innerHTML=
-    `<div style="position:relative;width:794px;margin:0 auto">${page.innerHTML}</div>`;
+  const pages=[...document.querySelectorAll('.rbPage')];
+  if(!pages.length||!pages.some(p=>p.children.length)){errorUI('Agrega al menos un bloque a alguna página antes de generar el PDF.');return;}
+  const {w}=rbPageDims();
+  document.getElementById('printArea').innerHTML=pages.map(p=>
+    `<div class="rbPage" style="position:relative;width:${w}px;margin:0 auto">${p.innerHTML}</div>`).join('');
   document.body.classList.add('printReport');
   setTimeout(()=>window.print(),60);
 };
