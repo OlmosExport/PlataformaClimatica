@@ -1,5 +1,5 @@
 /* Service Worker · Plataforma Agroclimática Los Olmos */
-const CACHE = 'olmos-agroclima-v4';
+const CACHE = 'olmos-agroclima-v5';
 const CORE = ['./','./index.html','./datos.json','./config.json','./heladas_comunas.json','./manifest.webmanifest',
   './icon-192.png','./icon-512.png','./apple-touch-icon.png',
   'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js',

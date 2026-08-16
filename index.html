@@ -4,12 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Plataforma Agroclimática · Exportadora Los Olmos</title>
+<meta name="app-version" content="3.0">
 <meta name="app-build" content="2026-08-06-01">
-<meta name="theme-color" content="#2C7A46">
+<meta name="theme-color" content="#1B4F8A">
 <meta name="description" content="Grados-día y eventos de helada de la red de estaciones de Exportadora Los Olmos.">
 <link rel="manifest" href="./manifest.webmanifest">
-<link rel="apple-touch-icon" href="./apple-touch-icon.png">
-<link rel="icon" href="./icon-192.png">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png?v=2">
+<link rel="icon" href="./icon-192.png?v=2">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Agroclima Olmos">
@@ -635,6 +636,25 @@ tbody tr:hover td{background:var(--g-xl)}
   .card{border-radius:13px}
 }
 
+/* ══ VERSIÓN ══ */
+.verbtn{width:calc(100% - 24px);margin:0 12px 8px;display:flex;align-items:center;gap:10px;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:10px;
+  padding:9px 12px;cursor:pointer;transition:all .18s var(--ease);font-family:"Inter",sans-serif}
+.verbtn:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.2)}
+.verbtn .vtag{font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:700;color:#8FD6A4;
+  background:rgba(143,214,164,.14);border-radius:6px;padding:3px 8px;flex:0 0 auto}
+.verbtn .vlb{font-size:11.5px;color:#8FB79C;text-align:left;line-height:1.2}
+.side.mini .verbtn{justify-content:center;width:calc(100% - 12px);margin:0 6px 8px;padding:9px 0}
+.verchip{cursor:pointer;transition:all .18s var(--ease)}
+.verchip:hover{border-color:#B9D3E4;background:#F4F9FC}
+.vergrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+.vergrid div{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:11px 13px}
+.vergrid .l{font-family:"IBM Plex Mono",monospace;font-size:9px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--mut2)}
+.vergrid .v{font-size:14px;font-weight:600;margin-top:3px}
+.vernota{display:flex;gap:11px;align-items:flex-start;padding:9px 0;border-bottom:1px solid #F1F4F0;font-size:12.5px;line-height:1.5}
+.vernota:last-child{border-bottom:0}
+.vernota i{font-style:normal;flex:0 0 18px;text-align:center}
 /* ══ ERRORES / CARGA ══ */
 #errbar{position:fixed;left:14px;right:14px;bottom:14px;z-index:3000;background:#8C3020;color:#fff;
   border-radius:12px;padding:13px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;
@@ -939,6 +959,10 @@ body.modalopen{overflow:hidden}
       <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#2C7A46" stroke-width="1.8"
         stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M11 18h2"/></svg>
       <span class="lb2">Instalar app en el celular</span></button>
+    <button class="verbtn" id="btnVer" title="Ver detalle de la versión">
+      <span class="vtag">v<span class="verTxt">—</span></span>
+      <span class="vlb lb2">Plataforma Climática</span>
+    </button>
     <div class="helpcard">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2C7A46" stroke-width="1.7"
         stroke-linecap="round"><path d="M4 14v-3a8 8 0 0 1 16 0v3"/><rect x="2" y="13" width="4" height="7" rx="1.6"/><rect x="18" y="13" width="4" height="7" rx="1.6"/><path d="M20 20v1a3 3 0 0 1-3 3h-3"/></svg>
@@ -974,6 +998,10 @@ body.modalopen{overflow:hidden}
           <span><span class="l">App actualizada al</span><span class="v stampTxt">—</span></span></div>
         <div class="chipbox"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#2E6B8F" stroke-width="1.8"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg>
           <span><span class="l">Datos actualizados al</span><span class="v lastTxt">—</span></span></div>
+        <div class="chipbox verchip" id="verChip" title="Ver detalle de la versión">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#1B4F8A" stroke-width="1.8"
+            stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v5c0 4.5-3.2 8.3-8 9-4.8-.7-8-4.5-8-9V7z"/><path d="M9 12l2 2 4-4"/></svg>
+          <span><span class="l">Versión</span><span class="v verTxt">—</span></span></div>
         <button class="iconbtn" id="btnCfg" title="Configurar estaciones visibles" aria-label="Configuración">
           <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#2C7A46" stroke-width="1.8"
             stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/>
@@ -1249,15 +1277,43 @@ body.modalopen{overflow:hidden}
       </div>
     </div>
 
-    <div class="grid g3 mb16">
-      <div class="kpi hl"><div class="ki"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#2C7A46" stroke-width="1.8"
+    <div class="grid g4 mb16">
+      <div class="kpi hl"><div class="ki"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2C7A46" stroke-width="1.8"
         stroke-linecap="round" stroke-linejoin="round"><path d="M12 21c4-2 7-5.5 7-10a7 7 0 0 0-14 0c0 4.5 3 8 7 10z"/><path d="M12 21V8"/></svg></div>
-        <div><div class="kl">Grados-día acumulados</div><div class="kv" id="kAcum">—</div><div class="ks" id="kAcumS">—</div></div></div>
-      <div class="kpi warn"><div class="ki"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#E0A73C" stroke-width="1.8"
+        <div><div class="kl">GDD acumulados <span id="kY1">—</span></div><div class="kv" id="kAcum">—</div><div class="ks" id="kAcumS">—</div></div></div>
+      <div class="kpi warn"><div class="ki"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E0A73C" stroke-width="1.8"
         stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg></div>
-        <div><div class="kl">Promedio diario</div><div class="kv" id="kRate">—</div><div class="ks">Promedio del período</div></div></div>
-      <div class="kpi blue"><div class="ki"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#2E6B8F" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></div>
+        <div><div class="kl">Promedio diario</div><div class="kv" id="kRate">—</div><div class="ks" id="kRateS">Promedio del período</div></div></div>
+      <div class="kpi warn"><div class="ki"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E0A73C" stroke-width="1.8" stroke-linecap="round"><path d="M3 17l6-6 4 4 7-8"/><path d="M21 7h-5M21 7v5"/></svg></div>
+        <div><div class="kl">Variación vs. temporada anterior</div><div class="kv" id="kVar">—</div><div class="ks" id="kVarS">—</div></div></div>
+      <div class="kpi blue"><div class="ki"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2E6B8F" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></div>
         <div><div class="kl">Período analizado</div><div class="kv" id="kDays">—</div><div class="ks" id="kDaysS">—</div></div></div>
+    </div>
+
+    <div class="grid g3 mb16">
+      <div class="estcard" id="gEstCard"></div>
+      <div class="card">
+        <div class="chead">
+          <div><h3>GDD base 4,5 °C por temporada</h3><p>Acumulado en el mismo período de cada temporada</p></div>
+          <div class="ptools">
+            <button class="gh" onclick="ampliarTabla('gTab45Table','GDD base 4,5 °C por temporada')">⤢ Ampliar</button>
+            <button class="gh" onclick="descargarTabla('gTab45Table','GDD base 4,5 °C por temporada')">↓ Descargar imagen</button>
+          </div>
+        </div>
+        <div class="tscroll"><table class="matrix mini" id="gTab45Table"><thead><tr><th>Temporada</th><th id="gThEst">Estación</th><th>Promedio red</th></tr></thead>
+          <tbody id="gTab45"></tbody></table></div>
+      </div>
+      <div class="card">
+        <div class="chead">
+          <div><h3>GDD base 10 °C por temporada</h3><p>Acumulado en el mismo período de cada temporada</p></div>
+          <div class="ptools">
+            <button class="gh" onclick="ampliarTabla('gTab10Table','GDD base 10 °C por temporada')">⤢ Ampliar</button>
+            <button class="gh" onclick="descargarTabla('gTab10Table','GDD base 10 °C por temporada')">↓ Descargar imagen</button>
+          </div>
+        </div>
+        <div class="tscroll"><table class="matrix mini" id="gTab10Table"><thead><tr><th>Temporada</th><th id="gThEst2">Estación</th><th>Promedio red</th></tr></thead>
+          <tbody id="gTab10"></tbody></table></div>
+      </div>
     </div>
 
     <div class="card mb16">
@@ -2077,6 +2133,42 @@ body.modalopen{overflow:hidden}
   </div>
 </div>
 
+<div id="vermodal" class="ovl hide">
+  <div class="obox" style="max-width:520px">
+    <div class="ohead">
+      <div><h3>Plataforma Climática</h3><p>Exportadora Los Olmos · Departamento Técnico</p></div>
+      <button class="gh" id="verX">✕</button>
+    </div>
+    <div class="obody">
+      <div style="display:flex;align-items:center;gap:14px">
+        <img id="verIcon" alt="" style="width:56px;height:56px;border-radius:14px">
+        <div><div style="font-size:30px;font-weight:700;letter-spacing:-.03em;line-height:1">
+          Versión <span class="verTxt">—</span></div>
+          <div class="hint" style="margin-top:3px">Aplicación web instalable · funciona sin conexión</div></div>
+      </div>
+      <div class="vergrid">
+        <div><div class="l">App actualizada al</div><div class="v stampTxt">—</div></div>
+        <div><div class="l">Datos actualizados al</div><div class="v lastTxt">—</div></div>
+        <div><div class="l">Estaciones activas</div><div class="v" id="verEst">—</div></div>
+        <div><div class="l">Temporadas cargadas</div><div class="v" id="verTemp">—</div></div>
+      </div>
+      <span class="eyebrow">Qué trae esta versión</span>
+      <div style="margin-top:9px">
+        <div class="vernota"><i>📊</i><span>Reporte de <b>Grados-Día</b> con panel por estación, comparación entre temporadas y acumulado semanal por semana agrícola.</span></div>
+        <div class="vernota"><i>❄️</i><span><b>Horas frío base 7,2 °C y porciones de frío</b>, con día de corte ajustable y déficit o superávit entre temporadas.</span></div>
+        <div class="vernota"><i>🌡️</i><span><b>Eventos de helada</b> por estación y el reporte de heladas por comuna de Cogrowers.</span></div>
+        <div class="vernota"><i>🗺️</i><span><b>Mapa de estaciones</b> sobre satélite con la calidad de los datos horarios de cada una.</span></div>
+        <div class="vernota"><i>✍️</i><span><b>Carga manual</b> de registros diarios, heladas y estaciones nuevas.</span></div>
+        <div class="vernota"><i>📱</i><span>Instalable en el celular, con aviso automático cuando hay una versión más reciente.</span></div>
+      </div>
+    </div>
+    <div class="ofoot">
+      <span class="hint" style="flex:1">Desarrollada por el Departamento Técnico</span>
+      <button class="btn" id="verOk">Cerrar</button>
+    </div>
+  </div>
+</div>
+
 <div id="sopmodal" class="ovl hide">
   <div class="obox">
     <div class="ohead">
@@ -2889,17 +2981,109 @@ function renderGdd(){
     const promD=stats.reduce((a,c)=>a+c.gd,0)/stats.length;
     set('kAcum',nf(prom,0)+'<small>°D</small>',`Promedio de ${stats.length} estaciones · base ${b.lbl}`);
     set('kRate',nf(promD,1)+'<small>°D/día</small>');
-    const rate=document.getElementById('kRate').parentElement.querySelector('.ks');
-    if(rate)rate.textContent='Promedio diario del grupo';
+    set('kRate',nf(promD,1)+'<small>°D/día</small>','Promedio diario del grupo');
   }else if(mine){
     set('kAcum',nf(mine.gdd,0)+'<small>°D</small>',`${mine.est} · base ${b.lbl}`);
     set('kRate',nf(mine.gd,1)+'<small>°D/día</small>');
-    const rate=document.getElementById('kRate').parentElement.querySelector('.ks');
-    if(rate)rate.textContent='Promedio del período';
+    set('kRate',nf(mine.gd,1)+'<small>°D/día</small>','Promedio del período');
   }else{set('kAcum','—','Sin datos');set('kRate','—');}
   set('kDays',days(S.from,S.to)+'<small>días</small>',`${fmtL(S.from)} → ${fmtL(S.to)}`);
+  panelEstacionGdd(foco,sel,stats);
   chartCurva(sel,foco); chartSemana(sel); cmpBoxes(foco);
   chartAnios(sel); tablaAnios(sel); tablaVariacionGdd(sel);
+}
+
+/* ═══ Panel de una estación, al estilo del reporte de frío ═══ */
+function gddTemporada(est,bi,y){
+  /* acumulado de la estación en la misma ventana calendario de la temporada y */
+  const mm=mmddList();
+  const map={};
+  (DATA[est]||[]).forEach(r=>{ if(seasonOf(r[0])===y&&r[bi]!=null) map[r[0].slice(5)]=r[bi]; });
+  let s=0,hay=false;
+  mm.forEach(k=>{ if(map[k]!=null){s+=map[k];hay=true;} });
+  return hay?s:null;
+}
+function gddRed(bi,y,sel){
+  const base=(sel&&sel.length>1)?sel:ESTACIONES;
+  const vs=base.map(e=>gddTemporada(e,bi,y)).filter(v=>v!=null&&v>0);
+  return vs.length?vs.reduce((a,b)=>a+b,0)/vs.length:null;
+}
+function panelEstacionGdd(foco,sel,stats){
+  const card=document.getElementById('gEstCard');
+  const t45=document.getElementById('gTab45'),t10=document.getElementById('gTab10');
+  if(!card||!t45)return;
+  const anios=SEASONS.slice().sort((a,b)=>b-a);
+  const ANT=anios.filter(y=>y<SEASON)[0];
+  const bi=BASES[S.base].i;
+  document.getElementById('kY1').textContent=SEASON+'/'+String(SEASON+1).slice(2);
+  const set=(id,v,s,col)=>{const a=document.getElementById(id);if(!a)return;a.innerHTML=v;
+    if(col!==undefined)a.style.color=col||''; const b=document.getElementById(id+'S'); if(b&&s!=null)b.textContent=s;};
+
+  if(!foco){
+    card.innerHTML='<div class="eyebrow">Estación analizada</div><h3>Sin selección</h3>';
+    t45.innerHTML='<tr><td colspan="3" class="empty">Marca una estación.</td></tr>';
+    t10.innerHTML='<tr><td colspan="3" class="empty">Marca una estación.</td></tr>';
+    set('kVar','—','Sin estación seleccionada','');
+    return;
+  }
+  document.getElementById('gThEst').textContent=foco;
+  document.getElementById('gThEst2').textContent=foco;
+
+  /* variación de la temporada actual contra la anterior, mismo período */
+  const act=gddTemporada(foco,bi,SEASON), ant=ANT!=null?gddTemporada(foco,bi,ANT):null;
+  const v=(act!=null&&ant)?((act-ant)/ant*100):null;
+  set('kVar',v==null?'—':(v>=0?'▲ ':'▼ ')+nf(Math.abs(v),1)+'<small>%</small>',
+    ant?`${ANT}/${String(ANT+1).slice(2)}: ${nf(ant,0)} °D`:'Sin registro en la temporada anterior',
+    v==null?'':(v>=0?'#1E5B33':'#A33A28'));
+
+  /* ficha verde */
+  const co=COORDS[foco]||[];
+  const conDato=anios.filter(y=>gddTemporada(foco,bi,y)!=null).length;
+  const a45=gddTemporada(foco,1,SEASON), a10=gddTemporada(foco,2,SEASON);
+  card.innerHTML=`
+    <div class="eyebrow">Estación analizada</div><h3>${foco}</h3>
+    <div class="li" style="margin-top:2px">📍 Región de O’Higgins · ${co[2]??'—'} msnm · ${co[0]!=null?co[0].toFixed(2)+' / '+co[1].toFixed(2):'sin coordenadas'}</div>
+    <div class="grid2b">
+      <div class="bx"><div class="l">GDD base 4,5 °C</div><div class="v">${a45!=null?nf(a45,0):'—'}</div></div>
+      <div class="bx"><div class="l">GDD base 10 °C</div><div class="v">${a10!=null?nf(a10,0):'—'}</div></div>
+      <div class="bx"><div class="l">Temporadas con dato</div><div class="v">${conDato}</div></div>
+      <div class="bx"><div class="l">Días del período</div><div class="v">${days(S.from,S.to)}</div></div>
+    </div>
+    <div class="minimap" id="gMini"></div>`;
+  miniMapaGdd(foco,co);
+
+  /* tablas por temporada, una por base térmica */
+  const tabla=(col)=>{
+    const filas=anios.map(y=>{
+      const val=gddTemporada(foco,col,y), red=gddRed(col,y,sel);
+      return `<tr${y===SEASON?' style="background:var(--g-xl)"':''}>
+        <td style="text-align:left;font-weight:600">${y}/${String(y+1).slice(2)}${y===SEASON?' <span style="font-weight:400;color:var(--mut2)">actual</span>':''}</td>
+        <td>${val!=null?'<b>'+nf(val,0)+'</b>':'<span class="sinreg">Sin datos</span>'}</td>
+        <td>${red!=null?nf(red,0):'—'}</td></tr>`;
+    }).join('');
+    const va=anios.map(y=>gddTemporada(foco,col,y)).filter(x=>x!=null);
+    const vr=anios.map(y=>gddRed(col,y,sel)).filter(x=>x!=null);
+    const pa=va.length?va.reduce((a,b)=>a+b,0)/va.length:null;
+    const pr=vr.length?vr.reduce((a,b)=>a+b,0)/vr.length:null;
+    return filas+`<tr class="tot"><td style="text-align:left">Promedio</td>
+      <td>${pa!=null?nf(pa,0):'—'}</td><td>${pr!=null?nf(pr,0):'—'}</td></tr>`;
+  };
+  t45.innerHTML=tabla(1);
+  t10.innerHTML=tabla(2);
+}
+let gmini=null;
+function miniMapaGdd(est,co){
+  if(co[0]==null||!window.L)return;
+  const el=document.getElementById('gMini'); if(!el)return;
+  try{
+    if(gmini){gmini.remove();gmini=null;}
+    gmini=L.map(el,{zoomControl:false,attributionControl:false,dragging:false,scrollWheelZoom:false,
+      doubleClickZoom:false,boxZoom:false,keyboard:false,tap:false}).setView([co[0],co[1]],12);
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:18}).addTo(gmini);
+    L.circleMarker([co[0],co[1]],{radius:8,fillColor:'#fff',color:'#2C7A46',weight:3,fillOpacity:1}).addTo(gmini)
+      .bindTooltip(est,{permanent:true,direction:'top',className:'minitip'});
+    setTimeout(()=>gmini.invalidateSize(),120);
+  }catch(e){ el.style.display='none'; }
 }
 function mmddList(){
   const out=[],d0=parseD(S.from),d1=parseD(S.to);
@@ -4347,6 +4531,21 @@ document.getElementById('cfgDl').onclick=()=>
   download(new Blob([JSON.stringify({off:[...OFF]},null,2)],{type:'application/json'}),'config.json');
 document.getElementById('cfgAll').onclick=()=>{OFF=new Set();saveCfg();applyCfg();renderCfg();};
 document.getElementById('cfgNone').onclick=()=>{OFF=new Set(allStations());saveCfg();applyCfg();renderCfg();};
+/* versión */
+function abrirVersion(){
+  document.querySelectorAll('.verTxt').forEach(x=>x.textContent=APP_VERSION);
+  const ic=document.getElementById('verIcon'); if(ic)ic.src='./icon-192.png?v=2';
+  const e=document.getElementById('verEst'); if(e)e.textContent=ESTACIONES.length;
+  const t=document.getElementById('verTemp'); if(t)t.textContent=SEASONS.length;
+  document.getElementById('vermodal').classList.remove('hide');
+  document.body.classList.add('modalopen');
+}
+const cerrarVer=()=>{document.getElementById('vermodal').classList.add('hide');
+  document.body.classList.remove('modalopen');};
+['btnVer','verChip'].forEach(id=>{const b=document.getElementById(id); if(b)b.onclick=abrirVersion;});
+document.getElementById('verX').onclick=cerrarVer;
+document.getElementById('verOk').onclick=cerrarVer;
+document.getElementById('vermodal').onclick=e=>{if(e.target.id==='vermodal')cerrarVer();};
 /* soporte */
 const cerrarSop=()=>{document.getElementById('sopmodal').classList.add('hide');document.body.classList.remove('modalopen');};
 document.getElementById('btnSoporte').onclick=e=>{e.preventDefault();
@@ -5124,6 +5323,7 @@ document.getElementById('btnSave').onclick=()=>{
 };
 
 /* ═══ INSTALACIÓN Y ACTUALIZACIONES ═══ */
+const APP_VERSION="3.0";
 const APP_BUILD="2026-08-06-01";
 const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent)||
   (navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
@@ -5237,6 +5437,7 @@ function boot(keep){
   if(!S.fSel.size)S.fSel=new Set([FROST[S.near]?S.near:Object.keys(FROST)[0]]);
   document.getElementById('covSeason').textContent=`${SEASON}/${String(SEASON+1).slice(2)}`;
   document.querySelectorAll('.stampTxt').forEach(x=>x.textContent=fmtL(META.updated));
+  document.querySelectorAll('.verTxt').forEach(x=>x.textContent=APP_VERSION);
   document.querySelectorAll('.lastTxt').forEach(x=>x.textContent=fmtL(DMAX));
   document.getElementById('stEst').innerHTML=ESTACIONES.length+'<small style="font-size:11px;color:var(--mut)"> estaciones</small>';
   document.getElementById('stReg').textContent=ALL_DATES.length.toLocaleString('es-CL');
