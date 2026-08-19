@@ -1648,6 +1648,36 @@ body.modalopen{overflow:hidden}
       </div>
     </div>
 
+    <div class="card mb16">
+      <div class="chead">
+        <div><h3>Acumulado semanal de frío</h3>
+          <p id="cSemSub">Cuánto frío aportó cada semana dentro de su mes: sirve para ver en qué parte del invierno se concentró o se perdió.</p></div>
+        <div class="ptools">
+          <div class="segm tight" id="segSemMet" style="margin-right:4px">
+            <button class="gh on" data-m="hf">Horas frío</button>
+            <button class="gh" data-m="pf">Porciones</button>
+          </div>
+          <button class="gh" onclick="expandChart('chSemFrio')">⤢ Ampliar</button>
+          <button class="gh" onclick="downloadChart('chSemFrio')">↓ Descargar imagen</button>
+        </div>
+      </div>
+      <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;margin-bottom:14px">
+        <div class="fld" style="gap:7px">
+          <span class="eyebrow">Meses en el gráfico</span>
+          <div class="chips" id="mesBox">
+            <div class="sevchip on" data-m="0"><span class="sq" style="background:#A9CEB3"></span>Mayo</div>
+            <div class="sevchip on" data-m="1"><span class="sq" style="background:#4F9E68"></span>Junio</div>
+            <div class="sevchip on" data-m="2"><span class="sq" style="background:#1E5B33"></span>Julio</div>
+          </div>
+        </div>
+        <div class="fld" style="gap:7px">
+          <span class="eyebrow">Temporadas</span>
+          <div class="chips" id="semAnioBox"></div>
+        </div>
+      </div>
+      <div class="chartbox tall"><canvas id="chSemFrio"></canvas></div>
+    </div>
+
     <div class="grid g2 mb16">
       <div class="card">
         <div class="chead"><div><h3 id="cEvolT">Evolución de las horas frío base 7,2 °C</h3>
@@ -3776,6 +3806,7 @@ function rbDefs(){
     {cat:'Horas Frío',key:'frio-pf',label:'Tabla Porciones de Frío por temporada',build:rbTableClone('cTabPFTable','Porciones de frío por temporada')},
     {cat:'Horas Frío',key:'frio-evol',label:'Gráfico evolución Horas Frío',build:rbChartLive('chEvol','Evolución horas frío')},
     {cat:'Horas Frío',key:'frio-evolpf',label:'Gráfico evolución Porciones de Frío',build:rbChartLive('chEvolPF','Evolución porciones de frío')},
+    {cat:'Horas Frío',key:'frio-sem',label:'Gráfico acumulado semanal de frío',build:rbChartLive('chSemFrio','Acumulado semanal de frío')},
     {cat:'Heladas',key:'hel-kpi',label:'Texto resumen Heladas',build:rbHeladaKpi},
     {cat:'Heladas',key:'hel-kpi1',label:'KPI: Eventos de helada',build:rbKpiClone('fk1')},
     {cat:'Heladas',key:'hel-kpi2',label:'KPI: Mínima más baja',build:rbKpiClone('fk3')},
@@ -4591,6 +4622,106 @@ function cMes(est,y,met){
     return n?s:null;
   });
 }
+/* ═══ Acumulado semanal de frío ═══
+   Cada mes se divide en semanas de 7 días: mayo 1-4, junio 1-4, julio 1-5. */
+S.semMet='hf'; S.semMes=new Set([0,1,2]); S.semAnios=new Set();
+function semanasFrio(){
+  /* devuelve [{mes, sem, i0, i1, lab}] según los meses activos */
+  const out=[];
+  MESES.forEach(([nombre,i0,i1],mi)=>{
+    if(!S.semMes.has(mi))return;
+    let s=1;
+    for(let i=i0;i<=i1;i+=7){
+      const fin=Math.min(i+6,i1);
+      out.push({mes:mi,sem:s,i0:i,i1:fin,lab:[nombre,'Sem '+s]});
+      s++;
+    }
+  });
+  return out;
+}
+function sumaSemana(est,y,met,i0,i1){
+  const o=(COLD[est]||{})[y]; if(!o)return null;
+  const a=o[met]||[];
+  let s=0,n=0;
+  for(let i=i0;i<=Math.min(i1,S.cCut);i++) if(a[i]!=null){s+=a[i];n++;}
+  return n?+s.toFixed(met==='pf'?2:0):null;
+}
+function buildSemAnios(){
+  const box=document.getElementById('semAnioBox'); if(!box)return;
+  const disp=CY.filter(y=>cEsts().some(e=>(COLD[e]||{})[y]));
+  if(!S.semAnios.size){
+    S.semAnios=new Set([S.cRef, ...disp.filter(y=>y<S.cRef).slice(-1)].filter(Boolean));
+  }
+  box.innerHTML=disp.slice().reverse().map(y=>
+    `<div class="sevchip ${S.semAnios.has(y)?'on':''}" data-y="${y}">
+      <span class="sq" style="background:${CCOL[y]||'#9AA79C'}"></span>${y}</div>`).join('');
+  box.querySelectorAll('.sevchip').forEach(c=>c.onclick=()=>{
+    const y=+c.dataset.y;
+    S.semAnios.has(y)?S.semAnios.delete(y):S.semAnios.add(y);
+    if(!S.semAnios.size)S.semAnios.add(y);
+    buildSemAnios(); chartSemFrio();
+  });
+}
+const semBox=document.getElementById('mesBox');
+if(semBox)semBox.onclick=ev=>{
+  const c=ev.target.closest('.sevchip'); if(!c)return;
+  const m=+c.dataset.m;
+  S.semMes.has(m)?S.semMes.delete(m):S.semMes.add(m);
+  if(!S.semMes.size)S.semMes.add(m);
+  c.classList.toggle('on',S.semMes.has(m));
+  chartSemFrio();
+};
+const semMet=document.getElementById('segSemMet');
+if(semMet)semMet.onclick=ev=>{
+  const b=ev.target.closest('button'); if(!b)return;
+  document.querySelectorAll('#segSemMet button').forEach(x=>x.classList.toggle('on',x===b));
+  S.semMet=b.dataset.m; chartSemFrio();
+};
+function chartSemFrio(){
+  const est=S.cEst; if(!est)return;
+  const met=S.semMet, dec=met==='pf'?1:0;
+  const sem=semanasFrio();
+  const anios=CY.filter(y=>S.semAnios.has(y)).sort((a,b)=>a-b);
+  document.getElementById('cSemSub').textContent=
+    `${met==='hf'?'Horas frío base 7,2 °C':'Porciones de frío'} por semana · ${est} · `+
+    `${sem.length} semanas de ${[...S.semMes].sort().map(i=>MESES[i][0].toLowerCase()).join(', ')}`;
+  const ds=anios.map(y=>({
+    label:String(y),
+    data:sem.map(s=>sumaSemana(est,y,met,s.i0,s.i1)),
+    borderColor:CCOL[y]||'#9AA79C', backgroundColor:CCOL[y]||'#9AA79C',
+    borderWidth:y===S.cRef?3:1.8,
+    pointRadius:y===S.cRef?5:3.5, pointHoverRadius:7,
+    pointBackgroundColor:'#fff', pointBorderColor:CCOL[y]||'#9AA79C',
+    pointBorderWidth:y===S.cRef?3:2,
+    tension:.3, spanGaps:true, fill:false, dl:false
+  }));
+  /* separadores entre meses */
+  const cortes=[];
+  sem.forEach((s,i)=>{ if(i&&s.mes!==sem[i-1].mes)cortes.push(i-0.5); });
+  const lineasMes={id:'lm',beforeDatasetsDraw(c){
+    const x=c.scales.x,y=c.scales.y,ctx=c.ctx;
+    ctx.save(); ctx.strokeStyle='#DDE4D9'; ctx.setLineDash([4,4]); ctx.lineWidth=1;
+    cortes.forEach(v=>{const px=x.getPixelForValue(v);
+      ctx.beginPath(); ctx.moveTo(px,y.top); ctx.lineTo(px,y.bottom); ctx.stroke();});
+    ctx.restore();
+  }};
+  const cfg={type:'line',data:{labels:sem.map(s=>s.lab),datasets:ds},
+    options:{responsive:true,maintainAspectRatio:false,animation:{duration:700},
+      layout:{padding:{top:10,right:10}},
+      interaction:{mode:'index',intersect:false},
+      plugins:{legend:{position:'top',align:'start',
+          labels:{color:'#4A5A4E',boxWidth:22,boxHeight:2,font:{family:'Inter',size:11.5,weight:'500'},padding:14}},
+        tooltip:{...TT,
+          callbacks:{title:c=>{const s=sem[c[0].dataIndex];return s.lab[0]+' · semana '+s.sem;},
+            label:c=>` Temporada ${c.dataset.label}: ${nf(c.parsed.y,dec)} ${met==='hf'?'HF':'PF'}`}}},
+      scales:{x:{grid:{display:false},border:{display:true,color:'#DDE4D9'},
+          ticks:{color:'#7F8C82',font:{family:'IBM Plex Mono',size:9.5},autoSkip:false,padding:6}},
+        y:{...AX,beginAtZero:true,grace:'12%',
+          title:{display:true,text:met==='hf'?'horas frío de la semana':'porciones de la semana',
+            color:'#7F8C82',font:{family:'IBM Plex Mono',size:10}}}}},
+    plugins:[lineasMes]};
+  mount('chSemFrio',cfg,(met==='hf'?'Horas frío base 7,2 °C':'Porciones de frío')+' por semana · '+est);
+}
 function buildCChips(){
   const es=cEsts();
   if(!S.cEst||!es.includes(S.cEst)) S.cEst=(S.near&&COLD[S.near])?S.near:es[0]||null;
@@ -4690,6 +4821,7 @@ function renderCold(){
 
   chartMes('chHFmes',est,'hf','Horas frío base 7,2 °C por mes · '+est,0);
   chartMes('chPFmes',est,'pf','Porciones de frío por mes · '+est,1);
+  buildSemAnios(); chartSemFrio();
   chartEvol('chEvol',est,'hf'); chartEvol('chEvolPF',est,'pf');
   document.getElementById('cEvolT').textContent='Evolución horas frío base 7,2 °C · '+est;
   document.getElementById('cEvolT2').textContent='Evolución de las porciones de frío · '+est;
