@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Plataforma Agroclimática · Exportadora Los Olmos</title>
-<meta name="app-version" content="3.0">
+<meta name="app-version" content="3.4">
 <meta name="app-build" content="2026-08-06-01">
 <meta name="theme-color" content="#1B4F8A">
 <meta name="description" content="Grados-día y eventos de helada de la red de estaciones de Exportadora Los Olmos.">
@@ -636,6 +636,31 @@ tbody tr:hover td{background:var(--g-xl)}
   .card{border-radius:13px}
 }
 
+/* ══ PRONÓSTICO 7 DÍAS ══ */
+.wfrow7{display:flex;flex-direction:column;gap:2px}
+.wday{display:grid;grid-template-columns:52px 30px 1fr 78px;align-items:center;gap:10px;
+  padding:8px 9px;border-radius:9px;transition:background .15s var(--ease)}
+.wday:hover{background:var(--g-xl)}
+.wday.hoy{background:var(--g-l)}
+.wday .dd{font-size:12px;font-weight:600;line-height:1.15}
+.wday .dd small{display:block;font-weight:400;color:var(--mut2);font-size:10px;font-family:"IBM Plex Mono",monospace}
+.wday .ic{font-size:19px;text-align:center;line-height:1}
+.wday .ds{font-size:11px;color:var(--mut);line-height:1.3;min-width:0;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wday .ds b{display:block;color:var(--blue);font-weight:600;font-size:10.5px}
+.wday .tt{text-align:right;font-family:"IBM Plex Mono",monospace;font-size:12.5px;white-space:nowrap}
+.wday .tt b{color:var(--ink);font-weight:700}
+.wday .tt span{color:var(--mut2)}
+.wday .tt .frio{color:#1B4F8A;font-weight:700}
+.whelada{margin-top:10px;background:#EAF2F8;border:1px solid #C4DCEC;border-radius:10px;
+  padding:10px 13px;font-size:12px;color:#1B4F8A;line-height:1.5;display:flex;gap:9px;align-items:flex-start}
+.whelada b{display:block;font-size:12.5px}
+@media (max-width:520px){
+  .wday{grid-template-columns:46px 26px 1fr 70px;gap:7px;padding:7px 6px}
+  .wday .ds{display:none}
+  .wday{grid-template-columns:52px 30px 1fr}
+  .wday .tt{text-align:right}
+}
 /* ══ VERSIÓN ══ */
 .verbtn{width:calc(100% - 24px);margin:0 12px 8px;display:flex;align-items:center;gap:10px;
   background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:10px;
@@ -923,6 +948,175 @@ body.modalopen{overflow:hidden}
   .dual input[type=range]::-webkit-slider-thumb{width:24px;height:24px}
   .dual{height:34px}
 }
+
+/* ══════════════════════════════════════════════════
+   ADAPTACIÓN POR DISPOSITIVO
+   Escritorio ≥1280 · Portátil 1024-1280 · Tablet 700-1024 · Móvil <700
+   ══════════════════════════════════════════════════ */
+
+/* — Escritorio amplio — */
+@media (min-width:1600px){
+  .main{padding:26px 40px 60px;max-width:1720px}
+  .dashgrid{grid-template-columns:1fr 350px}
+  .herogrid{grid-template-columns:1.35fr .8fr}
+}
+
+/* — Portátil — */
+@media (max-width:1280px){
+  .main{padding:20px 22px 50px}
+  .side{width:224px;flex:0 0 224px}
+  .g4{grid-template-columns:repeat(2,1fr)}
+  .kpi4{grid-template-columns:repeat(2,1fr)}
+  .phead h1{font-size:22px}
+  .hero2{grid-template-columns:1fr 190px;padding:22px}
+  .hero2 .big2{font-size:26px}
+}
+
+/* — Tablet — */
+@media (max-width:1024px){
+  .g3,.g21,.g12,.dashgrid,.herogrid,.maplayout{grid-template-columns:1fr}
+  .g2{grid-template-columns:1fr}
+  .grid.g2.mb16 .chartbox{height:280px}
+  .mapside{max-height:none}
+  #map{height:420px}
+  .estcard{margin-bottom:0}
+  .minimap{height:180px}
+  .crow{gap:16px 20px}
+  .fld{flex:1 1 260px}
+  .chipbox2{max-height:132px}
+  .stripe{grid-template-columns:repeat(2,1fr)}
+  .stripe div:nth-child(2n){border-right:0}
+  .stripe div:nth-child(-n+2){border-bottom:1px solid var(--line)}
+}
+
+/* — Móvil — */
+@media (max-width:700px){
+  .main{padding:14px 12px 48px}
+  .card,.controls{padding:15px 14px;border-radius:13px}
+  .card+.card,.mb16{margin-bottom:13px}
+  .grid{gap:12px}
+  .g4,.kpi4,.g3,.g2,.qgrid,.vergrid,.formgrid,.steps,.cmpgrid,.mcards,.doors{grid-template-columns:1fr}
+  .kpirow{grid-template-columns:1fr 1fr;gap:9px}
+  .kpirow .kpi{padding:12px;gap:9px;flex-direction:column;align-items:flex-start}
+  .kpirow .kpi .kv{font-size:20px}
+  .kpirow .kpi .ks{font-size:10.5px}
+  .kpi{padding:14px 15px}
+  .kpi .kv{font-size:23px}
+  .kpi .ki{width:38px;height:38px;flex:0 0 38px}
+  .chartbox{height:250px;padding:10px 6px 4px}
+  .chartbox.tall{height:280px}
+  .chartbox.sm{height:180px}
+  .phead{gap:10px;flex-direction:column;align-items:stretch}
+  .phead h1{font-size:19px;letter-spacing:-.02em}
+  .phead .sub{font-size:12px}
+  .ptitle2{gap:11px}
+  .picon{width:36px;height:36px;flex:0 0 36px}
+  .ptools{width:100%;flex-wrap:wrap}
+  .ptools .gh{flex:1 1 auto;justify-content:center;min-height:38px}
+  .ptools .btn{flex:1 1 100%}
+  .chipbox{flex:1 1 auto;padding:8px 11px}
+  .chipbox .v{font-size:12px}
+  .chead{flex-direction:column;gap:9px}
+  .chead h3{font-size:14px}
+  .tophead{padding:10px 0 12px;gap:9px}
+  .tophead .hi h2{font-size:18px}
+  .tophead .hi p{font-size:11.5px}
+  .iconbtn{width:38px;height:38px;flex:0 0 38px;border-radius:10px}
+  /* tablas: la primera columna deja de ser fija para ganar ancho */
+  .tscroll tbody td:first-child,.mlist tbody td:first-child{position:static}
+  .tscroll thead th:first-child,.mlist thead th:first-child{position:sticky;left:auto}
+  th{font-size:8px;padding:9px 8px}
+  td{padding:9px 8px;font-size:11.5px}
+  td:first-child{font-size:11.5px}
+  /* controles */
+  .crow{gap:13px}
+  .fld{flex:1 1 100%}
+  input[type=date],select,.filtro input{width:100%;max-width:none}
+  .filtro{width:100%}
+  .segm.tight{width:100%;overflow-x:auto}
+  .segm.tight .gh{flex:1 0 auto;white-space:nowrap}
+  .estbar{flex-direction:column;align-items:stretch;gap:9px}
+  .estacts{width:100%}
+  .estacts .gh{flex:1;justify-content:center}
+  .chipbox2{max-height:126px}
+  .switchrow{padding:12px 13px}
+  /* dashboard */
+  .hero2{grid-template-columns:1fr;padding:20px;gap:16px;min-height:0}
+  .hero2 .saludo{font-size:22px}
+  .hero2 .big2{font-size:21px}
+  .hero2 .cta2{width:100%;justify-content:center}
+  .riskbox{padding:12px}
+  .riskbox .rc{height:92px}
+  #dmap,#fmap{height:260px}
+  #map{height:330px}
+  .minimap{height:150px}
+  .mlist{max-height:320px}
+  /* portada */
+  .hero h1{font-size:30px}
+  .hero .wm{width:220px;right:-30px;bottom:-40px}
+  .door{padding:18px}
+  .door p{min-height:0;font-size:12px}
+  .wcard{padding:15px}
+  .wtemp{font-size:29px}
+  .wgrid{grid-template-columns:1fr 1fr}
+  .wsearch{flex-wrap:wrap}
+  .wsearch input{flex:1 1 100%}
+  .wsearch .gh{flex:1}
+  /* modales a pantalla completa */
+  #modal,#instmodal,.ovl{padding:0;align-items:flex-end}
+  .mbox,.ibox,.obox{max-height:92vh;border-radius:18px 18px 0 0;max-width:none}
+  .mbody{padding:14px 14px 20px}
+  .mbody .chartbox{height:62vh}
+  .ohead,.mhead{padding:15px 16px}
+  .obody{padding:14px 16px}
+  .ofoot{padding:12px 16px}
+  .ofoot .btn,.ofoot .gh{flex:1;justify-content:center}
+  /* guía */
+  .gwrap h1{font-size:22px}
+  .gstep{padding:14px;gap:12px}
+  .gstep .gic{display:none}
+  /* varios */
+  .legend{font-size:10px}
+  .ramp{width:80px}
+  .info{padding:14px 15px;gap:10px}
+  .qleg{gap:10px;font-size:11px}
+  .sevchip{font-size:11px;padding:7px 11px}
+  .dualv{font-size:11px}
+  .vergrid{grid-template-columns:1fr 1fr}
+}
+
+/* — Móvil angosto — */
+@media (max-width:400px){
+  .kpirow{grid-template-columns:1fr}
+  .wgrid{grid-template-columns:1fr}
+  .vergrid{grid-template-columns:1fr}
+  .hero h1{font-size:26px}
+  .tophead .hi h2{font-size:17px}
+}
+
+/* — Altura reducida (celular apaisado) — */
+@media (max-height:520px) and (orientation:landscape){
+  .side{overflow-y:auto}
+  .chartbox{height:200px}
+  .mbody .chartbox{height:56vh}
+}
+
+/* — Pantallas táctiles: sin efectos de hover que se quedan pegados — */
+@media (hover:none){
+  .card:hover,.kpi:hover,.qcard:hover{transform:none;box-shadow:var(--sh2)}
+  .gh:hover,.chipbox2 .chip:hover{transform:none;box-shadow:none}
+  .btn:hover{transform:none}
+}
+
+/* — Impresión — */
+@media print{
+  .side,.tophead,.ptools,.mobbar,#modal,.ovl,#errbar,#updbar{display:none!important}
+  .main{padding:0;max-width:none}
+  .card,.kpi{box-shadow:none;border-color:#D8DED8;break-inside:avoid}
+  .g2,.g3,.g4{grid-template-columns:1fr 1fr}
+  .chartbox{height:230px}
+}
+
 </style>
 </head>
 <body>
@@ -1085,8 +1279,9 @@ body.modalopen{overflow:hidden}
       <div class="wfoot"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9AA79C" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
         <span id="wUpd">—</span></div>
       <div class="wfc">
-        <div class="hd">Pronóstico de hoy</div>
-        <div class="wfrow" id="wFc"></div>
+        <div class="hd">Pronóstico 7 días</div>
+        <div class="wfrow7" id="wFc"></div>
+        <div class="whelada hide" id="wHel"></div>
       </div>
       <div class="wsearch">
         <input id="wQ" placeholder="Buscar otra localidad…" autocomplete="off">
@@ -2182,7 +2377,9 @@ body.modalopen{overflow:hidden}
         <div><div class="l">Estaciones activas</div><div class="v" id="verEst">—</div></div>
         <div><div class="l">Temporadas cargadas</div><div class="v" id="verTemp">—</div></div>
       </div>
-      <span class="eyebrow">Qué trae esta versión</span>
+      <span class="eyebrow">Historial de versiones</span>
+      <div id="verHist" style="margin:9px 0 18px"></div>
+      <span class="eyebrow">Qué incluye la plataforma</span>
       <div style="margin-top:9px">
         <div class="vernota"><i>📊</i><span>Reporte de <b>Grados-Día</b> con panel por estación, comparación entre temporadas y acumulado semanal por semana agrícola.</span></div>
         <div class="vernota"><i>❄️</i><span><b>Horas frío base 7,2 °C y porciones de frío</b>, con día de corte ajustable y déficit o superávit entre temporadas.</span></div>
@@ -3010,16 +3207,14 @@ function renderGdd(){
     const prom=stats.reduce((a,c)=>a+c.gdd,0)/stats.length;
     const promD=stats.reduce((a,c)=>a+c.gd,0)/stats.length;
     set('kAcum',nf(prom,0)+'<small>°D</small>',`Promedio de ${stats.length} estaciones · base ${b.lbl}`);
-    set('kRate',nf(promD,1)+'<small>°D/día</small>');
     set('kRate',nf(promD,1)+'<small>°D/día</small>','Promedio diario del grupo');
   }else if(mine){
     set('kAcum',nf(mine.gdd,0)+'<small>°D</small>',`${mine.est} · base ${b.lbl}`);
-    set('kRate',nf(mine.gd,1)+'<small>°D/día</small>');
     set('kRate',nf(mine.gd,1)+'<small>°D/día</small>','Promedio del período');
-  }else{set('kAcum','—','Sin datos');set('kRate','—');}
+  }else{set('kAcum','—','Sin datos');set('kRate','—','—');}
   set('kDays',days(S.from,S.to)+'<small>días</small>',`${fmtL(S.from)} → ${fmtL(S.to)}`);
   panelEstacionGdd(foco,sel,stats);
-  chartCurva(sel,foco); chartSemana(sel); cmpBoxes(foco);
+  chartCurva(sel,foco); chartSemana(sel); cmpBoxes(foco,sel);
   chartAnios(sel); tablaAnios(sel); tablaVariacionGdd(sel);
 }
 
@@ -3038,6 +3233,11 @@ function gddRed(bi,y,sel){
   const vs=base.map(e=>gddTemporada(e,bi,y)).filter(v=>v!=null&&v>0);
   return vs.length?vs.reduce((a,b)=>a+b,0)/vs.length:null;
 }
+/* promedio del grupo seleccionado para una temporada y una base */
+function gddGrupo(sel,bi,y){
+  const vs=(sel||[]).map(e=>gddTemporada(e,bi,y)).filter(v=>v!=null);
+  return vs.length?vs.reduce((a,b)=>a+b,0)/vs.length:null;
+}
 function panelEstacionGdd(foco,sel,stats){
   const card=document.getElementById('gEstCard');
   const t45=document.getElementById('gTab45'),t10=document.getElementById('gTab10');
@@ -3045,6 +3245,10 @@ function panelEstacionGdd(foco,sel,stats){
   const anios=SEASONS.slice().sort((a,b)=>b-a);
   const ANT=anios.filter(y=>y<SEASON)[0];
   const bi=BASES[S.base].i;
+  const multi=(sel||[]).length>1;
+  /* con varias estaciones, todo el bloque trabaja sobre el promedio del grupo */
+  const valor=(col,y)=>multi?gddGrupo(sel,col,y):gddTemporada(foco,col,y);
+  const rotulo=multi?`Promedio de ${sel.length} estaciones`:foco;
   document.getElementById('kY1').textContent=SEASON+'/'+String(SEASON+1).slice(2);
   const set=(id,v,s,col)=>{const a=document.getElementById(id);if(!a)return;a.innerHTML=v;
     if(col!==undefined)a.style.color=col||''; const b=document.getElementById(id+'S'); if(b&&s!=null)b.textContent=s;};
@@ -3056,11 +3260,11 @@ function panelEstacionGdd(foco,sel,stats){
     set('kVar','—','Sin estación seleccionada','');
     return;
   }
-  document.getElementById('gThEst').textContent=foco;
-  document.getElementById('gThEst2').textContent=foco;
+  document.getElementById('gThEst').textContent=rotulo;
+  document.getElementById('gThEst2').textContent=rotulo;
 
   /* variación de la temporada actual contra la anterior, mismo período */
-  const act=gddTemporada(foco,bi,SEASON), ant=ANT!=null?gddTemporada(foco,bi,ANT):null;
+  const act=valor(bi,SEASON), ant=ANT!=null?valor(bi,ANT):null;
   const v=(act!=null&&ant)?((act-ant)/ant*100):null;
   set('kVar',v==null?'—':(v>=0?'▲ ':'▼ ')+nf(Math.abs(v),1)+'<small>%</small>',
     ant?`${ANT}/${String(ANT+1).slice(2)}: ${nf(ant,0)} °D`:'Sin registro en la temporada anterior',
@@ -3068,31 +3272,37 @@ function panelEstacionGdd(foco,sel,stats){
 
   /* ficha verde */
   const co=COORDS[foco]||[];
-  const conDato=anios.filter(y=>gddTemporada(foco,bi,y)!=null).length;
-  const a45=gddTemporada(foco,1,SEASON), a10=gddTemporada(foco,2,SEASON);
+  const conDato=anios.filter(y=>valor(bi,y)!=null).length;
+  const a45=valor(1,SEASON), a10=valor(2,SEASON);
+  const alts=multi?sel.map(e=>(COORDS[e]||[])[2]).filter(v=>v!=null):[];
+  const altProm=alts.length?Math.round(alts.reduce((a,b)=>a+b,0)/alts.length):null;
   card.innerHTML=`
-    <div class="eyebrow">Estación analizada</div><h3>${foco}</h3>
-    <div class="li" style="margin-top:2px">📍 Región de O’Higgins · ${co[2]??'—'} msnm · ${co[0]!=null?co[0].toFixed(2)+' / '+co[1].toFixed(2):'sin coordenadas'}</div>
+    <div class="eyebrow">${multi?'Grupo analizado':'Estación analizada'}</div>
+    <h3>${multi?sel.length+' estaciones':foco}</h3>
+    <div class="li" style="margin-top:2px">${multi
+      ? '📍 Promedio del grupo · altitud media '+(altProm!=null?altProm+' msnm':'—')
+      : '📍 Región de O’Higgins · '+(co[2]??'—')+' msnm · '+(co[0]!=null?co[0].toFixed(2)+' / '+co[1].toFixed(2):'sin coordenadas')}</div>
+    ${multi?`<div class="li" style="font-size:10.5px;opacity:.85;line-height:1.45">${sel.slice(0,6).join(' · ')}${sel.length>6?' y '+(sel.length-6)+' más':''}</div>`:''}
     <div class="grid2b">
       <div class="bx"><div class="l">GDD base 4,5 °C</div><div class="v">${a45!=null?nf(a45,0):'—'}</div></div>
       <div class="bx"><div class="l">GDD base 10 °C</div><div class="v">${a10!=null?nf(a10,0):'—'}</div></div>
-      <div class="bx"><div class="l">Temporadas con dato</div><div class="v">${conDato}</div></div>
+      <div class="bx"><div class="l">${multi?'Estaciones':'Temporadas con dato'}</div><div class="v">${multi?sel.length:conDato}</div></div>
       <div class="bx"><div class="l">Días del período</div><div class="v">${days(S.from,S.to)}</div></div>
     </div>
     <div class="minimap" id="gMini"></div>`;
-  miniMapaGdd(foco,co);
+  miniMapaGdd(multi?sel:foco,co,multi);
 
   /* tablas por temporada, una por base térmica */
   const tabla=(col)=>{
     const filas=anios.map(y=>{
-      const val=gddTemporada(foco,col,y), red=gddRed(col,y,sel);
+      const val=valor(col,y), red=gddRed(col,y,null);
       return `<tr${y===SEASON?' style="background:var(--g-xl)"':''}>
         <td style="text-align:left;font-weight:600">${y}/${String(y+1).slice(2)}${y===SEASON?' <span style="font-weight:400;color:var(--mut2)">actual</span>':''}</td>
         <td>${val!=null?'<b>'+nf(val,0)+'</b>':'<span class="sinreg">Sin datos</span>'}</td>
         <td>${red!=null?nf(red,0):'—'}</td></tr>`;
     }).join('');
-    const va=anios.map(y=>gddTemporada(foco,col,y)).filter(x=>x!=null);
-    const vr=anios.map(y=>gddRed(col,y,sel)).filter(x=>x!=null);
+    const va=anios.map(y=>valor(col,y)).filter(x=>x!=null);
+    const vr=anios.map(y=>gddRed(col,y,null)).filter(x=>x!=null);
     const pa=va.length?va.reduce((a,b)=>a+b,0)/va.length:null;
     const pr=vr.length?vr.reduce((a,b)=>a+b,0)/vr.length:null;
     return filas+`<tr class="tot"><td style="text-align:left">Promedio</td>
@@ -3102,16 +3312,28 @@ function panelEstacionGdd(foco,sel,stats){
   t10.innerHTML=tabla(2);
 }
 let gmini=null;
-function miniMapaGdd(est,co){
-  if(co[0]==null||!window.L)return;
+function miniMapaGdd(est,co,multi){
+  if(!window.L)return;
   const el=document.getElementById('gMini'); if(!el)return;
+  const lista=multi?est.filter(e=>COORDS[e]):(co&&co[0]!=null?[est]:[]);
+  if(!lista.length){el.style.display='none';return;}
+  el.style.display='';
   try{
     if(gmini){gmini.remove();gmini=null;}
     gmini=L.map(el,{zoomControl:false,attributionControl:false,dragging:false,scrollWheelZoom:false,
-      doubleClickZoom:false,boxZoom:false,keyboard:false,tap:false}).setView([co[0],co[1]],12);
+      doubleClickZoom:false,boxZoom:false,keyboard:false,tap:false});
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:18}).addTo(gmini);
-    L.circleMarker([co[0],co[1]],{radius:8,fillColor:'#fff',color:'#2C7A46',weight:3,fillOpacity:1}).addTo(gmini)
-      .bindTooltip(est,{permanent:true,direction:'top',className:'minitip'});
+    const pts=[];
+    lista.forEach(e=>{
+      const c=COORDS[e]; if(!c)return;
+      pts.push([c[0],c[1]]);
+      const m=L.circleMarker([c[0],c[1]],{radius:multi?6:8,fillColor:'#fff',color:'#2C7A46',
+        weight:multi?2.5:3,fillOpacity:1}).addTo(gmini);
+      if(!multi)m.bindTooltip(e,{permanent:true,direction:'top',className:'minitip'});
+      else m.bindTooltip(e,{direction:'top',className:'minitip'});
+    });
+    if(pts.length===1)gmini.setView(pts[0],12);
+    else gmini.fitBounds(pts,{padding:[22,22],maxZoom:11});
     setTimeout(()=>gmini.invalidateSize(),120);
   }catch(e){ el.style.display='none'; }
 }
@@ -3184,27 +3406,37 @@ function chartCurva(sel,foco){
           font:{family:'IBM Plex Mono',size:10}}}}}};
   mount('chCurva',cfg,(S.mode==='acum'?'Acumulado GDD':'GDD diarios')+' base '+BASES[S.base].lbl);
 }
-function cmpBoxes(foco){
+function cmpBoxes(foco,sel){
   const box=document.getElementById('cmpBoxes');
   if(!foco){box.innerHTML='<div class="empty">Sin estación seleccionada.</div>';return;}
+  const multi=(sel||[]).length>1;
+  const rot=multi?`el promedio de las ${sel.length} estaciones`:foco;
   if(!S.hist){
     box.innerHTML=`<div class="hintbox" style="margin:0">La comparación con temporadas anteriores está desactivada.
-      Actívala en el bloque de estaciones para ver el desvío contra el historial de ${foco}.</div>`;
+      Actívala en el bloque de estaciones para ver el desvío contra el historial de ${rot}.</div>`;
     return;
   }
   const i=BASES[S.base].i;
-  const act=sumOf(foco,i,S.from,S.to);
+  const prom=(fn)=>{const v=(multi?sel:[foco]).map(fn).filter(x=>x!=null&&!isNaN(x));
+    return v.length?v.reduce((a,b)=>a+b,0)/v.length:null;};
+  const act=prom(e=>sumOf(e,i,S.from,S.to));
   const mm=mmddList();
   const prev=SEASONS.filter(y=>y!==SEASON);
-  const curves=prev.map(y=>({y,c:histCurve(foco,mm,y)})).filter(o=>o.c.some(v=>v!=null));
+  const curves=prev.map(y=>{
+    const cs=(multi?sel:[foco]).map(e=>histCurve(e,mm,y)).filter(c=>c.some(v=>v!=null));
+    if(!cs.length)return {y,c:[]};
+    const c=mm.map((_,k)=>{const vs=cs.map(x=>x[k]).filter(v=>v!=null);
+      return vs.length?vs.reduce((a,b)=>a+b,0)/vs.length:null;});
+    return {y,c};
+  }).filter(o=>o.c.some(v=>v!=null));
   const last=curves.find(o=>o.y===SEASON-1);
   const finals=curves.map(o=>o.c.filter(v=>v!=null).slice(-1)[0]).filter(v=>v!=null);
   const promHist=finals.length?finals.reduce((a,c)=>a+c,0)/finals.length:null;
   const lastVal=last?last.c.filter(v=>v!=null).slice(-1)[0]:null;
-  const rs=rowsOf(foco);
-  const l7=rs.slice(-7),p7=rs.slice(-14,-7);
-  const a7=l7.length?l7.reduce((a,r)=>a+r[i],0)/l7.length:null;
-  const b7=p7.length?p7.reduce((a,r)=>a+r[i],0)/p7.length:null;
+  const a7=prom(e=>{const r=rowsOf(e).slice(-7);
+    return r.length?r.reduce((a,x)=>a+x[i],0)/r.length:null;});
+  const b7=prom(e=>{const r=rowsOf(e).slice(-14,-7);
+    return r.length?r.reduce((a,x)=>a+x[i],0)/r.length:null;});
   const dif7=(a7!=null&&b7)?((a7-b7)/b7*100):null;
   const tend=dif7==null?['Sin datos','var(--mut)','—']:
     dif7>12?['Al alza','var(--red)','↗']:dif7<-12?['A la baja','var(--blue)','↘']:['Estable','var(--g)','⇄'];
@@ -3225,7 +3457,7 @@ function cmpBoxes(foco){
   }
   html+=bx('Tendencia actual',tend[2]+' '+tend[0],tend[1],'Últimos 7 días vs. 7 anteriores');
   if(promHist==null&&lastVal==null)
-    html+=`<div class="hint">Aún no hay datos de temporadas anteriores en esta ventana de fechas para ${foco}.</div>`;
+    html+=`<div class="hint">Aún no hay datos de temporadas anteriores en esta ventana de fechas para ${rot}.</div>`;
   box.innerHTML=html;
 }
 function isoWeek(d){
@@ -3234,6 +3466,14 @@ function isoWeek(d){
   const y0=new Date(Date.UTC(t.getUTCFullYear(),0,1));
   return Math.ceil(((t-y0)/864e5+1)/7);
 }
+/* lunes de la semana a la que pertenece una fecha */
+function lunesDe(d){
+  const x=new Date(d.getFullYear(),d.getMonth(),d.getDate());
+  const dow=(x.getDay()||7);           /* 1 lunes … 7 domingo */
+  x.setDate(x.getDate()-(dow-1));
+  return x;
+}
+const claveDia=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 /* acumulado a la fecha equivalente de cada temporada, para comparar estaciones entre sí */
 function aniosSeleccionados(){
   if(!S.hist)return [SEASON];
@@ -3453,28 +3693,31 @@ function chartSemana(sel){
   const bk={};
   for(let t=d0.getTime();t<=d1.getTime();t+=864e5){
     const d=new Date(t);
-    const iso=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    const iso=claveDia(d);
+    const lun=lunesDe(d), k=claveDia(lun);
+    bk[k]=bk[k]||{lab:fmtD(lun),sem:isoWeek(d),v:0,dias:0,ini:d,fin:d};
+    if(d<bk[k].ini)bk[k].ini=d;
+    if(d>bk[k].fin)bk[k].fin=d;
     const vs=maps.map(m=>m[iso]).filter(v=>v!=null);
     if(!vs.length)continue;
-    const avg=vs.reduce((a,c)=>a+c,0)/vs.length;
-    const k=Math.floor((t-d0.getTime())/(7*864e5));
-    const ini=new Date(d0.getTime()+k*7*864e5);
-    bk[k]=bk[k]||{lab:fmtD(ini),sem:isoWeek(ini),v:0}; bk[k].v+=avg;
+    bk[k].v+=vs.reduce((a,c)=>a+c,0)/vs.length;
+    bk[k].dias++;
   }
-  const ks=Object.keys(bk).map(Number).sort((a,b)=>a-b);
+  const ks=Object.keys(bk).sort();
   const vals=ks.map(k=>+bk[k].v.toFixed(1));
   const mx=Math.max(...vals,1);
   document.getElementById('acumSub').textContent=sel.length>1
     ?`Promedio semanal del grupo (${sel.length} estaciones seleccionadas): muestra si el clima viene acelerando o frenando.`
     :'Cuánto aportó cada semana agrícola: muestra si el clima viene acelerando o frenando.';
-  const cfg={type:'bar',data:{labels:ks.map(k=>[bk[k].lab,'Semana '+bk[k].sem]),
+  const cfg={type:'bar',data:{labels:ks.map(k=>['Sem '+bk[k].sem,bk[k].lab]),
       datasets:[{data:vals,dlUnit:'',dlDec:1,
         backgroundColor:vals.map(v=>v/mx>.75?'#2C7A46':v/mx>.45?'#4F9E68':'#A8CBA0'),
         borderRadius:6,maxBarThickness:44}]},
     options:{responsive:true,maintainAspectRatio:false,animation:{duration:800},
       layout:{padding:{top:24}},
       plugins:{legend:{display:false},tooltip:{...TT,callbacks:{
-        title:c=>'Semana del '+(Array.isArray(c[0].label)?c[0].label.join(' · '):c[0].label),
+        title:c=>{const b=bk[ks[c[0].dataIndex]];
+          return 'Semana '+b.sem+' · '+fmtD(b.ini)+' a '+fmtD(b.fin)+(b.dias<7?' ('+b.dias+' días)':'');},
         label:c=>` ${nf(c.parsed.y,1)} °D acumulados`}}},
       scales:{x:{grid:{display:false},border:{color:'#E5EAE4'},
           ticks:{color:'#9AA79C',maxRotation:0,autoSkip:false,font:{family:'IBM Plex Mono',size:9.5}}},
@@ -4071,10 +4314,17 @@ async function cargarClima(loc){
     L.est?((L.km!=null?'A '+nf(L.km,1)+' km · ':'')+(L.alt!=null?L.alt+' m de altitud':'')):'Localidad buscada'}</small>`;
   const on=document.getElementById('wOn');
   try{
-    const u='https://api.open-meteo.com/v1/forecast?latitude='+L.lat+'&longitude='+L.lon+
+    /* La altitud real de la estación corrige la temperatura del modelo, que
+       trabaja sobre una grilla y puede diferir varios cientos de metros. */
+    const alt=(L.alt!=null&&L.alt>0)?'&elevation='+Math.round(L.alt):'';
+    const u='https://api.open-meteo.com/v1/forecast?latitude='+L.lat.toFixed(4)+'&longitude='+L.lon.toFixed(4)+alt+
       '&current=temperature_2m,relative_humidity_2m,precipitation,weather_code,wind_speed_10m,wind_direction_10m,shortwave_radiation'+
-      '&hourly=temperature_2m,weather_code&daily=precipitation_sum&timezone=America%2FSantiago&forecast_days=1';
-    const r=await fetch(u); const d=await r.json();
+      '&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max'+
+      '&timezone=America%2FSantiago&forecast_days=7';
+    const r=await fetch(u);
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    const d=await r.json();
+    if(!d.current)throw new Error('respuesta sin datos');
     const c=d.current||{},wc=WMO[c.weather_code]||['—','·'];
     document.getElementById('wTemp').innerHTML=nf(c.temperature_2m,1)+' °C<small>Temperatura actual</small>';
     document.getElementById('wIcon').textContent=wc[1];
@@ -4087,22 +4337,48 @@ async function cargarClima(loc){
       p:(d.daily&&d.daily.precipitation_sum?d.daily.precipitation_sum[0]:c.precipitation),r:c.shortwave_radiation};
     if(CURSEC==='panel'&&document.getElementById('dResumen'))pintarResumen();
     const hh=new Date(c.time).toLocaleTimeString('es-CL',{hour:'2-digit',minute:'2-digit'});
-    document.getElementById('wUpd').textContent='Actualizado a las '+hh;
+    const elev=(d.elevation!=null)?' · modelo a '+Math.round(d.elevation)+' m':'';
+    document.getElementById('wUpd').textContent='Actualizado a las '+hh+elev;
     on.className='wonline'; on.innerHTML='<i></i>En línea';
-    const ht=d.hourly?d.hourly.time:[],tt=d.hourly?d.hourly.temperature_2m:[],cc=d.hourly?d.hourly.weather_code:[];
-    const horas=[6,9,12,15,18,21];
-    document.getElementById('wFc').innerHTML=horas.map(H=>{
-      let k=ht.findIndex(t=>new Date(t).getHours()===H);
-      if(k<0)return '';
-      const w=WMO[cc[k]]||['','·'];
-      return `<div><div class="hh">${String(H).padStart(2,'0')}:00</div><div class="ic">${w[1]}</div>
-        <div class="tt">${nf(tt[k],0)}°</div></div>`;
+
+    /* pronóstico de los próximos 7 días */
+    const D=d.daily||{};
+    const hoy=new Date().toISOString().slice(0,10);
+    let riesgo=null;
+    document.getElementById('wFc').innerHTML=(D.time||[]).map((f,k)=>{
+      const w=WMO[D.weather_code[k]]||['—','·'];
+      const tmin=D.temperature_2m_min[k], tmax=D.temperature_2m_max[k];
+      const pp=D.precipitation_probability_max?D.precipitation_probability_max[k]:null;
+      const mm=D.precipitation_sum?D.precipitation_sum[k]:null;
+      if(tmin!=null&&tmin<=2&&riesgo===null)riesgo={f,tmin};
+      const dd=parseD(f);
+      const dia=k===0?'Hoy':dd.toLocaleDateString('es-CL',{weekday:'short'}).replace('.','');
+      const lluvia=(pp!=null&&pp>=20)?`<b>${nf(pp,0)} % lluvia${mm?' · '+nf(mm,1)+' mm':''}</b>`:'';
+      return `<div class="wday ${k===0?'hoy':''}">
+        <div class="dd">${dia.charAt(0).toUpperCase()+dia.slice(1)}<small>${fmtD(dd)}</small></div>
+        <div class="ic">${w[1]}</div>
+        <div class="ds">${lluvia||w[0]}</div>
+        <div class="tt"><b>${nf(tmax,0)}°</b> <span>/</span>
+          <span class="${tmin<=2?'frio':''}">${nf(tmin,0)}°</span></div>
+      </div>`;
     }).join('');
+
+    const hel=document.getElementById('wHel');
+    if(riesgo){
+      const dd=parseD(riesgo.f);
+      const cuando=riesgo.f===hoy?'esta noche':dd.toLocaleDateString('es-CL',{weekday:'long',day:'2-digit',month:'long'});
+      hel.className='whelada';
+      hel.innerHTML=`<span style="font-size:15px">❄️</span><span>
+        <b>${riesgo.tmin<=0?'Riesgo de helada':'Noche fría'} ${cuando}</b>
+        Mínima prevista de ${nf(riesgo.tmin,1)} °C en ${L.nombre}.</span>`;
+    }else hel.className='whelada hide';
   }catch(e){
     on.className='wonline off'; on.innerHTML='<i></i>Sin conexión';
     document.getElementById('wTemp').innerHTML='—<small>Sin datos en línea</small>';
     document.getElementById('wDesc').textContent='No se pudo consultar el clima';
-    document.getElementById('wFc').innerHTML='';
+    document.getElementById('wFc').innerHTML=
+      '<div class="empty" style="padding:18px 0;font-size:12px">Sin pronóstico disponible</div>';
+    document.getElementById('wHel').className='whelada hide';
   }
 }
 document.getElementById('wGo').onclick=buscarLoc;
@@ -4565,6 +4841,12 @@ document.getElementById('cfgNone').onclick=()=>{OFF=new Set(allStations());saveC
 /* versión */
 function abrirVersion(){
   document.querySelectorAll('.verTxt').forEach(x=>x.textContent=APP_VERSION);
+  const hist=document.getElementById('verHist');
+  if(hist)hist.innerHTML=APP_HISTORIAL.map(([v,t],i)=>`
+    <div class="vernota" style="${i?'':'font-weight:500'}">
+      <i style="font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;
+        color:${i?'var(--mut2)':'var(--g)'};flex:0 0 30px">${v}</i>
+      <span style="color:${i?'var(--mut)':'var(--ink)'}">${t}</span></div>`).join('');
   const ic=document.getElementById('verIcon'); if(ic)ic.src='./icon-192.png?v=2';
   const e=document.getElementById('verEst'); if(e)e.textContent=ESTACIONES.length;
   const t=document.getElementById('verTemp'); if(t)t.textContent=SEASONS.length;
@@ -4625,25 +4907,48 @@ function cMes(est,y,met){
 /* ═══ Acumulado semanal de frío ═══
    Cada mes se divide en semanas de 7 días: mayo 1-4, junio 1-4, julio 1-5. */
 S.semMet='hf'; S.semMes=new Set([0,1,2]); S.semAnios=new Set();
-function semanasFrio(){
-  /* devuelve [{mes, sem, i0, i1, lab}] según los meses activos */
-  const out=[];
-  MESES.forEach(([nombre,i0,i1],mi)=>{
-    if(!S.semMes.has(mi))return;
-    let s=1;
-    for(let i=i0;i<=i1;i+=7){
-      const fin=Math.min(i+6,i1);
-      out.push({mes:mi,sem:s,i0:i,i1:fin,lab:[nombre,'Sem '+s]});
-      s++;
-    }
+/* Índices (0-91 desde el 1 de mayo) agrupados por semana ISO, para un año dado.
+   Las semanas van de lunes a domingo, así que la primera y la última de la
+   ventana mayo-julio pueden quedar incompletas. */
+const _cacheSem={};
+function semanasDeAnio(y){
+  if(_cacheSem[y])return _cacheSem[y];
+  const m={};
+  for(let i=0;i<92;i++){
+    const d=new Date(y,4,1+i);
+    const w=isoWeek(d);
+    if(!m[w])m[w]={sem:w,idx:[],mes:{},ini:d,fin:d};
+    m[w].idx.push(i);
+    if(d<m[w].ini)m[w].ini=d;
+    if(d>m[w].fin)m[w].fin=d;
+    const mi=d.getMonth()-4;              /* 0 mayo · 1 junio · 2 julio */
+    m[w].mes[mi]=(m[w].mes[mi]||0)+1;
+  }
+  Object.values(m).forEach(o=>{
+    /* la semana pertenece al mes donde tiene más días */
+    o.mesIdx=+Object.keys(o.mes).sort((a,b)=>o.mes[b]-o.mes[a])[0];
+    o.completa=o.idx.length===7;
   });
-  return out;
+  _cacheSem[y]=m;
+  return m;
 }
-function sumaSemana(est,y,met,i0,i1){
+function semanasFrio(){
+  /* el eje se arma con la temporada de referencia y se filtra por mes */
+  const base=semanasDeAnio(S.cRef);
+  return Object.values(base)
+    .filter(o=>S.semMes.has(o.mesIdx))
+    .sort((a,b)=>a.idx[0]-b.idx[0])
+    .map(o=>({sem:o.sem,mes:o.mesIdx,ini:o.ini,fin:o.fin,completa:o.completa,
+      lab:['Sem '+o.sem,fmtD(o.ini)]}));
+}
+function sumaSemana(est,y,met,sem){
+  /* suma la misma semana ISO dentro del año y, respetando el día de corte */
   const o=(COLD[est]||{})[y]; if(!o)return null;
   const a=o[met]||[];
+  const w=semanasDeAnio(y)[sem];
+  if(!w)return null;
   let s=0,n=0;
-  for(let i=i0;i<=Math.min(i1,S.cCut);i++) if(a[i]!=null){s+=a[i];n++;}
+  w.idx.forEach(i=>{ if(i<=S.cCut&&a[i]!=null){s+=a[i];n++;} });
   return n?+s.toFixed(met==='pf'?2:0):null;
 }
 function buildSemAnios(){
@@ -4683,11 +4988,11 @@ function chartSemFrio(){
   const sem=semanasFrio();
   const anios=CY.filter(y=>S.semAnios.has(y)).sort((a,b)=>a-b);
   document.getElementById('cSemSub').textContent=
-    `${met==='hf'?'Horas frío base 7,2 °C':'Porciones de frío'} por semana · ${est} · `+
+    `${met==='hf'?'Horas frío base 7,2 °C':'Porciones de frío'} por semana agrícola (lunes a domingo) · ${est} · `+
     `${sem.length} semanas de ${[...S.semMes].sort().map(i=>MESES[i][0].toLowerCase()).join(', ')}`;
   const ds=anios.map(y=>({
     label:String(y),
-    data:sem.map(s=>sumaSemana(est,y,met,s.i0,s.i1)),
+    data:sem.map(s=>sumaSemana(est,y,met,s.sem)),
     borderColor:CCOL[y]||'#9AA79C', backgroundColor:CCOL[y]||'#9AA79C',
     borderWidth:y===S.cRef?3:1.8,
     pointRadius:y===S.cRef?5:3.5, pointHoverRadius:7,
@@ -4712,7 +5017,9 @@ function chartSemFrio(){
       plugins:{legend:{position:'top',align:'start',
           labels:{color:'#4A5A4E',boxWidth:22,boxHeight:2,font:{family:'Inter',size:11.5,weight:'500'},padding:14}},
         tooltip:{...TT,
-          callbacks:{title:c=>{const s=sem[c[0].dataIndex];return s.lab[0]+' · semana '+s.sem;},
+          callbacks:{
+            title:c=>{const s=sem[c[0].dataIndex];
+              return `Semana ${s.sem} · ${fmtD(s.ini)} a ${fmtD(s.fin)}`+(s.completa?'':' (parcial)');},
             label:c=>` Temporada ${c.dataset.label}: ${nf(c.parsed.y,dec)} ${met==='hf'?'HF':'PF'}`}}},
       scales:{x:{grid:{display:false},border:{display:true,color:'#DDE4D9'},
           ticks:{color:'#7F8C82',font:{family:'IBM Plex Mono',size:9.5},autoSkip:false,padding:6}},
@@ -5455,7 +5762,19 @@ document.getElementById('btnSave').onclick=()=>{
 };
 
 /* ═══ INSTALACIÓN Y ACTUALIZACIONES ═══ */
-const APP_VERSION="3.0";
+/* ═══════════════════════════════════════════════════
+   VERSIÓN DE LA PLATAFORMA
+   Al publicar un cambio: sube el número y agrega la línea
+   correspondiente al principio de APP_HISTORIAL.
+   ═══════════════════════════════════════════════════ */
+const APP_VERSION="3.4";
+const APP_HISTORIAL=[
+  ['3.4','Pronóstico de 7 días con aviso de helada y ajuste de la app a cada dispositivo'],
+  ['3.3','Los indicadores de Grados-Día promedian todas las estaciones seleccionadas'],
+  ['3.2','Las semanas se cuentan de lunes a domingo con número de semana agrícola'],
+  ['3.1','Acumulado semanal en el reporte de Horas Frío y Porciones'],
+  ['3.0','Ícono celeste, indicador de versión y panel por estación en Grados-Día']
+];
 const APP_BUILD="2026-08-06-01";
 const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent)||
   (navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
