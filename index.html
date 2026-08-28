@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Plataforma Agroclimática · Exportadora Los Olmos</title>
-<meta name="app-version" content="3.4">
+<meta name="app-version" content="3.5">
 <meta name="app-build" content="2026-08-06-01">
 <meta name="theme-color" content="#1B4F8A">
 <meta name="description" content="Grados-día y eventos de helada de la red de estaciones de Exportadora Los Olmos.">
@@ -636,6 +636,12 @@ tbody tr:hover td{background:var(--g-xl)}
   .card{border-radius:13px}
 }
 
+/* ══ INFORME · texto editable ══ */
+.rbEdit{border:1px dashed transparent;border-radius:6px;padding:3px 4px;transition:border-color .15s}
+.rbEdit:hover{border-color:#DDE4D9}
+.rbEdit:focus{border-color:var(--g-m);background:#FBFDFA}
+.rbEdit b{color:#141613}
+@media print{.rbEdit{border:0!important;background:none!important}}
 /* ══ PRONÓSTICO 7 DÍAS ══ */
 .wfrow7{display:flex;flex-direction:column;gap:2px}
 .wday{display:grid;grid-template-columns:52px 30px 1fr 78px;align-items:center;gap:10px;
@@ -2020,6 +2026,7 @@ body.modalopen{overflow:hidden}
         <div><h3>Bloques disponibles</h3><p>Haz clic para agregarlos a la última página. Usa la barra de cada bloque para arrastrarlo, "↻" para actualizarlo y la esquina para cambiar su tamaño.</p></div>
         <div class="ptools">
           <button class="gh" id="rbClear">Vaciar todo</button>
+          <button class="gh" id="rbPlantilla">📄 Informe GDD completo</button>
           <button class="btn" id="rbPrint">Generar PDF →</button>
         </div>
       </div>
@@ -4057,6 +4064,11 @@ function rbDefs(){
     {cat:'Heladas',key:'hel-est',label:'Tabla detalle por estación',build:rbTableClone('fEstTable','Detalle por estación')},
     {cat:'Heladas',key:'hel-ev',label:'Tabla detalle de eventos',build:rbTableClone('ftable','Detalle de eventos')},
     {cat:'Heladas',key:'hel-chart',label:'Gráfico heladas por fecha',build:rbChartLive('chFrost','Heladas por fecha')},
+    {cat:'Informe GDD',key:'inf-intro',label:'Párrafo de apertura',build:rbParrafoIntro(null)},
+    {cat:'Informe GDD',key:'inf-tablas',label:'Párrafo previo a las tablas',build:rbParrafoTablas},
+    {cat:'Informe GDD',key:'inf-nota',label:'Nota de actualización',build:rbParrafoNota},
+    {cat:'Informe GDD',key:'inf-resumen',label:'Resumen del informe (editable)',build:rbResumen},
+    {cat:'General',key:'texto',label:'+ Párrafo editable',build:rbTextoLibre},
     {cat:'General',key:'titulo',label:'+ Título de texto',build:rbTitulo}
   ];
 }
@@ -4165,6 +4177,119 @@ function rbTitulo(){
     return true;
   };
 }
+/* ═══ Bloques del informe agroclimático ═══ */
+const MESLARGO=['enero','febrero','marzo','abril','mayo','junio','julio',
+  'agosto','septiembre','octubre','noviembre','diciembre'];
+function fechaLarga(iso,conAnio){
+  const d=parseD(iso);
+  return String(d.getDate()).padStart(2,'0')+' de '+MESLARGO[d.getMonth()]+(conAnio?' de '+d.getFullYear():'');
+}
+const RB_PARR='font-size:12px;line-height:1.65;color:#141613;text-align:justify';
+/* rango: null usa el período del reporte; 'agosto' fuerza 1 de agosto → fin */
+function rbRango(modo){
+  if(modo==='agosto'){
+    const a=SEASON+'-08-01';
+    return {from:a<S.from?S.from:a, to:S.to};
+  }
+  return {from:S.from,to:S.to};
+}
+function rbParrafoIntro(modo){
+  return body=>{
+    const {from,to}=rbRango(modo);
+    body.innerHTML=`<div style="${RB_PARR}">A continuación, se presenta el comportamiento de los
+      <b>Grados-Día de Desarrollo (GDD) Base ${BASES[S.base].lbl}</b> acumulados durante la temporada
+      ${SEASON}/${String(SEASON+1).slice(2)}, considerando el período comprendido entre el
+      <b>${fechaLarga(from)}</b> y el <b>${fechaLarga(to,true)}</b>.</div>`;
+    return true;
+  };
+}
+function rbParrafoTablas(){
+  return body=>{
+    body.innerHTML=`<div style="${RB_PARR}">Las siguientes tablas presentan la acumulación de GDD Base
+      ${BASES[S.base].lbl} registrada para cada estación durante la temporada
+      ${SEASON}/${String(SEASON+1).slice(2)}, junto con su comparación respecto de temporadas anteriores.
+      La variación porcentual permite cuantificar el diferencial de acumulación térmica entre períodos,
+      identificando sectores con mayor o menor aporte térmico acumulado a la fecha de análisis.</div>`;
+    return true;
+  };
+}
+function rbParrafoNota(){
+  return body=>{
+    body.innerHTML=`<div style="font-size:10.5px;line-height:1.6;color:#6B7A6E;text-align:justify">
+      El reporte será actualizado periódicamente a medida que avance la temporada, permitiendo realizar un
+      seguimiento continuo de la acumulación térmica y su variación respecto de temporadas anteriores.</div>`;
+    return true;
+  };
+}
+/* texto que el usuario escribe y queda guardado en el bloque */
+function rbEditable(titulo,inicial,alto){
+  return body=>{
+    body.style.display='flex'; body.style.flexDirection='column';
+    body.innerHTML=`${titulo?`<div style="font-size:14px;font-weight:700;color:#141613;margin-bottom:7px">${titulo}</div>`:''}
+      <div class="rbEdit" contenteditable="true" spellcheck="true"
+        style="${RB_PARR};flex:1;outline:none;overflow:auto;min-height:${alto||60}px">${inicial}</div>`;
+    return true;
+  };
+}
+function rbTextoLibre(){
+  return rbEditable('','<i style="color:#9AA79C">Escribe aquí el texto del informe…</i>',60);
+}
+/* resumen con un borrador armado desde los datos */
+function rbBorradorResumen(modo){
+  const {from,to}=rbRango(modo);
+  const sel=ESTACIONES.filter(e=>S.sel.has(e));
+  const bi=BASES[S.base].i;
+  const anios=SEASONS.slice().sort((a,b)=>b-a);
+  const prom=(y)=>{
+    const vs=sel.map(e=>{
+      const mm=[]; const d0=parseD(from),d1=parseD(to);
+      for(let t=d0.getTime();t<=d1.getTime();t+=864e5){
+        const d=new Date(t);
+        mm.push(String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'));
+      }
+      const map={};
+      (DATA[e]||[]).forEach(r=>{ if(seasonOf(r[0])===y&&r[bi]!=null)map[r[0].slice(5)]=r[bi]; });
+      let s=0,hay=false;
+      mm.forEach(k=>{ if(map[k]!=null){s+=map[k];hay=true;} });
+      return hay?s:null;
+    }).filter(v=>v!=null);
+    return vs.length?vs.reduce((a,b)=>a+b,0)/vs.length:null;
+  };
+  const act=prom(SEASON);
+  if(act==null)return '<i style="color:#9AA79C">Sin datos suficientes para el borrador.</i>';
+  const otras=anios.filter(y=>y!==SEASON).map(y=>({y,v:prom(y)})).filter(o=>o.v!=null);
+  const bajo=otras.filter(o=>o.v>act), sobre=otras.filter(o=>o.v<act);
+  const tempTxt=y=>`${y}/${String(y+1).slice(2)}`;
+  const pct=v=>nf(Math.abs((act-v)/v*100),0);
+  let t='';
+  if(bajo.length&&sobre.length){
+    t=`<b>Acumulado de temporada:</b> actualmente estamos por debajo de ${bajo.map(o=>tempTxt(o.y)).join(' y ')}
+       en GDD base ${BASES[S.base].lbl}, pero al comparar con temporadas anteriores como
+       ${sobre.map(o=>tempTxt(o.y)).join(', ')}, el acumulado térmico actual es favorable.`;
+  }else if(sobre.length){
+    t=`<b>Acumulado de temporada:</b> la temporada ${tempTxt(SEASON)} presenta el mayor acumulado térmico
+       del período analizado, por sobre ${sobre.map(o=>tempTxt(o.y)).join(', ')}.`;
+  }else{
+    t=`<b>Acumulado de temporada:</b> el acumulado térmico de ${tempTxt(SEASON)} se ubica por debajo de
+       ${bajo.map(o=>tempTxt(o.y)).join(', ')}.`;
+  }
+  if(sobre.length){
+    const r=sobre.sort((a,b)=>a.v-b.v)[0];
+    t+=`<br><br><b>Referencia ${tempTxt(r.y)}:</b> esta temporada lleva aproximadamente
+       <b>${pct(r.v)} % más GDD que ${r.y}</b>, lo que podría plantearse como un antecedente favorable
+       respecto a la velocidad de avance térmico. Esto podría traducirse en una menor heterogeneidad de la
+       floración, aunque no permite concluirlo por sí solo, porque la floración depende también de frío
+       acumulado, reservas, temperaturas durante la transición, eventos extremos, lluvias y otros factores.`;
+  }
+  t+=`<br><br><b>Interpretación:</b> `+
+     `<i style="color:#9AA79C">— completa aquí el análisis del período —</i>`;
+  t+=`<br><br>Promedio de ${sel.length} estación${sel.length===1?'':'es'}: <b>${nf(act,0)} °D</b> `+
+     `entre el ${fechaLarga(from)} y el ${fechaLarga(to,true)}.`;
+  return t;
+}
+function rbResumen(){
+  return body=>rbEditable('Resumen del informe',rbBorradorResumen(null),120)(body);
+}
 function rbFill(div,def){
   const body=div.querySelector('.rbBody');
   body.innerHTML=''; body.style.display=''; body.style.flexDirection='';
@@ -4193,6 +4318,99 @@ function rbAdd(def){
   rbDrag(div,div.querySelector('.rbHandle'));
   rbResize(div,div.querySelector('.rbResize'));
 }
+/* ═══ Plantilla: informe de Grados-Día en dos páginas ═══ */
+function rbBloque(page,label,build,x,y,w,hh,key){
+  const id='rb'+(RB_ID++);
+  const div=document.createElement('div');
+  div.className='rbBlock'; div.id=id; div.dataset.defKey=key||'';
+  div.style.left=x+'px'; div.style.top=y+'px'; div.style.width=w+'px'; div.style.height=hh+'px';
+  div.innerHTML=`<div class="rbHandle"><span>${label}</span>
+      <span class="rbTools"><span class="rbRefresh" title="Actualizar">↻</span><span class="rbClose" title="Quitar">✕</span></span></div>
+    <div class="rbBody"></div><div class="rbResize"></div>`;
+  page.appendChild(div);
+  const body=div.querySelector('.rbBody');
+  body.innerHTML=''; body.style.display=''; body.style.flexDirection='';
+  const ok=safe(()=>build(body),'armar el informe');
+  if(!ok){div.remove();return null;}
+  div.querySelector('.rbClose').onclick=()=>div.remove();
+  div.querySelector('.rbRefresh').onclick=()=>{
+    const d2=rbDefs().find(d=>d.key===div.dataset.defKey);
+    if(d2)rbFill(div,d2);
+  };
+  rbDrag(div,div.querySelector('.rbHandle'));
+  rbResize(div,div.querySelector('.rbResize'));
+  return div;
+}
+/* arma una hoja completa para el rango indicado */
+function rbHojaGdd(page,modo,titulo){
+  const {w}=rbPageDims();
+  const M=26, AN=w-2*M, MED=(AN-14)/2;
+  let y=M;
+  rbBloque(page,'Título',body=>{
+    const {from,to}=rbRango(modo);
+    body.innerHTML=`<div style="border-bottom:2px solid #2C7A46;padding-bottom:8px">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.18em;
+        text-transform:uppercase;color:#6B7A6E">Reporte agroclimático · Exportadora Los Olmos</div>
+      <div style="font-size:19px;font-weight:700;color:#1E5B33;margin-top:3px">${titulo}</div>
+      <div style="font-size:11px;color:#6B7A6E;margin-top:2px">${fechaLarga(from)} al ${fechaLarga(to,true)}</div></div>`;
+    return true;
+  },M,y,AN,74,'');
+  y+=84;
+  rbBloque(page,'Párrafo de apertura',rbParrafoIntro(modo),M,y,AN,58,'inf-intro'); y+=66;
+  rbBloque(page,'Párrafo previo a las tablas',rbParrafoTablas(),M,y,AN,74,'inf-tablas'); y+=82;
+  rbBloque(page,'Tabla por temporada',
+    rbTablaRango('gAnioTable','GDD BASE '+BASES[S.base].lbl.toUpperCase()+' · ACUMULADOS POR TEMPORADA',modo),
+    M,y,MED,236,'gdd-tabla');
+  rbBloque(page,'Tabla variación %',
+    rbTablaRango('gVarTable','COMPARATIVO GDD: DÉFICIT Y SUPERÁVIT ENTRE TEMPORADAS',modo),
+    M+MED+14,y,MED,236,'gdd-var');
+  y+=246;
+  rbBloque(page,'Nota de actualización',rbParrafoNota(),M,y,AN,44,'inf-nota'); y+=52;
+  rbBloque(page,'Resumen del informe',
+    body=>rbEditable('Resumen del informe',rbBorradorResumen(modo),150)(body),
+    M,y,AN,Math.max(190,rbPageDims().h-y-40),'inf-resumen');
+}
+/* clona una tabla recalculada para otro rango de fechas */
+function rbTablaRango(id,titulo,modo){
+  return body=>{
+    const org={from:S.from,to:S.to};
+    const r=rbRango(modo);
+    let cambio=false;
+    if(r.from!==S.from||r.to!==S.to){S.from=r.from;S.to=r.to;cambio=true;safe(renderGdd,'recalcular el informe');}
+    const t=document.getElementById(id);
+    let ok=false;
+    if(t){
+      const cl=t.cloneNode(true);
+      cl.style.width='100%'; cl.style.fontSize='9.5px';
+      cl.querySelectorAll('th,td').forEach(c=>{c.style.padding='5px 6px';c.style.position='static';});
+      body.innerHTML=`<div style="font-size:10px;font-weight:700;color:#1E5B33;text-align:center;
+        letter-spacing:.04em;margin-bottom:7px">${titulo}</div>`;
+      const cont=document.createElement('div');
+      cont.style.cssText='border:1px solid #E1E8DE;border-radius:9px;overflow:hidden';
+      cont.appendChild(cl); body.appendChild(cont);
+      ok=true;
+    }
+    if(cambio){S.from=org.from;S.to=org.to;safe(renderGdd,'restaurar el período');}
+    if(!ok)errorUI('No se encontró la tabla del reporte de Grados-Día.');
+    return ok;
+  };
+}
+document.getElementById('rbPlantilla').onclick=()=>{
+  if(!ESTACIONES.filter(e=>S.sel.has(e)).length){
+    errorUI('Marca al menos una estación en el reporte de Grados-Día antes de armar el informe.');return;}
+  const wrap=document.getElementById('rbPages');
+  if(wrap.children.length&&wrap.querySelector('.rbBlock')&&
+     !confirm('Se reemplazará lo que hay armado. ¿Continuar?'))return;
+  wrap.innerHTML='';
+  const p1=rbAddPage();
+  rbHojaGdd(p1,null,'Grados-Día de Desarrollo · Base '+BASES[S.base].lbl);
+  const agosto=SEASON+'-08-01';
+  if(S.to>=agosto){
+    const p2=rbAddPage();
+    rbHojaGdd(p2,'agosto','Acumulación de agosto · Base '+BASES[S.base].lbl);
+  }
+  window.scrollTo({top:document.getElementById('rbPages').offsetTop-80,behavior:'smooth'});
+};
 function rbDrag(div,handle){
   let on=false,sx=0,sy=0,ox=0,oy=0;
   handle.addEventListener('mousedown',e=>{
@@ -5767,8 +5985,9 @@ document.getElementById('btnSave').onclick=()=>{
    Al publicar un cambio: sube el número y agrega la línea
    correspondiente al principio de APP_HISTORIAL.
    ═══════════════════════════════════════════════════ */
-const APP_VERSION="3.4";
+const APP_VERSION="3.5";
 const APP_HISTORIAL=[
+  ['3.5','Informe de Grados-Día en dos hojas, con resumen editable y sección de agosto'],
   ['3.4','Pronóstico de 7 días con aviso de helada y ajuste de la app a cada dispositivo'],
   ['3.3','Los indicadores de Grados-Día promedian todas las estaciones seleccionadas'],
   ['3.2','Las semanas se cuentan de lunes a domingo con número de semana agrícola'],
